@@ -20,4 +20,5 @@ create table if not exists staff
 )charset=utf8;
 -- 构造数据
 insert into staff(type, username, password, age, gender) values('doctor', 'Tom', '123456', 30, 'male');
+insert into staff(type, username, password, age, gender) values('doctor', 'doctor', '123456', 30, 'male');
 insert into staff(type, username, password, age, gender, current_resp_num) values('hospital_nurse', 'Jerry', '123456', 30, 'male', 3);
