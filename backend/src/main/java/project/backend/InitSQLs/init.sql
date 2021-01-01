@@ -49,3 +49,15 @@ insert into staff(id, type, name, password, age, gender, current_resp_num, treat
 insert into staff(id, type, name, password, age, gender, current_resp_num, treatment_region_level) values('H003','hospital_nurse', 'hospital_nurse3', '123456', 30, 'male', 0, 3);
 
 
+drop table if exists bed;
+create table if not exists bed
+(
+    bed_id int auto_increment not null,
+    is_occupied int default 0 not null check ( is_occupied in (0, 1) ),
+    treatment_region_level int not null check ( treatment_region_level >= 1 and treatment_region_level <= 3 ),
+    primary key (bed_id),
+    foreign key (treatment_region_level) references treatment_region(level)
+)charset = utf8;
+insert into bed(is_occupied, treatment_region_level) VALUES (0, 1);
+insert into bed(is_occupied, treatment_region_level) VALUES (0, 2);
+insert into bed(is_occupied, treatment_region_level) VALUES (0, 3);
