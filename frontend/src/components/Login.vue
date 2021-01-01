@@ -74,7 +74,7 @@ export default {
         },
         rules: {
           user: [
-            {required:true,message:"Username or email is required",blur:"change",trigger:"blur"}
+            {required:true,message:"UserID is required",blur:"change",trigger:"blur"}
           ],
           password: [
             {required:true, message:"Password is required", blur:"change",trigger:"blur"},           

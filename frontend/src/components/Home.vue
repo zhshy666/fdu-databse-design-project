@@ -2,66 +2,118 @@
 <el-container>
     <el-aside>    
         <logo id="logo"></logo>    
-        <h1>张三</h1>    
+        <h1>Jaxon Liu</h1>    
         <el-menu
-            default-active="1"            
-            @open="handleOpen"
-            @close="handleClose"
+            default-active="patient-info"            
+            @select = "handleSelect"
         >    
-        <el-menu-item index="1">
+        <el-menu-item index="modify">
             <i class="el-icon-s-cooperation"></i>
-            <span slot="title">修改个人资料</span>
+            <span slot="title">Modify person information</span>
         </el-menu-item>
 
-        <el-menu-item index="2">
+        <el-menu-item index="new-patient">
             <i class="el-icon-document-add"></i>
-            <span slot="title">导入病人信息</span>
+            <span slot="title">Import patient</span>
         </el-menu-item>
 
-        <el-menu-item index="3">
+        <el-menu-item index="record-status">
             <i class="el-icon-s-claim"></i>
-            <span slot="title">登记病人日常信息</span>
+            <span slot="title">Record dairy status</span>
         </el-menu-item>
 
-        <el-menu-item index = "4">
+        <el-menu-item index = "patient-info">
             <i class="el-icon-user"></i>
-            <span slot="title">查看病人信息</span>
+            <span slot="title">Patient information</span>
         </el-menu-item>
 
-        <el-menu-item index = "5">
+        <el-menu-item index = "nurse-info">
             <i class="el-icon-user-solid"></i>
-            <span slot="title">查看区域护士信息</span>
+            <span slot="title">Nurse information</span>
         </el-menu-item>
 
-        <el-menu-item index = "6">
+        <el-menu-item index = "message">
             <i class="el-icon-message"></i>
-            <span slot="title">站内信</span>
+            <span slot="title">Message</span>
         </el-menu-item>
     </el-menu>
     </el-aside>
     <el-main>
         <!-- todo: 4个不同的功能区 -->
+        <modify-personal-info v-if="this.isModify">            
+        </modify-personal-info>
     </el-main>
 </el-container>
 </template>
 <script>
 import logo from '../components/Logo'
+import ModifyPersonalInfo from './ModifyPersonalInfo.vue'
 export default {
   name:"Home",
-  components:{logo},
+  components:{logo,ModifyPersonalInfo},
   data(){
       return{
-
+        isModify:false,
+        isNewPatient:false,
+        isPatientInfo:false,
+        isNurseInfo:false,
+        isDairyStatus:false,
+        isMessage:false,          
       }
   },
   methods:{
-       handleOpen(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
-      }
-    
+       handleSelect(key, keyPath) {
+           switch(key){
+               case "modify":
+                   this.isModify = true;
+                   this.isNewPatient = false;
+                   this.isPatientInfo = false;
+                   this.isNurseInfo = false;
+                   this.isDairyStatus = false;
+                   this.isMessage = false;
+                   break;
+                case "new-patient":
+                   this.isModify = false;
+                   this.isNewPatient = true;
+                   this.isPatientInfo = false;
+                   this.isNurseInfo = false;
+                   this.isDairyStatus = false;
+                   this.isMessage = false;
+                   break;
+                case "record-status":
+                   this.isModify = false;
+                   this.isNewPatient = false;
+                   this.isPatientInfo = true;
+                   this.isNurseInfo = false;
+                   this.isDairyStatus = false;
+                   this.isMessage = false;
+                   break;
+                case "patient-info":
+                   this.isModify = false;
+                   this.isNewPatient = false;
+                   this.isPatientInfo = false;
+                   this.isNurseInfo = true;
+                   this.isDairyStatus = false;
+                   this.isMessage = false;
+                   break;
+                case "nurse-info":
+                   this.isModify = false;
+                   this.isNewPatient = false;
+                   this.isPatientInfo = false;
+                   this.isNurseInfo = false;
+                   this.isDairyStatus = true;
+                   this.isMessage = false;
+                   break;
+                case "message":
+                   this.isModify = false;
+                   this.isNewPatient = false;
+                   this.isPatientInfo = false;
+                   this.isNurseInfo = false;
+                   this.isDairyStatus = false;
+                   this.isMessage = true;
+                   break;                
+           }        
+      },      
   }
 }
 </script>
