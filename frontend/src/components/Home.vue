@@ -1,7 +1,6 @@
 <template>
 <el-container>
-    <el-aside>    
-        <logo id="logo"></logo>    
+    <el-aside>                
         <h1>Jaxon Liu</h1>    
         <el-menu
             default-active="patient-info"            
@@ -42,15 +41,19 @@
         <!-- todo: 4个不同的功能区 -->
         <modify-personal-info v-if="this.isModify">            
         </modify-personal-info>
+
+        <add-patient v-if="this.isNewPatient"></add-patient>
     </el-main>
 </el-container>
 </template>
 <script>
 import logo from '../components/Logo'
+import AddPatient from './AddPatient.vue'
 import ModifyPersonalInfo from './ModifyPersonalInfo.vue'
+
 export default {
   name:"Home",
-  components:{logo,ModifyPersonalInfo},
+  components:{logo,ModifyPersonalInfo, AddPatient},
   data(){
       return{
         isModify:false,
@@ -121,7 +124,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .el-aside{    
-    padding:20px 0;
+    padding:100px 0;
     height:100vh;    
     background-color:rgba(112, 152, 187, 0.1);
 }

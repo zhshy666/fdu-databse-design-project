@@ -1,10 +1,6 @@
 <template>
 <div>
   <el-row>  
-  <!-- <el-col :span="10">      
-      <img src="../assets/login.png" alt="login background pic"/>
-  </el-col> -->
-
   <el-col :span="12" :offset="6" >
     <div class="loginFormContainer">      
       <logo></logo>
