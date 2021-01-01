@@ -1,11 +1,11 @@
 <template>
 <div>
   <el-row>  
-  <el-col :span="10">      
+  <!-- <el-col :span="10">      
       <img src="../assets/login.png" alt="login background pic"/>
-  </el-col>
+  </el-col> -->
 
-  <el-col :span="12">
+  <el-col :span="12" :offset="6" >
     <div class="loginFormContainer">      
       <logo></logo>
       <h3>LOG IN</h3>
@@ -129,12 +129,10 @@ img{
 }
 .loginFormContainer{
   margin:80px 100px 0 100px;
-  padding:50px 50px;  
+  padding:50px 50px; 
+  background-color: rgba(0, 0, 0, 0.05); 
 }
 h3{
   text-align: center;
-}
-a{
-    text-decoration: none;
 }
 </style>
