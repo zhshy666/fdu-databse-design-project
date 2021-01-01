@@ -1,17 +1,18 @@
 package project.backend.Entity;
 
 public class Staff {
-    private int id;
+    private String id;
     private String type;
     private String name;
     private String password;
     private String age;
     private String gender;
     private Integer current_resp_num;
+    private Integer treatment_region_level;
 
     public Staff(){}
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -61,5 +62,13 @@ public class Staff {
 
     public void setCurrent_resp_num(Integer current_resp_num) {
         this.current_resp_num = current_resp_num;
+    }
+
+    public Integer getTreatment_region_level() {
+        return treatment_region_level;
+    }
+
+    public void setTreatment_region_level(Integer treatment_region_level) {
+        this.treatment_region_level = treatment_region_level;
     }
 }
