@@ -2,7 +2,7 @@ package project.backend.Entity;
 
 public class Bed {
     private int bed_id;
-    private int is_occupied;
+    private int patient_id;
     private int treatment_region_level;
 
     public Bed(){}
@@ -15,12 +15,12 @@ public class Bed {
         this.bed_id = bed_id;
     }
 
-    public int getIs_occupied() {
-        return is_occupied;
+    public int getPatient_id() {
+        return patient_id;
     }
 
-    public void setIs_occupied(int is_occupied) {
-        this.is_occupied = is_occupied;
+    public void setPatient_id(int patient_id) {
+        this.patient_id = patient_id;
     }
 
     public int getTreatment_region_level() {

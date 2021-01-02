@@ -1,63 +1,158 @@
 create schema if not exists database_project;
 
-
 use database_project;
 
 drop table if exists staff;
+drop table if exists patient_status;
+drop table if exists checklist;
+drop table if exists patient;
+drop table if exists bed;
 drop table if exists treatment_region;
+drop table if exists doctor;
+create table if not exists doctor
+(
+    id               varchar(20) not null unique,
+    name             varchar(50) not null,
+    password         varchar(50) not null ,
+    age              int not null check ( age > 0 ),
+    gender           varchar(10) default 'male' check ( gender in ('male', 'female') ),
+    primary key (id)
+)charset = utf8;
+insert into doctor(id, name, password, age, gender) VALUES ('D001', 'doctor1', '123456', 26, 'male');
+insert into doctor(id, name, password, age, gender) VALUES ('D002', 'doctor2', '123456', 36, 'male');
+insert into doctor(id, name, password, age, gender) VALUES ('D003', 'doctor3', '123456', 28, 'female');
+
+
+drop table if exists bed;
+drop table if exists chief_nurse;
+create table if not exists chief_nurse
+(
+    id               varchar(20) not null unique,
+    name             varchar(50) not null,
+    password         varchar(50) not null ,
+    age              int not null check ( age > 0 ),
+    gender           varchar(10) default 'male' check ( gender in ('male', 'female') ),
+    primary key (id)
+)charset = utf8;
+insert into chief_nurse(id, name, password, age, gender) VALUES ('C001', 'chief_nurse1', '123456', 26, 'female');
+insert into chief_nurse(id, name, password, age, gender) VALUES ('C002', 'chief_nurse2', '123456', 36, 'male');
+insert into chief_nurse(id, name, password, age, gender) VALUES ('C003', 'chief_nurse3', '123456', 28, 'female');
+
+
+drop table if exists emergency_nurse;
+create table if not exists emergency_nurse
+(
+    id               varchar(20) not null unique,
+    name             varchar(50) not null,
+    password         varchar(50) not null ,
+    age              int not null check ( age > 0 ),
+    gender           varchar(10) default 'male' check ( gender in ('male', 'female') ),
+    primary key (id)
+)charset = utf8;
+insert into emergency_nurse(id, name, password, age, gender) VALUES ('E001', 'emergency_nurse1', '123456', 26, 'female');
+insert into emergency_nurse(id, name, password, age, gender) VALUES ('E002', 'emergency_nurse2', '123456', 36, 'male');
+insert into emergency_nurse(id, name, password, age, gender) VALUES ('E003', 'emergency_nurse3', '123456', 28, 'female');
+
+
+drop table if exists hospital_nurse;
+create table if not exists hospital_nurse
+(
+    id               varchar(20) not null unique,
+    name             varchar(50) not null,
+    password         varchar(50) not null ,
+    age              int not null check ( age > 0 ),
+    gender           varchar(10) default 'male' check ( gender in ('male', 'female') ),
+    current_resp_num int not null default 0 check ( current_resp_num >= 0 and current_resp_num <= 3 ),
+    primary key (id)
+)charset = utf8;
+insert into hospital_nurse(id, name, password, age, gender) VALUES ('E001', 'emergency_nurse1', '123456', 26, 'female');
+insert into hospital_nurse(id, name, password, age, gender) VALUES ('E002', 'emergency_nurse2', '123456', 36, 'male');
+insert into hospital_nurse(id, name, password, age, gender) VALUES ('E003', 'emergency_nurse3', '123456', 28, 'female');
+
+
 create table if not exists treatment_region
 (
     level int default 0 not null check ( level >= 0 and level <= 3),  # 1, 2, 3 依次加重，0 表示在隔离区域
     nurse_num int default 0 check ( nurse_num >= 0 ),
     nurse_resp_num int default 0 check ( nurse_resp_num >= 0 ),
+    doctor_id varchar(20),
+    nurse_id varchar(20),
     primary key (level),
-    check ( (level != 0 and nurse_num is not null and nurse_resp_num is not null) or (level = 0))
-)charset=utf8;
-insert into treatment_region(level, nurse_num, nurse_resp_num) VALUES (0, null, null);
-insert into treatment_region(level, nurse_num, nurse_resp_num) VALUES (1, 10, 3);
-insert into treatment_region(level, nurse_num, nurse_resp_num) VALUES (2, 10, 2);
-insert into treatment_region(level, nurse_num, nurse_resp_num) VALUES (3, 10, 1);
+    foreign key (doctor_id) references doctor(id),
+    foreign key (nurse_id) references chief_nurse(id),
+    check ( (level != 0 and nurse_num is not null and nurse_resp_num is not null
+        and doctor_id is not null and nurse_id is not null) or (level = 0))
+)charset = utf8;
+insert into treatment_region(level, nurse_num, nurse_resp_num, doctor_id, nurse_id) VALUES (0, null, null, null, null);
+insert into treatment_region(level, nurse_num, nurse_resp_num, doctor_id, nurse_id) VALUES (1, 10, 3, 'D001', 'C001');
+insert into treatment_region(level, nurse_num, nurse_resp_num, doctor_id, nurse_id) VALUES (2, 10, 2, 'D002', 'C002');
+insert into treatment_region(level, nurse_num, nurse_resp_num, doctor_id, nurse_id) VALUES (3, 10, 1, 'D003', 'C003');
 
 
-
-drop table if exists staff;
-create table if not exists staff
+create table if not exists patient
 (
-    id               varchar(20) not null,
-    type             varchar(20) check ( type in ('doctor', 'chief_nurse', 'emergency_nurse', 'hospital_nurse') ),
-    name             varchar(50) not null unique,
-    password         varchar(50) not null ,
-    age              int not null check ( age > 0 ),
-    gender           varchar(10) default 'male' check ( gender in ('male', 'female') ),
-    current_resp_num integer,
-    treatment_region_level integer,
-    PRIMARY KEY (id),
-    foreign key (treatment_region_level) references treatment_region(level),
-    check ( (type != 'hospital_nurse') or (type = 'hospital_nurse' and current_resp_num is not null and current_resp_num >= 0) ),
-    check ( (type = 'emergency_nurse') or (type != 'emergency_nurse' and treatment_region_level is not null and treatment_region_level >= 1 and treatment_region_level <= 3) )
-)charset=utf8;
-
-insert into staff(id, type, name, password, age, gender, treatment_region_level) values('D001','doctor', 'Tom', '123456', 30, 'male', 1);
-insert into staff(id, type, name, password, age, gender, treatment_region_level) values('D002','doctor', 'doctor2', '123456', 40, 'male', 2);
-insert into staff(id, type, name, password, age, gender, treatment_region_level) values('D003','doctor', 'doctor3', '123456', 32, 'female', 3);
-insert into staff(id, type, name, password, age, gender, treatment_region_level) values('C001','chief_nurse', 'chief_nurse1', '123456', 32, 'female', 1);
-insert into staff(id, type, name, password, age, gender, treatment_region_level) values('C002','chief_nurse', 'chief_nurse2', '123456', 32, 'female', 2);
-insert into staff(id, type, name, password, age, gender, treatment_region_level) values('C003','chief_nurse', 'chief_nurse3', '123456', 32, 'female', 3);
-insert into staff(id, type, name, password, age, gender) values('E001','emergency_nurse', 'emergence_nurse1', '123456', 28, 'female');
-insert into staff(id, type, name, password, age, gender, current_resp_num, treatment_region_level) values('H001','hospital_nurse', 'hospital_nurse1', '123456', 30, 'male', 0, 1);
-insert into staff(id, type, name, password, age, gender, current_resp_num, treatment_region_level) values('H002','hospital_nurse', 'hospital_nurse2', '123456', 30, 'male', 0, 2);
-insert into staff(id, type, name, password, age, gender, current_resp_num, treatment_region_level) values('H003','hospital_nurse', 'hospital_nurse3', '123456', 30, 'male', 0, 3);
+    patient_id int not null auto_increment,
+    name varchar(30) not null,
+    gender varchar(10) default 'male' check ( gender in ('male', 'female') ),
+    age int not null check ( age > 0 ),
+    disease_level int not null check ( disease_level >= 1 and disease_level <= 3 ),
+    nurse_id varchar(20),
+    treatment_region_level int not null,
+    primary key (patient_id),
+    foreign key (nurse_id) references chief_nurse(id),
+    foreign key (treatment_region_level) references treatment_region(level)
+)charset = utf8;
+insert into patient(name, age, disease_level, nurse_id, treatment_region_level) VALUES ('p1', 20, 1, 'C001', 1);
+insert into patient(name, age, disease_level, nurse_id, treatment_region_level) VALUES ('p2', 20, 2, 'C002', 2);
+insert into patient(name, age, disease_level, nurse_id, treatment_region_level) VALUES ('p3', 20, 3, 'C003', 3);
 
 
-drop table if exists bed;
 create table if not exists bed
 (
     bed_id int auto_increment not null,
-    is_occupied int default 0 not null check ( is_occupied in (0, 1) ),
+    patient_id int,
     treatment_region_level int not null check ( treatment_region_level >= 1 and treatment_region_level <= 3 ),
     primary key (bed_id),
     foreign key (treatment_region_level) references treatment_region(level)
 )charset = utf8;
-insert into bed(is_occupied, treatment_region_level) VALUES (0, 1);
-insert into bed(is_occupied, treatment_region_level) VALUES (0, 2);
-insert into bed(is_occupied, treatment_region_level) VALUES (0, 3);
+insert into bed(patient_id, treatment_region_level) VALUES (1, 1);
+insert into bed(patient_id, treatment_region_level) VALUES (2, 2);
+insert into bed(patient_id, treatment_region_level) VALUES (3, 3);
+
+
+create table if not exists checklist
+(
+    id int auto_increment not null,
+    test_result varchar(10) not null check ( test_result in ('positive', 'negative') ),
+    date datetime not null,
+    disease_level int not null check ( disease_level >= 1 and disease_level <= 3 ),
+    doctor_id varchar(20) not null,
+    patient_id int not null,
+    primary key (id),
+    foreign key (doctor_id) references doctor(id),
+    foreign key (patient_id) references patient(patient_id)
+)charset = utf8;
+insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('positive', '2020-12-20 13:30:20', 3, 'D003', 1);
+insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-25 13:30:20', 1, 'D001', 3);
+
+
+create table if not exists patient_status
+(
+    id int auto_increment not null,
+    temperature double not null,
+    symptom varchar(100) not null,
+    life_status varchar(10) not null check ( life_status in ('healthy', 'treating', 'dead') ),
+    date datetime not null,
+    patient_id int not null,
+    nurse_id varchar(20) not null,
+    checklist_id int not null,
+    primary key (id),
+    foreign key (patient_id) references patient(patient_id),
+    foreign key (nurse_id) references chief_nurse(id),
+    foreign key (checklist_id) references checklist(id)
+)charset = utf8;
+insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
+            VALUES (37.6, 'fever', 'treating', '2020-12-20 13:30:20', 3, 'C001', 1);
+insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
+            VALUES (37.1, 'healthy', 'treating', '2020-12-25 13:30:20', 1, 'C001', 2);
+
