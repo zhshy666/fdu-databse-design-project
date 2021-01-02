@@ -22,11 +22,17 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest request){
         String id = request.getId();
         String password = request.getPassword();
-        System.out.println("input: id = " + id + ", password = " + password);
         Staff staff = authService.login(id, password);
         if (staff == null){
             return new ResponseEntity<>("Login failed", HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(staff);
+    }
+
+    @PostMapping("/modifyPersonalInfo")
+    public ResponseEntity<?> modifyPersonalInfo(@RequestBody ModifyPersonalInfoRequest request){
+        String id = request.getId();
+        String message = authService.updateUserInfo(id, request.getName(), request.getPassword(), request.getAge());
+        return ResponseEntity.ok(message);
     }
 }

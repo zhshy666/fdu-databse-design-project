@@ -40,10 +40,10 @@ public class DoctorController {
         String id = request.getId();
         // 2 找到该医生对应的治疗区域
         List<Integer> levels = treatmentRegionService.getTreatmentRegions(id);
-        List<Patient> list = new LinkedList<>();
+        List<Patient> patients = new LinkedList<>();
         for(Integer level : levels) {
-            patientService.getPatients(level, list, Config.DOCTOR);
+            patientService.getPatients(level, patients, Config.DOCTOR);
         }
-        return ResponseEntity.ok(list);
+        return ResponseEntity.ok(patients);
     }
 }

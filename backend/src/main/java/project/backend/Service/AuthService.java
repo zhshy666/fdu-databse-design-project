@@ -47,4 +47,24 @@ public class AuthService {
         return null;
     }
 
+    public String updateUserInfo(String id, String name, String password, int age) {
+        char type = id.charAt(0);
+        switch (type){
+            case 'D':
+                doctorRepo.updateDoctorById(id, name, password, age);
+                break;
+            case 'C':
+                chiefNurseRepo.updateNurseById(id, name, password, age);
+                break;
+            case 'E':
+                emergencyNurseRepo.updateNurseById(id, name, password, age);
+                break;
+            case 'H':
+                hospitalNurseRepo.updateNurseById(id, name, password, age);
+                break;
+            default:
+                break;
+        }
+        return "success";
+    }
 }
