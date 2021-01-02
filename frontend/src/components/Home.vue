@@ -39,10 +39,11 @@
     </el-aside>
     <el-main>
         <!-- todo: 4个不同的功能区 -->
-        <modify-personal-info v-if="this.isModify">            
-        </modify-personal-info>
+        <modify-personal-info v-if="this.isModify"></modify-personal-info>
 
         <add-patient v-if="this.isNewPatient"></add-patient>
+
+        <record-status v-if="this.isDairyStatus"></record-status>
     </el-main>
 </el-container>
 </template>
@@ -50,10 +51,11 @@
 import logo from '../components/Logo'
 import AddPatient from './AddPatient.vue'
 import ModifyPersonalInfo from './ModifyPersonalInfo.vue'
+import RecordStatus from './RecordStatus.vue'
 
 export default {
   name:"Home",
-  components:{logo,ModifyPersonalInfo, AddPatient},
+  components:{logo,ModifyPersonalInfo, AddPatient,RecordStatus},
   data(){
       return{
         isModify:false,
@@ -69,50 +71,50 @@ export default {
            switch(key){
                case "modify":
                    this.isModify = true;
-                   this.isNewPatient = false;
-                   this.isPatientInfo = false;
-                   this.isNurseInfo = false;
+                   this.isNewPatient = false;                   
                    this.isDairyStatus = false;
+                   this.isPatientInfo = false;
+                   this.isNurseInfo = false;                   
                    this.isMessage = false;
                    break;
                 case "new-patient":
                    this.isModify = false;
                    this.isNewPatient = true;
-                   this.isPatientInfo = false;
-                   this.isNurseInfo = false;
                    this.isDairyStatus = false;
+                   this.isPatientInfo = false;
+                   this.isNurseInfo = false;                   
                    this.isMessage = false;
                    break;
                 case "record-status":
                    this.isModify = false;
-                   this.isNewPatient = false;
-                   this.isPatientInfo = true;
-                   this.isNurseInfo = false;
-                   this.isDairyStatus = false;
+                   this.isNewPatient = false;                   
+                   this.isDairyStatus = true;
+                   this.isPatientInfo = false;
+                   this.isNurseInfo = false;                   
                    this.isMessage = false;
                    break;
                 case "patient-info":
                    this.isModify = false;
-                   this.isNewPatient = false;
-                   this.isPatientInfo = false;
-                   this.isNurseInfo = true;
+                   this.isNewPatient = false;                   
                    this.isDairyStatus = false;
+                   this.isPatientInfo = true;
+                   this.isNurseInfo = false;                   
                    this.isMessage = false;
                    break;
                 case "nurse-info":
                    this.isModify = false;
-                   this.isNewPatient = false;
+                   this.isNewPatient = false;                   
+                   this.isDairyStatus = false;
                    this.isPatientInfo = false;
-                   this.isNurseInfo = false;
-                   this.isDairyStatus = true;
+                   this.isNurseInfo = true;                   
                    this.isMessage = false;
                    break;
                 case "message":
                    this.isModify = false;
-                   this.isNewPatient = false;
-                   this.isPatientInfo = false;
-                   this.isNurseInfo = false;
+                   this.isNewPatient = false;                   
                    this.isDairyStatus = false;
+                   this.isPatientInfo = false;
+                   this.isNurseInfo = false;                   
                    this.isMessage = true;
                    break;                
            }        
