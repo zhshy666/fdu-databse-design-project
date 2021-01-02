@@ -26,6 +26,22 @@ public class Util {
         return conn;
     }
 
+    public static Connection connect(String type) {
+        switch (type){
+            case "DOCTOR":
+                return Util.connectSQL(Config.DB_URL, Config.DOCTOR, Config.PASSWORD_D);
+            case "CHIEF_NURSE":
+                return Util.connectSQL(Config.DB_URL, Config.CHIEF_NURSE, Config.PASSWORD_C);
+            case "EMERGENCY_NURSE":
+                return Util.connectSQL(Config.DB_URL, Config.EMERGENCY_NURSE, Config.PASSWORD_E);
+            case "HOSPITAL_NURSE":
+                return Util.connectSQL(Config.DB_URL, Config.HOSPITAL_NURSE, Config.PASSWORD_H);
+            default:
+                System.out.println("Error");
+        }
+        return null;
+    }
+
     public static void close(Connection connection) {
         try{
             connection.close();
