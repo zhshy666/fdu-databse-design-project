@@ -10,7 +10,6 @@ import project.backend.Repo.HospitalNurseRepo;
 
 @Service
 public class AuthService {
-//    private StaffRepo staffRepo;
     private DoctorRepo doctorRepo;
     private ChiefNurseRepo chiefNurseRepo;
     private EmergencyNurseRepo emergencyNurseRepo;

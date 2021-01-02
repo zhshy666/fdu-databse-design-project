@@ -22,6 +22,7 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest request){
         String id = request.getId();
         String password = request.getPassword();
+        System.out.println("input: id = " + id + ", password = " + password);
         Staff staff = authService.login(id, password);
         if (staff == null){
             return new ResponseEntity<>("Login failed", HttpStatus.BAD_REQUEST);

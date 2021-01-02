@@ -19,8 +19,6 @@ public class Util {
             Class.forName(Config.SQL_DRIVER);
             // connect
             conn = DriverManager.getConnection(url, username, password);
-
-            System.out.println("Connect to db successfully");
         }
         catch(Exception e){
             e.printStackTrace();
@@ -31,7 +29,6 @@ public class Util {
     public static void close(Connection connection) {
         try{
             connection.close();
-            System.out.println("Disconnect successfully");
         }
         catch(SQLException e){
             e.printStackTrace();
@@ -47,7 +44,6 @@ public class Util {
 
         for (Field field : fields) {
             try {
-//                System.out.println(field.getName());
                 map.put(field.getName(), rs.getObject(field.getName()));
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -63,6 +59,7 @@ public class Util {
 //                System.out.println(name);
                 if (map.containsKey(name)) {
                     try {
+//                        System.out.println(map);
                         method.invoke(object, map.get(name));
                     } catch (Exception e) {
                         e.printStackTrace();

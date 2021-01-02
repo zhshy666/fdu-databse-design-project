@@ -16,6 +16,10 @@ public class PatientStatus {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public double getTemperature() {
         return temperature;
     }

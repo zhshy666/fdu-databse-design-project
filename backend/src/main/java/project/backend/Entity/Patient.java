@@ -6,6 +6,7 @@ public class Patient {
     private String gender;
     private int age;
     private int disease_level;
+    private String life_status;
     private String nurse_id;
     private int treatment_region_level;
 
@@ -49,6 +50,14 @@ public class Patient {
 
     public void setDisease_level(int disease_level) {
         this.disease_level = disease_level;
+    }
+
+    public String getLife_status() {
+        return life_status;
+    }
+
+    public void setLife_status(String life_status) {
+        this.life_status = life_status;
     }
 
     public String getNurse_id() {
