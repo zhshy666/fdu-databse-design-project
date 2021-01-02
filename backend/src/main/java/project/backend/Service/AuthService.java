@@ -1,6 +1,8 @@
 package project.backend.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import project.backend.Entity.Staff;
 import project.backend.Repo.StaffRepo;
@@ -15,6 +17,10 @@ public class AuthService {
     }
 
     public Staff login(String name, String psw){
+        Staff staff = staffRepo.findUserByUsernameAndPassword(name, psw);
+        if (staff == null){
+            return null;
+        }
         return staffRepo.findUserByUsernameAndPassword(name, psw);
     }
 }
