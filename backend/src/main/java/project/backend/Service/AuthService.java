@@ -2,23 +2,50 @@ package project.backend.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import project.backend.Entity.Staff;
-import project.backend.Repo.StaffRepo;
+import project.backend.Entity.*;
+import project.backend.Repo.ChiefNurseRepo;
+import project.backend.Repo.DoctorRepo;
+import project.backend.Repo.EmergencyNurseRepo;
+import project.backend.Repo.HospitalNurseRepo;
 
 @Service
 public class AuthService {
-    private StaffRepo staffRepo;
+//    private StaffRepo staffRepo;
+    private DoctorRepo doctorRepo;
+    private ChiefNurseRepo chiefNurseRepo;
+    private EmergencyNurseRepo emergencyNurseRepo;
+    private HospitalNurseRepo hospitalNurseRepo;
 
     @Autowired
-    public AuthService(StaffRepo repo){
-        this.staffRepo = repo;
+    public AuthService(DoctorRepo doctorRepo, ChiefNurseRepo chiefNurseRepo,
+                       EmergencyNurseRepo emergencyNurseRepo, HospitalNurseRepo hospitalNurseRepo){
+        this.doctorRepo = doctorRepo;
+        this.chiefNurseRepo = chiefNurseRepo;
+        this.emergencyNurseRepo = emergencyNurseRepo;
+        this.hospitalNurseRepo = hospitalNurseRepo;
     }
 
-    public Staff login(String name, String psw){
-        Staff staff = staffRepo.findUserByUsernameAndPassword(name, psw);
-        if (staff == null){
-            return null;
+    public Staff login(String id, String psw){
+        Doctor doctor = doctorRepo.findUserByIdAndPassword(id, psw);
+        if (doctor != null){
+            return new Staff(doctor.getId(), "doctor", doctor.getName());
         }
-        return staffRepo.findUserByUsernameAndPassword(name, psw);
+
+        ChiefNurse chiefNurse = chiefNurseRepo.findUserByIdAndPassword(id, psw);
+        if (chiefNurse != null){
+            return new Staff(chiefNurse.getId(), "chief_nurse", chiefNurse.getName());
+        }
+
+        EmergencyNurse emergencyNurse = emergencyNurseRepo.findUserByIdAndPassword(id, psw);
+        if (emergencyNurse != null){
+            return new Staff(emergencyNurse.getId(), "emergency_nurse", emergencyNurse.getName());
+        }
+
+        HospitalNurse hospitalNurse = hospitalNurseRepo.findUserByIdAndPassword(id, psw);
+        if (hospitalNurse != null){
+            return new Staff(hospitalNurse.getId(), "hospital_nurse", hospitalNurse.getName());
+        }
+        return null;
     }
+
 }

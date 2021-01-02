@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import project.backend.Controller.Request.*;
 import project.backend.Entity.Staff;
-import project.backend.Entity.TokenProcessor;
 import project.backend.Service.AuthService;
 
 @RestController
@@ -21,16 +20,12 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request){
-        String username = request.getName();
+        String id = request.getId();
         String password = request.getPassword();
-        Staff staff = authService.login(username, password);
+        Staff staff = authService.login(id, password);
         if (staff == null){
             return new ResponseEntity<>("Login failed", HttpStatus.BAD_REQUEST);
         }
-        TokenProcessor t = new TokenProcessor();
-        t.setId(staff.getId());
-        t.setName(staff.getName());
-        t.setType(staff.getType());
         return ResponseEntity.ok(staff);
     }
 }

@@ -43,7 +43,7 @@ public class Util {
 
         Map<String, Object> map = new HashMap<>();
 
-        Field[] fields = c.getDeclaredFields(); //获取属性数组
+        Field[] fields = c.getDeclaredFields(); // 获取属性数组
 
         for (Field field : fields) {
             try {
@@ -54,12 +54,12 @@ public class Util {
             }
         }
 
-        Method[] methods = c.getMethods(); //获取对象方法
+        Method[] methods = c.getMethods(); // 获取对象方法
         for (Method method : methods) {
             if (method.getName().startsWith("set")) {
                 String name = method.getName();
 //                System.out.println(name);
-                name = name.substring(3, 4).toLowerCase() + name.substring(4); //获取属性名
+                name = name.substring(3, 4).toLowerCase() + name.substring(4); // 获取属性名
 //                System.out.println(name);
                 if (map.containsKey(name)) {
                     try {

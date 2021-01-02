@@ -1,18 +1,14 @@
 package project.backend.Controller.Request;
 
 public class LoginRequest {
-    private String name;
+    private String id;
     private String password;
 
     public LoginRequest() {
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String username) {
-        this.name = username;
+    public String getId() {
+        return id;
     }
 
     public String getPassword() {
