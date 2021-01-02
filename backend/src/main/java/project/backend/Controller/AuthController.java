@@ -9,13 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 import project.backend.Controller.Request.*;
 import project.backend.Entity.Staff;
 import project.backend.Entity.TokenProcessor;
-import project.backend.Security.jwt.JwtTokenUtil;
 import project.backend.Service.AuthService;
 
 @RestController
 public class AuthController {
     private AuthService authService;
-    private JwtTokenUtil jwtTokenUtil;
     @Autowired
     public AuthController(AuthService authService){
         this.authService = authService;
@@ -29,9 +27,7 @@ public class AuthController {
         if (staff == null){
             return new ResponseEntity<>("Login failed", HttpStatus.BAD_REQUEST);
         }
-        String token = jwtTokenUtil.generateToken(staff);
         TokenProcessor t = new TokenProcessor();
-        t.setToken(token);
         t.setId(staff.getId());
         t.setName(staff.getName());
         t.setType(staff.getType());
