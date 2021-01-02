@@ -34,7 +34,7 @@ public class DoctorController {
     @PostMapping("/getPatientsInfo")
     public ResponseEntity<?> getPatientsInfo(@RequestBody GetPatientsInfoRequest request){
         // 1 检查是否是医生身份
-        if (!(request.getId().startsWith("D") && request.getType().equals("doctor"))){
+        if (!request.getId().startsWith("D")){
             return new ResponseEntity<>("Not allowed", HttpStatus.FORBIDDEN);
         }
         String id = request.getId();

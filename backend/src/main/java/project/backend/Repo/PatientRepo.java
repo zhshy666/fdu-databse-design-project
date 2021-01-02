@@ -8,7 +8,6 @@ import project.backend.Utils.Util;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.LinkedList;
 import java.util.List;
 
 @Repository
@@ -38,13 +37,13 @@ public class PatientRepo {
 
     private Connection connect(String type) {
         switch (type){
-            case "doctor":
+            case "DOCTOR":
                 return Util.connectSQL(Config.DB_URL, Config.DOCTOR, Config.PASSWORD_D);
-            case "chief_nurse":
+            case "CHIEF_NURSE":
                 return Util.connectSQL(Config.DB_URL, Config.CHIEF_NURSE, Config.PASSWORD_C);
-            case "emergency_nurse":
+            case "EMERGENCY_NURSE":
                 return Util.connectSQL(Config.DB_URL, Config.EMERGENCY_NURSE, Config.PASSWORD_E);
-            case "hospital_nurse":
+            case "HOSPITAL_NURSE":
                 return Util.connectSQL(Config.DB_URL, Config.HOSPITAL_NURSE, Config.PASSWORD_H);
             default:
                 System.out.println("Error");
