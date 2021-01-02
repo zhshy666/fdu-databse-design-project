@@ -4,13 +4,17 @@ public class ChiefNurse {
     private String id;
     private String name;
     private String password;
-    private String age;
+    private int age;
     private String gender;
 
     public ChiefNurse(){}
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -29,11 +33,11 @@ public class ChiefNurse {
         this.password = password;
     }
 
-    public String getAge() {
+    public int getAge() {
         return age;
     }
 
-    public void setAge(String age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
