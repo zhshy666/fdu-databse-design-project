@@ -44,13 +44,6 @@
         >Log In</el-button>
       </el-form-item>
     </el-form>
-    
-    <div >
-      <span>
-        Don't have an account yet?
-        <router-link to="register">Create one</router-link>
-      </span>
-    </div>
   </div>
   </el-col>
 </el-row>
@@ -90,24 +83,36 @@ export default {
       this.loading = true;      
       this.$axios
         .post("/login", {
-          userIdentifier: this.loginForm.user,
+          id: this.loginForm.user,
           password: this.loginForm.password,
         })
         .then(resp => {          
           if (resp.status === 200) {
             //Save token
-             this.$store.commit("login", resp.data);
-             this.notify('success','Welcome back!');
-             this.$router.go(-1);
-            // this.$router.push("/");
-          } else {
-            this.notify('error','Username/Email or password is wrong!');
+             // this.$store.commit("login", resp.data);
+             //this.notify('success','Welcome back!');
+             this.$message({
+              message: 'Login successfully',
+              type: 'success'
+              });
+             //this.$router.go(-1);
+            this.$router.push("/");
+          } else {          
+            //this.notify('error','Username/Email or password is wrong!');
+            this.$message({
+              message: 'Login error',
+              type: 'error'
+              });
             this.loading = false;
           }
         })
         .catch(error => {
           console.log(error);
-          this.notify('error','Username/Email or password is wrong!');
+          this.$message({
+              message: 'Login error',
+              type: 'error'
+              });
+          // this.notify('error','Username/Email or password is wrong!');
           this.loading = false;
         });
       }

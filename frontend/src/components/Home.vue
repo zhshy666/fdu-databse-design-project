@@ -44,6 +44,8 @@
         <add-patient v-if="this.isNewPatient"></add-patient>
 
         <record-status v-if="this.isDairyStatus"></record-status>
+
+        <patient-info v-if="this.isPatientInfo"></patient-info>
     </el-main>
 </el-container>
 </template>
@@ -51,16 +53,17 @@
 import logo from '../components/Logo'
 import AddPatient from './AddPatient.vue'
 import ModifyPersonalInfo from './ModifyPersonalInfo.vue'
+import PatientInfo from './PatientInfo.vue'
 import RecordStatus from './RecordStatus.vue'
 
 export default {
   name:"Home",
-  components:{logo,ModifyPersonalInfo, AddPatient,RecordStatus},
+  components:{logo,ModifyPersonalInfo, AddPatient,RecordStatus, PatientInfo},
   data(){
       return{
         isModify:false,
         isNewPatient:false,
-        isPatientInfo:false,
+        isPatientInfo:true,
         isNurseInfo:false,
         isDairyStatus:false,
         isMessage:false,          

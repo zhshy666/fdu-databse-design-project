@@ -34,13 +34,29 @@
         ></el-input>
       </el-form-item>
 
-      <el-form-item prop="age" size="medium" label="Disease Level">
+      <el-form-item prop="level" size="medium" label="Disease Level">
         <el-radio-group v-model="newPatient.level" size="medium">
-            <el-radio border label="Severe"></el-radio>
-            <el-radio border label="Midium"></el-radio>
             <el-radio border label="Light"></el-radio>
+            <el-radio border label="Severe"></el-radio>
+            <el-radio border label="Critical"></el-radio>            
         </el-radio-group>
-      </el-form-item>      
+      </el-form-item> 
+
+      <el-form-item size="medium" label="Coronavirus test">
+        <el-radio-group v-model="newPatient.testResult" size="medium">
+            <el-radio border label="Positive"></el-radio>
+            <el-radio border label="Negative"></el-radio>            
+        </el-radio-group>
+      </el-form-item> 
+
+      <el-form-item prop="date" size="medium" label="Date">
+        <el-date-picker
+            v-model="newPatient.date"
+            type="datetime"
+            placeholder="select time"
+            default-time="12:00:00">
+        </el-date-picker>
+      </el-form-item> 
 
       <el-form-item size="medium">
         <el-button
@@ -66,7 +82,8 @@ export default {
             gender:"Male",
             age:21,
             level:"Severe",
-
+            testResult:"Positive",
+            date:"",
         },        
     }
   },

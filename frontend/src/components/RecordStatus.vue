@@ -49,9 +49,9 @@
 
       <el-form-item prop="level" size="medium" label="Disease Level">
         <el-radio-group v-model="recordStatus.level" size="medium">
-            <el-radio border label="Severe"></el-radio>
-            <el-radio border label="Midium"></el-radio>
             <el-radio border label="Light"></el-radio>
+            <el-radio border label="Severe"></el-radio>
+            <el-radio border label="Critical"></el-radio>            
         </el-radio-group>
       </el-form-item>      
 
@@ -94,10 +94,11 @@
 <script>
 import logo from "./Logo"
 export default {
-  name:"",
+  name:"RecordStatus",
   components:{logo},
   data(){
   return{
+      loading:false,
       recordStatus:{
         patientID:123,
         patientName:"Tom",
