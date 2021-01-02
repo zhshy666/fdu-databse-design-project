@@ -8,8 +8,8 @@
     <el-table-column
       sortable
       prop="patientID"
-      label="PatientID"
-      width="105">
+      label="ID"
+      width="60">
     </el-table-column>
     <el-table-column      
       prop="patientName"
@@ -47,7 +47,10 @@
     <el-table-column
       prop="status"
       label="Life Status"      
-      width="120">
+      width="120"
+      :filters="[{ text: 'Recoveried', value: 'Recoveried' }, { text: 'Treating', value: 'Treating'},{text: 'Dead', value: 'Dead'}]"
+      :filter-method="filterTag"
+      filter-placement="bottom-end">
       <template slot-scope="scope">
         <el-tag           
           :type="parseStatus(scope.row.status)"
@@ -67,14 +70,14 @@
     <el-table-column
       prop="discharge"
       label="Discharge"      
-      width="130">
+      width="100">
     </el-table-column>
   </el-table>
 
   <br/>
 
   <el-pagination
-    hide-on-single-page="true"
+    :hide-on-single-page="true"
     :page-size = "pageSize"    
     :current-page.sync="currentPage"   
     layout="prev, pager, next"
@@ -116,8 +119,13 @@ export default {
         case 'Dead':
           return 'info';
       }
-    }
+    },
+     filterTag(value, row) {
+        console.log(value);
+        console.log(row);
+      },
   },
+  
   mounted(){
     for (var i = 1; i < 30; i++) {
       this.patients.push({
@@ -130,6 +138,7 @@ export default {
         status:i%2==0?'Treating':'Dead',
         region:i%2==0?'Light':'Wating',
         transfer:i%2==0?'yes':'no',
+        discharge:i%2==1?'yes':'no',
       })      
     }    
   }
