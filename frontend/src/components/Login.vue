@@ -87,18 +87,15 @@ export default {
           password: this.loginForm.password,
         })
         .then(resp => {          
-          if (resp.status === 200) {
-            //Save token
-             // this.$store.commit("login", resp.data);
-             //this.notify('success','Welcome back!');
-             this.$message({
-              message: 'Login successfully',
-              type: 'success'
-              });
-             //this.$router.go(-1);
-            this.$router.push("/");
-          } else {          
-            //this.notify('error','Username/Email or password is wrong!');
+          if (resp.status === 200) {            
+            console.log(resp.data);
+            this.$store.commit("login", resp.data);             
+            this.$message({
+             message: 'Login successfully',
+             type: 'success'
+            });     
+            this.$router.push("/");            
+          } else {                      
             this.$message({
               message: 'Login error',
               type: 'error'
@@ -111,8 +108,7 @@ export default {
           this.$message({
               message: 'Login error',
               type: 'error'
-              });
-          // this.notify('error','Username/Email or password is wrong!');
+              });          
           this.loading = false;
         });
       }

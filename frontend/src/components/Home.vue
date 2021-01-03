@@ -1,7 +1,8 @@
 <template>
 <el-container>
-    <el-aside>                
-        <h1>Jaxon Liu</h1>    
+    <el-aside>                 
+        <h1>Jaxon Liu</h1>            
+        <h3>{{this.$store.state.title.toUpperCase()}}&nbsp;{{this.$store.state.id}}</h3>        
         <el-menu
             default-active="patient-info"            
             @select = "handleSelect"
@@ -11,12 +12,12 @@
             <span slot="title">Modify person information</span>
         </el-menu-item>
 
-        <el-menu-item index="new-patient">
+        <el-menu-item index="new-patient" v-if="this.isEmergencyNurse">        
             <i class="el-icon-document-add"></i>
             <span slot="title">Import patient</span>
         </el-menu-item>
 
-        <el-menu-item index="record-status">
+        <el-menu-item index="record-status" v-if="this.isHospitalNurse">
             <i class="el-icon-s-claim"></i>
             <span slot="title">Record dairy status</span>
         </el-menu-item>
@@ -26,12 +27,12 @@
             <span slot="title">Patient information</span>
         </el-menu-item>
 
-        <el-menu-item index = "nurse-info">
+        <el-menu-item index = "nurse-info" v-if="this.isDoctor||this.isChiefNurse">
             <i class="el-icon-user-solid"></i>
             <span slot="title">Nurse information</span>
         </el-menu-item>
 
-        <el-menu-item index = "message">
+        <el-menu-item index = "message" v-if="this.isDoctor">
             <i class="el-icon-message"></i>
             <span slot="title">Message</span>
         </el-menu-item>
@@ -63,7 +64,12 @@ export default {
   name:"Home",
   components:{logo,ModifyPersonalInfo, AddPatient,RecordStatus, PatientInfo, NurseInfo},
   data(){
-      return{
+      return{        
+        isDoctor:false,
+        isChiefNurse:false,
+        isEmergencyNurse:false,
+        isHospitalNurse:false,
+
         isModify:false,
         isNewPatient:false,
         isPatientInfo:true,
@@ -124,7 +130,23 @@ export default {
                    this.isMessage = true;
                    break;                
            }        
-      },      
+      },            
+  },
+  created(){
+      switch(this.$store.state.title){
+        case "doctor":
+            this.isDoctor = true;              
+            break;
+        case "chief_nurse":
+            this.isChiefNurse = true;
+            break;
+        case "emergency_nurse":
+            this.isEmergencyNurse = true;
+            break;
+        case "hospital_nurse":
+            this.isHospitalNurse = true;
+            break;        
+      }
   }
 }
 </script>
