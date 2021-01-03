@@ -66,7 +66,6 @@ public class PatientService {
                 list.add(patient);
             }
         }
-
     }
 
     public void getPatientsNeedTransfer(String type, List<Patient> needTransfer, Integer level) {
@@ -85,8 +84,8 @@ public class PatientService {
         }
         assert d1 != null;
         assert d2 != null;
-        long from2 = d1.getTime();
-        long to2 = d2.getTime();
-        return (int) ((to2 - from2) / (1000 * 60 * 60));
+        long to = d1.getTime();
+        long from = d2.getTime();
+        return (int) ((to - from) / (1000 * 60 * 60));
     }
 }
