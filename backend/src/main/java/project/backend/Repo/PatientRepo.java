@@ -1,6 +1,7 @@
 package project.backend.Repo;
 
 import org.springframework.stereotype.Repository;
+import project.backend.Entity.Doctor;
 import project.backend.Entity.Patient;
 import project.backend.Utils.Config;
 import project.backend.Utils.Util;
@@ -12,16 +13,29 @@ import java.util.List;
 
 @Repository
 public class PatientRepo {
-
-    public void findPatientsByTreatmentRegionLevel(Integer level, List<Patient> list, String type) {
-        Connection conn = connect(type);
+    // 如果是 1 或者 2 类型的就直接查，其他的需要设置一下筛选条件
+    public void findPatientsByTreatmentRegionLevelAndCondition(Integer level, List<Patient> list, String type, String condition) {
+        Connection conn = Util.connect(type);
         assert conn != null;
         // query
-        String sql = "select * from database_project.patient where treatment_region_level = ?";
+        String sql;
+        String[] map = null;
+        boolean flag = condition.equals("1") || condition.equals("2");
+        if (flag){
+            sql = "select * from database_project.patient where treatment_region_level = ?";
+        }
+        else {
+            map = condition.split("=");
+            sql = "select * from database_project.patient where treatment_region_level = ? and ? = ?";
+        }
         ResultSet rs;
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setInt(1, level);
+            if (!flag) {
+                preparedStatement.setString(2, map[0]);
+                preparedStatement.setString(3, map[1]);
+            }
             rs = preparedStatement.executeQuery();
             while (rs.next()){
                 Patient patient = new Patient();
@@ -35,19 +49,49 @@ public class PatientRepo {
         Util.close(conn);
     }
 
-    private Connection connect(String type) {
-        switch (type){
-            case "DOCTOR":
-                return Util.connectSQL(Config.DB_URL, Config.DOCTOR, Config.PASSWORD_D);
-            case "CHIEF_NURSE":
-                return Util.connectSQL(Config.DB_URL, Config.CHIEF_NURSE, Config.PASSWORD_C);
-            case "EMERGENCY_NURSE":
-                return Util.connectSQL(Config.DB_URL, Config.EMERGENCY_NURSE, Config.PASSWORD_E);
-            case "HOSPITAL_NURSE":
-                return Util.connectSQL(Config.DB_URL, Config.HOSPITAL_NURSE, Config.PASSWORD_H);
-            default:
-                System.out.println("Error");
+    public Patient findPatientById(String type, Integer id) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        String sql = "select * from database_project.patient where patient_id = ?";
+        ResultSet rs;
+        Patient patient = null;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            rs = preparedStatement.executeQuery();
+            if (rs.next()){
+                patient = new Patient();
+                Util.toObject(rs, patient);
+            }
         }
-        return null;
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+        return patient;
+    }
+
+    public void findPatientsNeedTransfer(String type, List<Patient> list, Integer level) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        // query
+        String sql = "select * from database_project.patient where treatment_region_level = ? and disease_level != ?";
+
+        ResultSet rs;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setInt(1, level);
+            preparedStatement.setInt(2, level);
+            rs = preparedStatement.executeQuery();
+            while (rs.next()){
+                Patient patient = new Patient();
+                Util.toObject(rs, patient);
+                list.add(patient);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
     }
 }

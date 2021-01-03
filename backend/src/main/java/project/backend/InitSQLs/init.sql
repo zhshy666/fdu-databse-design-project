@@ -159,6 +159,7 @@ insert into patient_status(temperature, symptom, life_status, date, patient_id, 
 
 drop user 'doctor'@'localhost';
 create user 'doctor'@'localhost' identified by '123456';
+grant select, update on doctor to 'doctor'@'localhost';
 grant select, update on patient to 'doctor'@'localhost';
 grant select on chief_nurse to 'doctor'@'localhost';
 grant select on hospital_nurse to 'doctor'@'localhost';
@@ -166,18 +167,21 @@ grant select, insert on checklist to 'doctor'@'localhost';
 
 drop user 'chief_nurse'@'localhost';
 create user 'chief_nurse'@'localhost' identified by '123456';
+grant select, update on chief_nurse to 'chief_nurse'@'localhost';
 grant select on patient to 'chief_nurse'@'localhost';
 grant select, insert, delete on hospital_nurse to 'chief_nurse'@'localhost';
 grant select on bed to 'chief_nurse'@'localhost';
 
 drop user 'emergency_nurse'@'localhost';
 create user 'emergency_nurse'@'localhost' identified by '123456';
+grant select, update on emergency_nurse to 'emergency_nurse'@'localhost';
 grant select, insert on patient to 'emergency_nurse'@'localhost';
 grant select, insert on patient_status to 'emergency_nurse'@'localhost';
 grant select on treatment_region to 'emergency_nurse'@'localhost';
 
 drop user 'hospital_nurse'@'localhost';
 create user 'hospital_nurse'@'localhost' identified by '123456';
+grant select, update on hospital_nurse to 'hospital_nurse'@'localhost';
 grant select on patient to 'hospital_nurse'@'localhost';
 grant select, update on checklist to 'hospital_nurse'@'localhost';
 grant select, update, insert on patient_status to 'hospital_nurse'@'localhost';

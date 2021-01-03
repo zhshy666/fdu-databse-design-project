@@ -25,26 +25,51 @@ public class AuthService {
     }
 
     public Staff login(String id, String psw){
-        Doctor doctor = doctorRepo.findUserByIdAndPassword(id, psw);
-        if (doctor != null){
-            return new Staff(doctor.getId(), "doctor", doctor.getName());
-        }
-
-        ChiefNurse chiefNurse = chiefNurseRepo.findUserByIdAndPassword(id, psw);
-        if (chiefNurse != null){
-            return new Staff(chiefNurse.getId(), "chief_nurse", chiefNurse.getName());
-        }
-
-        EmergencyNurse emergencyNurse = emergencyNurseRepo.findUserByIdAndPassword(id, psw);
-        if (emergencyNurse != null){
-            return new Staff(emergencyNurse.getId(), "emergency_nurse", emergencyNurse.getName());
-        }
-
-        HospitalNurse hospitalNurse = hospitalNurseRepo.findUserByIdAndPassword(id, psw);
-        if (hospitalNurse != null){
-            return new Staff(hospitalNurse.getId(), "hospital_nurse", hospitalNurse.getName());
+        char type = id.charAt(0);
+        switch (type){
+            case 'D':
+                Doctor doctor = doctorRepo.findUserByIdAndPassword(id, psw);
+                if (doctor != null) {
+                    return new Staff(doctor.getId(), "doctor", doctor.getName());
+                }
+            case 'C':
+                ChiefNurse chiefNurse = chiefNurseRepo.findUserByIdAndPassword(id, psw);
+                if (chiefNurse != null){
+                    return new Staff(chiefNurse.getId(), "chief_nurse", chiefNurse.getName());
+                }
+            case 'E':
+                EmergencyNurse emergencyNurse = emergencyNurseRepo.findUserByIdAndPassword(id, psw);
+                if (emergencyNurse != null){
+                    return new Staff(emergencyNurse.getId(), "emergency_nurse", emergencyNurse.getName());
+                }
+            case 'H':
+                HospitalNurse hospitalNurse = hospitalNurseRepo.findUserByIdAndPassword(id, psw);
+                if (hospitalNurse != null){
+                    return new Staff(hospitalNurse.getId(), "hospital_nurse", hospitalNurse.getName());
+                }
         }
         return null;
+    }
+
+    public String updateUserInfo(String id, String name, String password, int age) {
+        char type = id.charAt(0);
+        switch (type){
+            case 'D':
+                doctorRepo.updateDoctorById(id, name, password, age);
+                break;
+            case 'C':
+                chiefNurseRepo.updateNurseById(id, name, password, age);
+                break;
+            case 'E':
+                emergencyNurseRepo.updateNurseById(id, name, password, age);
+                break;
+            case 'H':
+                hospitalNurseRepo.updateNurseById(id, name, password, age);
+                break;
+            default:
+                break;
+        }
+        return "success";
     }
 
 }

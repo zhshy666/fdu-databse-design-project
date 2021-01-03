@@ -33,4 +33,22 @@ public class HospitalNurseRepo {
         Util.close(conn);
         return hospitalNurse;
     }
+
+    public void updateNurseById(String id, String name, String password, int age) {
+        Connection conn = Util.connectSQL(Config.DB_URL, Config.HOSPITAL_NURSE, Config.PASSWORD_H);
+        // update
+        String sql = "update database_project.hospital_nurse set name = ?, password = ?, age = ? where id = ?";
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, password);
+            preparedStatement.setInt(3, age);
+            preparedStatement.setString(4, id);
+            preparedStatement.executeUpdate();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+    }
 }
