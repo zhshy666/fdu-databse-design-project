@@ -91,12 +91,12 @@ export default {
   return{
       loading:false,
       modifyForm:{
-          userID:"123",
-          username:"Jaxon Liu",
-          title:"doctor",
-          password:"123456",
-          age:"21",
-          gender:"Male"
+          userID:this.$store.state.user.id,
+          username:this.$store.state.user.name,
+          title:this.$store.state.user.type,
+          password:"",
+          age:this.$store.state.user.age,
+          gender:this.$store.state.user.gender
       },
       rules:{
           password: [
@@ -111,8 +111,7 @@ export default {
   computed:{
     isDisabled(){
       return (this.modifyForm.age == "") ||
-             (this.modifyForm.password =="")||
-             (this.modifyForm.gender == "");
+             (this.modifyForm.password =="");             
     }
   },
   methods:{
@@ -126,12 +125,13 @@ export default {
           age:this.modifyForm.age,
         })
         .then(resp => {          
-          if (resp.status === 200) {            
-            console.log(resp.data);                      
+          if (resp.status === 200) {      
+            this.$store.state.user.age = this.modifyForm.age;
+            this.$store.state.user.password = this.modifyForm.password;            
             this.$message({
              message: 'Modify successfully',
              type: 'success'
-            });                            
+            });
           } else {                      
             this.$message({
               message: 'Modify error',

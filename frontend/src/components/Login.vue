@@ -80,16 +80,16 @@ export default {
   },
   methods:{    
     login() {
-      this.loading = true;      
+      this.loading = true;           
       this.$axios
         .post("/login", {
           id: this.loginForm.user,
           password: this.loginForm.password,
         })
         .then(resp => {          
-          if (resp.status === 200) {            
-            console.log(resp.data);
-            this.$store.commit("login", resp.data);             
+          if (resp.status === 200) {                        
+            this.$store.commit("login",resp.data);  
+            console.log(this.$store.state.user);                                    
             this.$message({
              message: 'Login successfully',
              type: 'success'

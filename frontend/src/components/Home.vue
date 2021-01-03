@@ -2,7 +2,7 @@
 <el-container>
     <el-aside>                 
         <h1>Jaxon Liu</h1>            
-        <h3>{{this.$store.state.title.toUpperCase()}}&nbsp;{{this.$store.state.id}}</h3>        
+        <h3>{{this.$store.state.user.type.toUpperCase()}}&nbsp;{{this.$store.state.user.id}}</h3>        
         <el-menu
             default-active="patient-info"            
             @select = "handleSelect"
@@ -133,7 +133,7 @@ export default {
       },            
   },
   created(){
-      switch(this.$store.state.title){
+      switch(this.$store.state.user.type){
         case "doctor":
             this.isDoctor = true;              
             break;
