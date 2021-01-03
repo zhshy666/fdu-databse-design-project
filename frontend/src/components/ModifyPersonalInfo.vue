@@ -40,20 +40,14 @@
         ></el-input>
       </el-form-item>
 
-      <el-form-item prop="password" size="medium" label="Password">
+      <el-form-item prop="gender" size="medium" label="Gender">
         <el-input
           size="medium"
-          type="password"
-          v-model="modifyForm.password"
+          type="text"          
+          v-model="modifyForm.gender"
           auto-complete="off"          
+          disabled
         ></el-input>
-      </el-form-item>
-
-      <el-form-item prop="gender" size="medium" label="Gender">
-        <el-radio-group v-model="modifyForm.gender" size="medium">
-            <el-radio border label="Male"></el-radio>
-            <el-radio border label="Female"></el-radio>
-        </el-radio-group>    
       </el-form-item>
 
       <el-form-item prop="age" size="medium" label="Age">
@@ -66,6 +60,14 @@
         ></el-input>
       </el-form-item>
 
+      <el-form-item prop="password" size="medium" label="New Password">
+        <el-input
+          size="medium"
+          type="password"
+          v-model="modifyForm.password"
+          auto-complete="off"          
+        ></el-input>
+      </el-form-item>      
 
       <el-form-item size="medium">
         <el-button
@@ -73,7 +75,8 @@
           :disabled ="isDisabled"
           size="medium"
           type="primary"
-          style="width:100% "          
+          style="width:100% "   
+          @click="modifyInfo"       
         >Modify</el-button>
       </el-form-item>
     </el-form>
@@ -101,10 +104,7 @@ export default {
           ],
           age: [
             {required:true, message:"Age is required", blur:"change",trigger:"blur"},
-          ],
-          gender: [
-            {required:true, message:"Gender is required", blur:"change",trigger:"blur"},
-          ] 
+          ],          
       }
     }
   },
@@ -116,7 +116,40 @@ export default {
     }
   },
   methods:{
-  }
+    modifyInfo(){
+      this.loading = true;      
+      this.$axios
+        .post("/modifyPersonalInfo", {
+          id: this.modifyForm.id,
+          name: this.modifyForm.name,
+          password:this.modifyForm.password,
+          age:this.modifyForm.age,
+        })
+        .then(resp => {          
+          if (resp.status === 200) {            
+            console.log(resp.data);                      
+            this.$message({
+             message: 'Modify successfully',
+             type: 'success'
+            });                            
+          } else {                      
+            this.$message({
+              message: 'Modify error',
+              type: 'error'
+              });
+            this.loading = false;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+          this.$message({
+              message: 'Modify error',
+              type: 'error'
+              });          
+          this.loading = false;
+        });      
+    }
+  },  
 }
 </script>
 
