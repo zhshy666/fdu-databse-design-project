@@ -51,20 +51,20 @@ public class AuthService {
         return null;
     }
 
-    public String updateUserInfo(String id, String name, String password, int age) {
+    public String updateUserInfo(String id, String password, int age) {
         char type = id.charAt(0);
         switch (type){
             case 'D':
-                doctorRepo.updateDoctorById(id, name, password, age);
+                doctorRepo.updateDoctorById(id, password, age);
                 break;
             case 'C':
-                chiefNurseRepo.updateNurseById(id, name, password, age);
+                chiefNurseRepo.updateNurseById(id, password, age);
                 break;
             case 'E':
-                emergencyNurseRepo.updateNurseById(id, name, password, age);
+                emergencyNurseRepo.updateNurseById(id, password, age);
                 break;
             case 'H':
-                hospitalNurseRepo.updateNurseById(id, name, password, age);
+                hospitalNurseRepo.updateNurseById(id, password, age);
                 break;
             default:
                 break;
