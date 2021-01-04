@@ -30,22 +30,22 @@ public class AuthService {
             case 'D':
                 Doctor doctor = doctorRepo.findUserByIdAndPassword(id, psw);
                 if (doctor != null) {
-                    return new Staff(doctor.getId(), "doctor", doctor.getName());
+                    return new Staff(doctor.getId(), "doctor", doctor.getName(), doctor.getGender(), doctor.getAge());
                 }
             case 'C':
                 ChiefNurse chiefNurse = chiefNurseRepo.findUserByIdAndPassword(id, psw);
                 if (chiefNurse != null){
-                    return new Staff(chiefNurse.getId(), "chief_nurse", chiefNurse.getName());
+                    return new Staff(chiefNurse.getId(), "chief_nurse", chiefNurse.getName(), chiefNurse.getGender(), chiefNurse.getAge());
                 }
             case 'E':
                 EmergencyNurse emergencyNurse = emergencyNurseRepo.findUserByIdAndPassword(id, psw);
                 if (emergencyNurse != null){
-                    return new Staff(emergencyNurse.getId(), "emergency_nurse", emergencyNurse.getName());
+                    return new Staff(emergencyNurse.getId(), "emergency_nurse", emergencyNurse.getName(), emergencyNurse.getGender(), emergencyNurse.getAge());
                 }
             case 'H':
                 HospitalNurse hospitalNurse = hospitalNurseRepo.findUserByIdAndPassword(id, psw);
                 if (hospitalNurse != null){
-                    return new Staff(hospitalNurse.getId(), "hospital_nurse", hospitalNurse.getName());
+                    return new Staff(hospitalNurse.getId(), "hospital_nurse", hospitalNurse.getName(), hospitalNurse.getGender(), hospitalNurse.getAge());
                 }
         }
         return null;

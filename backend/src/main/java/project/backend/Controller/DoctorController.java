@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import project.backend.Controller.Request.GetPatientsInfoRequest;
 import project.backend.Entity.Patient;
-import project.backend.Entity.TreatmentRegion;
 import project.backend.Service.DoctorService;
 import project.backend.Service.PatientService;
 import project.backend.Service.TreatmentRegionService;
