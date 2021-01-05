@@ -90,7 +90,7 @@
       label="Discharge?"      
       width="100">    
       <template slot-scope="scope">    
-        <el-button size="small" v-if="scope.row.can_be_discharged == 1 && scope.row.disease_level == 'Light'">Permit</el-button>        
+        <el-button size="small" v-if="scope.row.can_be_discharged == 1 && scope.row.disease_level == 'light'">Permit</el-button>        
         <div v-else>no</div>
       </template>
     </el-table-column>
