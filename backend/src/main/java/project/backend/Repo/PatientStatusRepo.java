@@ -6,7 +6,7 @@ import project.backend.Utils.Util;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Date;
+import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class PatientStatusRepo {
         Connection conn = Util.connect(type);
         assert conn != null;
         List<Double> list = new LinkedList<>();
-        String sql = "select temperature from database_project.patient_status where patient_id = ? order by date desc";
+        String sql = "select * from database_project.patient_status where patient_id = ? order by date desc";
         ResultSet rs;
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
