@@ -28,13 +28,13 @@ public class Util {
 
     public static Connection connect(String type) {
         switch (type){
-            case "DOCTOR":
+            case "doctor":
                 return Util.connectSQL(Config.DB_URL, Config.DOCTOR, Config.PASSWORD_D);
-            case "CHIEF_NURSE":
+            case "chief_nurse":
                 return Util.connectSQL(Config.DB_URL, Config.CHIEF_NURSE, Config.PASSWORD_C);
-            case "EMERGENCY_NURSE":
+            case "emergency_nurse":
                 return Util.connectSQL(Config.DB_URL, Config.EMERGENCY_NURSE, Config.PASSWORD_E);
-            case "HOSPITAL_NURSE":
+            case "hospital_nurse":
                 return Util.connectSQL(Config.DB_URL, Config.HOSPITAL_NURSE, Config.PASSWORD_H);
             default:
                 System.out.println("Error");
