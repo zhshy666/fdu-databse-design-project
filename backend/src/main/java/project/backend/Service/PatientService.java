@@ -4,12 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.backend.Entity.Checklist;
 import project.backend.Entity.Patient;
+import project.backend.Entity.PatientInfo;
 import project.backend.Repo.ChecklistRepo;
 import project.backend.Repo.PatientRepo;
 import project.backend.Repo.PatientStatusRepo;
+import project.backend.Utils.Config;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,9 +34,10 @@ public class PatientService {
         patientRepo.findPatientsByTreatmentRegionLevelAndCondition(level, list, type, condition);
     }
 
-    public void getPatientsWhoCanBeDischarged(String type, List<Patient> list, List<Patient> allPatients) {
+    public List<Integer> getPatientIdsWhoCanBeDischarged(String type, List<Patient> allPatients) {
         List<Patient> temperatureMatch = new LinkedList<>();
         List<Patient> checkMatch = new LinkedList<>();
+        List<Integer> patients = new LinkedList<>();
         for (Patient patient : allPatients){
             List<Double> temperatureRes = patientStatusRepo.findTemperaturesByPatientId(type, patient.getPatient_id());
             boolean flag = true;
@@ -61,13 +65,18 @@ public class PatientService {
 
         for (Patient patient : allPatients){
             if (temperatureMatch.contains(patient) && checkMatch.contains(patient)){
-                list.add(patient);
+                patients.add(patient.getPatient_id());
             }
         }
+        return patients;
     }
 
-    public void getPatientsNeedTransfer(String type, List<Patient> needTransfer, String level) {
-        patientRepo.findPatientsNeedTransfer(type, needTransfer, level);
+    public List<Integer> getPatientIdsNeedTransfer(String type, List<String> levels) {
+        List<Integer> patients = new ArrayList<>();
+        for (String level : levels) {
+            patientRepo.findPatientsNeedTransfer(type, patients, level);
+        }
+        return patients;
     }
 
     private int minusDate(Checklist a, Checklist b) {
@@ -86,4 +95,5 @@ public class PatientService {
         long from = d2.getTime();
         return (int) ((to - from) / (1000 * 60 * 60));
     }
+
 }

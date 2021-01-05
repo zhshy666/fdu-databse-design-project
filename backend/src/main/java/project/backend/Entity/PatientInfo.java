@@ -1,6 +1,6 @@
 package project.backend.Entity;
 
-public class Patient {
+public class PatientInfo {
     private int patient_id;
     private String name;
     private String gender;
@@ -9,8 +9,20 @@ public class Patient {
     private String life_status;
     private String nurse_id;
     private int treatment_region_level;
+    private int canBeDischarged;
+    private int needTransfer;
 
-    public Patient(){}
+    public PatientInfo(int patient_id, String name, String gender, int age,
+                       String disease_level, String life_status, String nurse_id, int treatment_region_level) {
+        this.patient_id = patient_id;
+        this.name = name;
+        this.gender = gender;
+        this.age = age;
+        this.disease_level = disease_level;
+        this.life_status = life_status;
+        this.nurse_id = nurse_id;
+        this.treatment_region_level = treatment_region_level;
+    }
 
     public int getPatient_id() {
         return patient_id;
@@ -74,5 +86,21 @@ public class Patient {
 
     public void setTreatment_region_level(int treatment_region_level) {
         this.treatment_region_level = treatment_region_level;
+    }
+
+    public int getCanBeDischarged() {
+        return canBeDischarged;
+    }
+
+    public void setCanBeDischarged(int canBeDischarged) {
+        this.canBeDischarged = canBeDischarged;
+    }
+
+    public int getNeedTransfer() {
+        return needTransfer;
+    }
+
+    public void setNeedTransfer(int needTransfer) {
+        this.needTransfer = needTransfer;
     }
 }

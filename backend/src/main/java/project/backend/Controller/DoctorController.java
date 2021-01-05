@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import project.backend.Controller.Request.GetPatientsInfoRequest;
 import project.backend.Entity.Patient;
+import project.backend.Entity.PatientInfo;
 import project.backend.Service.DoctorService;
 import project.backend.Service.PatientService;
 import project.backend.Service.TreatmentRegionService;
@@ -34,7 +35,7 @@ public class DoctorController {
         if (!request.getId().startsWith("D")){
             return new ResponseEntity<>("Not allowed", HttpStatus.FORBIDDEN);
         }
-        Map<String, List<Patient>> ans = new HashMap<>();  // 返回值
+        List<PatientInfo> info = new ArrayList<>();  // 返回值
         String id = request.getId();
         String condition = request.getCondition();
 
@@ -46,39 +47,22 @@ public class DoctorController {
             patientService.getAllPatients(level, patients, Config.DOCTOR, condition);
         }
 
-        // 3 找到该区域满足出院条件的病人
-        if (condition.equals("1")){
-            List<Patient> canBeDischarged = new LinkedList<>();
-            patientService.getPatientsWhoCanBeDischarged(Config.DOCTOR, canBeDischarged, patients);
-            ans.put("1", canBeDischarged);
-            List<Patient> cannotBeDischarged = new LinkedList<>();
-            for (Patient patient : patients){
-                if (canBeDischarged.contains(patient)){
-                    continue;
-                }
-                cannotBeDischarged.add(patient);
+        List<Integer> patientsCanBeDischarged = patientService.getPatientIdsWhoCanBeDischarged(Config.DOCTOR, patients);
+        List<Integer> patientsNeedTransfer = patientService.getPatientIdsNeedTransfer(Config.DOCTOR, levels);
+
+        for (Patient patient : patients){
+            PatientInfo patientInfo = new PatientInfo(patient.getPatient_id(), patient.getName(), patient.getGender(),
+                    patient.getAge(), patient.getDisease_level(), patient.getLife_status(), patient.getNurse_id(),
+                    patient.getTreatment_region_level());
+            if (patientsCanBeDischarged.contains(patient.getPatient_id())){
+                patientInfo.setCanBeDischarged(1);
             }
-            ans.put("2", cannotBeDischarged);
-        }
-        else if (condition.equals("2")){
-            List<Patient> needTransfer = new LinkedList<>();
-            for (String level : levels) {
-                patientService.getPatientsNeedTransfer(Config.DOCTOR, needTransfer, level);
+            if (patientsNeedTransfer.contains(patient.getPatient_id())){
+                patientInfo.setNeedTransfer(1);
             }
-            ans.put("1", needTransfer);
-            List<Patient> noNeedToTransfer = new LinkedList<>();
-            for (Patient patient : patients){
-                if (needTransfer.contains(patient)){
-                    continue;
-                }
-                noNeedToTransfer.add(patient);
-            }
-            ans.put("2", noNeedToTransfer);
-        }
-        else {
-            ans.put(condition, patients);
+            info.add(patientInfo);
         }
 
-        return ResponseEntity.ok(ans);
+        return ResponseEntity.ok(info);
     }
 }
