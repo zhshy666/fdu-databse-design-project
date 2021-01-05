@@ -88,8 +88,7 @@ export default {
         })
         .then(resp => {          
           if (resp.status === 200) {                        
-            this.$store.commit("login",resp.data);  
-            console.log(this.$store.state.user);                                    
+            this.$store.commit("login",resp.data);                                                  
             this.$message({
              message: 'Login successfully',
              type: 'success'

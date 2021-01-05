@@ -14,7 +14,7 @@
         <el-input
           size="medium"
           type="text"          
-          v-model="modifyForm.userID"
+          v-model="modifyForm.id"
           auto-complete="off"          
           disabled
         ></el-input>
@@ -91,7 +91,7 @@ export default {
   return{
       loading:false,
       modifyForm:{
-          userID:this.$store.state.user.id,
+          id:this.$store.state.user.id,
           username:this.$store.state.user.name,
           title:this.$store.state.user.type,
           password:"",
@@ -119,8 +119,7 @@ export default {
       this.loading = true;      
       this.$axios
         .post("/modifyPersonalInfo", {
-          id: this.modifyForm.id,
-          name: this.modifyForm.name,
+          id: this.modifyForm.id,          
           password:this.modifyForm.password,
           age:this.modifyForm.age,
         })
@@ -132,6 +131,7 @@ export default {
              message: 'Modify successfully',
              type: 'success'
             });
+            this.loading = false
           } else {                      
             this.$message({
               message: 'Modify error',

@@ -1,7 +1,7 @@
 <template>
 <el-container>
-    <el-aside>                 
-        <h1>Jaxon Liu</h1>            
+    <el-aside style="width:245px">                 
+        <h1>{{this.$store.state.user.name}}</h1>            
         <h3>{{this.$store.state.user.type.toUpperCase()}}&nbsp;{{this.$store.state.user.id}}</h3>        
         <el-menu
             default-active="patient-info"            
@@ -38,8 +38,7 @@
         </el-menu-item>
     </el-menu>
     </el-aside>
-    <el-main>
-        <!-- todo: 4个不同的功能区 -->
+    <el-main>        
         <modify-personal-info v-if="this.isModify"></modify-personal-info>
 
         <add-patient v-if="this.isNewPatient"></add-patient>
@@ -48,7 +47,7 @@
 
         <patient-info v-if="this.isPatientInfo"></patient-info>
 
-        <nurse-info v-if = "this.isNurseInfo"></nurse-info>
+        <nurse-info v-if="this.isNurseInfo"></nurse-info>
     </el-main>
 </el-container>
 </template>
@@ -153,7 +152,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.el-aside{    
+.el-aside{        
     padding:100px 0;
     height:100vh;    
     background-color:rgba(112, 152, 187, 0.1);
