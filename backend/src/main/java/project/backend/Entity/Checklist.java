@@ -1,9 +1,11 @@
 package project.backend.Entity;
 
+import java.sql.Date;
+
 public class Checklist {
     private int id;
     private String test_result;
-    private String date;
+    private Date date;
     private int disease_level;
     private String doctor_id;
     private int patient_id;
@@ -22,11 +24,11 @@ public class Checklist {
         this.test_result = test_result;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

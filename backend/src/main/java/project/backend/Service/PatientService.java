@@ -4,16 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.backend.Entity.Checklist;
 import project.backend.Entity.Patient;
-import project.backend.Entity.PatientInfo;
 import project.backend.Repo.ChecklistRepo;
 import project.backend.Repo.PatientRepo;
 import project.backend.Repo.PatientStatusRepo;
-import project.backend.Utils.Config;
-
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -84,20 +78,6 @@ public class PatientService {
     }
 
     private int minusDate(Checklist a, Checklist b) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        java.util.Date d1 = null;
-        java.util.Date d2 = null;
-        try {
-            d1 = sdf.parse(a.getDate());
-            d2 = sdf.parse(b.getDate());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        assert d1 != null;
-        assert d2 != null;
-        long to = d1.getTime();
-        long from = d2.getTime();
-        return (int) ((to - from) / (1000 * 60 * 60));
+        return (int) ((a.getDate().getTime() - b.getDate().getTime()) / (1000 * 60 * 60));
     }
-
 }

@@ -1,11 +1,13 @@
 package project.backend.Entity;
 
+import java.sql.Date;
+
 public class PatientStatus {
     private int id;
     private double temperature;
     private String symptom;
     private String life_status;
-    private String date;
+    private Date date;
     private int patient_id;
     private String nurse_id;
     private int checklist_id;
@@ -44,11 +46,11 @@ public class PatientStatus {
         this.life_status = life_status;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
