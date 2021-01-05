@@ -17,7 +17,7 @@ public class PatientStatusRepo {
         Connection conn = Util.connect(type);
         assert conn != null;
         List<Double> list = new LinkedList<>();
-        String sql = "select temperature from database_project.patient_status where patient_id = ? order by date desc";
+        String sql = "select * from database_project.patient_status where patient_id = ? order by date desc";
         ResultSet rs;
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
