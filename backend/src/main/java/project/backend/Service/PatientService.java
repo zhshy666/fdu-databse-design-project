@@ -69,8 +69,8 @@ public class PatientService {
         return patients;
     }
 
-    public List<Integer> getPatientIdsNeedTransfer(String type, List<String> levels) {
-        List<Integer> patients = new ArrayList<>();
+    public List<Patient> getPatientIdsNeedTransfer(String type, List<String> levels) {
+        List<Patient> patients = new ArrayList<>();
         for (String level : levels) {
             patientRepo.findPatientsNeedTransfer(type, patients, level);
         }

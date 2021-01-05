@@ -6,7 +6,7 @@ import project.backend.Utils.Util;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Date;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,11 +28,11 @@ public class PatientStatusRepo {
             while (rs.next()){
                 if (i == 0){
                     // 获取最新的日期，减三天作为一个阈值
-                    Date latestDate = rs.getDate("date");
+                    Date latestDate = new Date(rs.getTimestamp("date").getTime());
                     lastDate = new Date(latestDate.getTime() - 3 * 24 * 60 * 60 * 1000);
                 }
                 else {
-                    Date date = rs.getDate("date");
+                    Date date = new Date(rs.getTimestamp("date").getTime());
                     if (date.compareTo(lastDate) < 0){
                         break;
                     }

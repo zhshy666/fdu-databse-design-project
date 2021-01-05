@@ -70,12 +70,10 @@ public class Util {
         for (Method method : methods) {
             if (method.getName().startsWith("set")) {
                 String name = method.getName();
-//                System.out.println(name);
                 name = name.substring(3, 4).toLowerCase() + name.substring(4); // 获取属性名
-//                System.out.println(name);
+//                System.out.println(name + " " + map.get(name));
                 if (map.containsKey(name)) {
                     try {
-//                        System.out.println(map);
                         method.invoke(object, map.get(name));
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -1,6 +1,7 @@
 package project.backend.Entity;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class PatientStatus {
     private int id;
@@ -50,8 +51,8 @@ public class PatientStatus {
         return date;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDate(Timestamp date) {
+        this.date = new Date(date.getTime());
     }
 
     public int getPatient_id() {

@@ -1,16 +1,22 @@
 package project.backend.Entity;
 
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Date;
 
 public class Checklist {
     private int id;
     private String test_result;
     private Date date;
-    private int disease_level;
+    private String disease_level;
     private String doctor_id;
     private int patient_id;
 
-    public Checklist(){}
+    public Checklist() {
+    }
+
+    public Checklist(Timestamp date) {
+        this.date = new Date(date.getTime());
+    }
 
     public int getId() {
         return id;
@@ -32,11 +38,15 @@ public class Checklist {
         this.date = date;
     }
 
-    public int getDisease_level() {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getDisease_level() {
         return disease_level;
     }
 
-    public void setDisease_level(int disease_level) {
+    public void setDisease_level(String disease_level) {
         this.disease_level = disease_level;
     }
 

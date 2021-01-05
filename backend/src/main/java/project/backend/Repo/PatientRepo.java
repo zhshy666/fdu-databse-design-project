@@ -59,11 +59,11 @@ public class PatientRepo {
         return patient;
     }
 
-    public void findPatientsNeedTransfer(String type, List<Integer> list, String level) {
+    public void findPatientsNeedTransfer(String type, List<Patient> list, String level) {
         Connection conn = Util.connect(type);
         assert conn != null;
         // query
-        String sql = "select * from database_project.patient where treatment_region_level = ? and disease_level != ?";
+        String sql = "select * from database_project.patient where disease_level = ? and treatment_region_level != ?";
 
         ResultSet rs;
         try {
@@ -74,7 +74,7 @@ public class PatientRepo {
             while (rs.next()){
                 Patient patient = new Patient();
                 Util.toObject(rs, patient);
-                list.add(patient.getPatient_id());
+                list.add(patient);
             }
         }
         catch (Exception e){
