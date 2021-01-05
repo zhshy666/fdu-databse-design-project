@@ -138,7 +138,7 @@ create table if not exists checklist
 (
     id int auto_increment not null,
     test_result varchar(10) not null check ( test_result in ('positive', 'negative') ),
-    date datetime not null,
+    date timestamp not null,
     # ToDo: 这个病情评级和上边病人的病情评级严格来说没有 reference 的必要，到时候如果这边有新的记录记得同步病人的病情评级属性
     disease_level varchar(10) not null check ( disease_level in ('light', 'severe', 'critical') ),
     doctor_id varchar(20) not null,
@@ -161,7 +161,7 @@ create table if not exists patient_status
     temperature double not null,
     symptom varchar(100) not null,
     life_status varchar(10) not null check ( life_status in ('healthy', 'treating', 'dead') ),
-    date datetime not null,
+    date timestamp not null,
     patient_id int not null,
     nurse_id varchar(20) not null,
     checklist_id int not null,
@@ -190,6 +190,7 @@ grant select, update on patient to 'doctor'@'localhost';
 grant select on chief_nurse to 'doctor'@'localhost';
 grant select on hospital_nurse to 'doctor'@'localhost';
 grant select, insert on checklist to 'doctor'@'localhost';
+grant select on patient_status to 'doctor'@'localhost';
 
 drop user 'chief_nurse'@'localhost';
 create user 'chief_nurse'@'localhost' identified by '123456';
