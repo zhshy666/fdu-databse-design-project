@@ -127,9 +127,10 @@ create table if not exists bed
     foreign key (treatment_region_level) references treatment_region(level)
 )charset = utf8;
 insert into bed(patient_id, treatment_region_level) VALUES (1, 'light');
-insert into bed(patient_id, treatment_region_level) VALUES (4, 'light');
 insert into bed(patient_id, treatment_region_level) VALUES (2, 'severe');
 insert into bed(patient_id, treatment_region_level) VALUES (3, 'critical');
+insert into bed(patient_id, treatment_region_level) VALUES (4, 'light');
+insert into bed(patient_id, treatment_region_level) VALUES (5, 'light');
 
 
 # check list

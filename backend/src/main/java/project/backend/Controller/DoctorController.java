@@ -46,6 +46,9 @@ public class DoctorController {
         List<Integer> patientsCanBeDischarged = patientService.getPatientIdsWhoCanBeDischarged(Config.DOCTOR, patients);
         List<Integer> patientsNeedTransfer = patientService.getPatientIdsNeedTransfer(Config.DOCTOR, levels);
 
+        System.out.println("patientsCanBeDischarged: " + patientsCanBeDischarged);
+        System.out.println("patientsNeedTransfer: " + patientsNeedTransfer);
+
         for (Patient patient : patients){
             PatientInfo patientInfo = new PatientInfo(patient.getPatient_id(), patient.getName(), patient.getGender(),
                     patient.getAge(), patient.getDisease_level(), patient.getLife_status(), patient.getNurse_id(),
