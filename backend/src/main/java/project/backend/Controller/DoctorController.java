@@ -61,4 +61,9 @@ public class DoctorController {
 
         return ResponseEntity.ok(info);
     }
+
+    @PostMapping("/getNursesInfo")
+    public ResponseEntity<?> getNursesInfo(){
+        return null;
+    }
 }

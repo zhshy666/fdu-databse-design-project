@@ -8,12 +8,12 @@ public class PatientInfo {
     private String disease_level;
     private String life_status;
     private String nurse_id;
-    private int treatment_region_level;
+    private String treatment_region_level;
     private int can_be_discharged;
     private int need_transfer;
 
-    public PatientInfo(int patient_id, String name, String gender, int age,
-                       String disease_level, String life_status, String nurse_id, int treatment_region_level) {
+    public PatientInfo(int patient_id, String name, String gender, int age, String disease_level,
+                       String life_status, String nurse_id, String treatment_region_level) {
         this.patient_id = patient_id;
         this.name = name;
         this.gender = gender;
@@ -80,11 +80,11 @@ public class PatientInfo {
         this.nurse_id = nurse_id;
     }
 
-    public int getTreatment_region_level() {
+    public String getTreatment_region_level() {
         return treatment_region_level;
     }
 
-    public void setTreatment_region_level(int treatment_region_level) {
+    public void setTreatment_region_level(String treatment_region_level) {
         this.treatment_region_level = treatment_region_level;
     }
 

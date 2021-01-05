@@ -112,7 +112,8 @@ create table if not exists patient
 insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p1', 20, 'light', 'treating', 'C001', 'light');
 insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p2', 20, 'severe', 'treating', 'C002', 'severe');
 insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p3', 20, 'critical', 'treating', 'C003', 'critical');
-insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p11', 25, 'light', 'treating', 'C001', 'quarantine');
+insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p11', 25, 'light', 'treating', 'C001', 'light');
+insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p21', 25, 'light', 'treating', 'C001', 'quarantine');
 
 
 # bed
