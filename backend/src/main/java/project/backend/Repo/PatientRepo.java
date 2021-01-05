@@ -63,7 +63,7 @@ public class PatientRepo {
         Connection conn = Util.connect(type);
         assert conn != null;
         // query
-        String sql = "select * from database_project.patient where disease_level = ? and treatment_region_level != ?";
+        String sql = "select * from database_project.patient where disease_level != ? and treatment_region_level = ?";
 
         ResultSet rs;
         try {

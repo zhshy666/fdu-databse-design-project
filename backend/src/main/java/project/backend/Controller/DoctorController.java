@@ -46,8 +46,8 @@ public class DoctorController {
         List<Integer> patientsCanBeDischarged = patientService.getPatientIdsWhoCanBeDischarged(Config.DOCTOR, patients);
         List<Patient> patientsNeedTransfer = patientService.getPatientIdsNeedTransfer(Config.DOCTOR, levels);
 
-        System.out.println("patientsCanBeDischarged: " + patientsCanBeDischarged);
-        System.out.println("patientsNeedTransfer: " + patientsNeedTransfer);
+//        System.out.println("patientsCanBeDischarged: " + patientsCanBeDischarged);
+//        System.out.println("patientsNeedTransfer: " + patientsNeedTransfer);
 
         for (Patient patient : patients){
             PatientInfo patientInfo = new PatientInfo(patient.getPatient_id(), patient.getName(), patient.getGender(),
@@ -59,16 +59,10 @@ public class DoctorController {
             if (patientsNeedTransfer.contains(patient)){
                 patientInfo.setNeed_transfer(1);
             }
-            info.add(patientInfo);
-        }
-        for (Patient patient : patientsNeedTransfer){
-            if (!patients.contains(patient)){
-                PatientInfo patientInfo = new PatientInfo(patient.getPatient_id(), patient.getName(), patient.getGender(),
-                        patient.getAge(), patient.getDisease_level(), patient.getLife_status(), patient.getNurse_id(),
-                        patient.getTreatment_region_level());
-                patientInfo.setNeed_transfer(1);
+            if (patientsNeedTransfer.contains(patient)){
                 info.add(patientInfo);
             }
+            info.add(patientInfo);
         }
 
         return ResponseEntity.ok(info);
