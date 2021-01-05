@@ -56,23 +56,6 @@ insert into emergency_nurse(id, name, password, age, gender) VALUES ('E002', 'em
 insert into emergency_nurse(id, name, password, age, gender) VALUES ('E003', 'emergency_nurse3', '123456', 28, 'female');
 
 
-# hospital nurse
-drop table if exists hospital_nurse;
-create table if not exists hospital_nurse
-(
-    id               varchar(20) not null unique,
-    name             varchar(50) not null,
-    password         varchar(50) not null ,
-    age              int not null check ( age > 0 ),
-    gender           varchar(10) default 'male' check ( gender in ('male', 'female') ),
-    current_resp_num int not null default 0 check ( current_resp_num >= 0 and current_resp_num <= 3 ),
-    primary key (id)
-)charset = utf8;
-insert into hospital_nurse(id, name, password, age, gender) VALUES ('H001', 'hospital_nurse1', '123456', 26, 'female');
-insert into hospital_nurse(id, name, password, age, gender) VALUES ('H002', 'hospital_nurse2', '123456', 36, 'male');
-insert into hospital_nurse(id, name, password, age, gender) VALUES ('H003', 'hospital_nurse3', '123456', 28, 'female');
-
-
 # treatment region
 create table if not exists treatment_region
 (
@@ -91,6 +74,25 @@ insert into treatment_region(level, nurse_num, nurse_resp_num, doctor_id, nurse_
 insert into treatment_region(level, nurse_num, nurse_resp_num, doctor_id, nurse_id) VALUES ('light', 10, 3, 'D001', 'C001');
 insert into treatment_region(level, nurse_num, nurse_resp_num, doctor_id, nurse_id) VALUES ('severe', 10, 2, 'D002', 'C002');
 insert into treatment_region(level, nurse_num, nurse_resp_num, doctor_id, nurse_id) VALUES ('critical', 10, 1, 'D003', 'C003');
+
+
+# hospital nurse
+drop table if exists hospital_nurse;
+create table if not exists hospital_nurse
+(
+    id               varchar(20) not null unique,
+    name             varchar(50) not null,
+    password         varchar(50) not null ,
+    age              int not null check ( age > 0 ),
+    gender           varchar(10) default 'male' check ( gender in ('male', 'female') ),
+    current_resp_num int not null default 0 check ( current_resp_num >= 0 and current_resp_num <= 3 ),
+    treatment_region_level varchar(20),
+    primary key (id),
+    foreign key (treatment_region_level) references treatment_region(level)
+)charset = utf8;
+insert into hospital_nurse(id, name, password, age, gender, treatment_region_level) VALUES ('H001', 'hospital_nurse1', '123456', 26, 'female', 'light');
+insert into hospital_nurse(id, name, password, age, gender, treatment_region_level) VALUES ('H002', 'hospital_nurse2', '123456', 36, 'male', 'severe');
+insert into hospital_nurse(id, name, password, age, gender, treatment_region_level) VALUES ('H003', 'hospital_nurse3', '123456', 28, 'female', 'critical');
 
 
 # patient
@@ -114,6 +116,7 @@ insert into patient(name, age, disease_level, life_status, nurse_id, treatment_r
 insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p3', 20, 'critical', 'treating', 'C003', 'critical');
 insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p11', 25, 'light', 'treating', 'C001', 'light');
 insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p21', 25, 'light', 'treating', 'C001', 'quarantine');
+insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('Alice', 33, 'severe', 'treating', 'C001', 'light');
 
 
 # bed
