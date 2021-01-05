@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public class PatientRepo {
     // 如果是 1 或者 2 类型的就直接查，其他的需要设置一下筛选条件
-    public void findPatientsByTreatmentRegionLevelAndCondition(Integer level, List<Patient> list, String type, String condition) {
+    public void findPatientsByTreatmentRegionLevelAndCondition(String level, List<Patient> list, String type, String condition) {
         Connection conn = Util.connect(type);
         assert conn != null;
         // query
@@ -31,7 +31,7 @@ public class PatientRepo {
         ResultSet rs;
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setInt(1, level);
+            preparedStatement.setString(1, level);
             if (!flag) {
                 preparedStatement.setString(2, map[0]);
                 preparedStatement.setString(3, map[1]);
@@ -71,7 +71,7 @@ public class PatientRepo {
         return patient;
     }
 
-    public void findPatientsNeedTransfer(String type, List<Patient> list, Integer level) {
+    public void findPatientsNeedTransfer(String type, List<Patient> list, String level) {
         Connection conn = Util.connect(type);
         assert conn != null;
         // query
@@ -80,8 +80,8 @@ public class PatientRepo {
         ResultSet rs;
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setInt(1, level);
-            preparedStatement.setInt(2, level);
+            preparedStatement.setString(1, level);
+            preparedStatement.setString(2, level);
             rs = preparedStatement.executeQuery();
             while (rs.next()){
                 Patient patient = new Patient();

@@ -71,7 +71,7 @@ insert into hospital_nurse(id, name, password, age, gender) VALUES ('H003', 'hos
 
 create table if not exists treatment_region
 (
-    level int default 0 not null check ( level >= 0 and level <= 3),  # 1, 2, 3 依次加重，0 表示在隔离区域
+    level varchar(10) not null check ( level in ('quarantine', 'light', 'severe', 'critical')),  # 1, 2, 3 依次加重，0 表示在隔离区域
     nurse_num int default 0 check ( nurse_num >= 0 ),
     nurse_resp_num int default 0 check ( nurse_resp_num >= 0 ),
     doctor_id varchar(20),
@@ -79,13 +79,13 @@ create table if not exists treatment_region
     primary key (level),
     foreign key (doctor_id) references doctor(id),
     foreign key (nurse_id) references chief_nurse(id),
-    check ( (level != 0 and nurse_num is not null and nurse_resp_num is not null
-        and doctor_id is not null and nurse_id is not null) or (level = 0))
+    check ( (level != 'quarantine' and nurse_num is not null and nurse_resp_num is not null
+        and doctor_id is not null and nurse_id is not null) or (level = 'quarantine'))
 )charset = utf8;
-insert into treatment_region(level, nurse_num, nurse_resp_num, doctor_id, nurse_id) VALUES (0, null, null, null, null);
-insert into treatment_region(level, nurse_num, nurse_resp_num, doctor_id, nurse_id) VALUES (1, 10, 3, 'D001', 'C001');
-insert into treatment_region(level, nurse_num, nurse_resp_num, doctor_id, nurse_id) VALUES (2, 10, 2, 'D002', 'C002');
-insert into treatment_region(level, nurse_num, nurse_resp_num, doctor_id, nurse_id) VALUES (3, 10, 1, 'D003', 'C003');
+insert into treatment_region(level, nurse_num, nurse_resp_num, doctor_id, nurse_id) VALUES ('quarantine', null, null, null, null);
+insert into treatment_region(level, nurse_num, nurse_resp_num, doctor_id, nurse_id) VALUES ('light', 10, 3, 'D001', 'C001');
+insert into treatment_region(level, nurse_num, nurse_resp_num, doctor_id, nurse_id) VALUES ('severe', 10, 2, 'D002', 'C002');
+insert into treatment_region(level, nurse_num, nurse_resp_num, doctor_id, nurse_id) VALUES ('critical', 10, 1, 'D003', 'C003');
 
 
 create table if not exists patient
@@ -94,30 +94,30 @@ create table if not exists patient
     name varchar(30) not null,
     gender varchar(10) default 'male' check ( gender in ('male', 'female') ),
     age int not null check ( age > 0 ),
-    disease_level int not null check ( disease_level >= 1 and disease_level <= 3 ),
+    disease_level varchar(10) not null check ( disease_level in ('light', 'severe', 'critical')),
     life_status varchar(10) not null check ( life_status in ('healthy', 'treating', 'dead') ),
     nurse_id varchar(20),
-    treatment_region_level int not null,
+    treatment_region_level varchar(10) not null,
     primary key (patient_id),
     foreign key (nurse_id) references chief_nurse(id),
     foreign key (treatment_region_level) references treatment_region(level)
 )charset = utf8;
-insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p1', 20, 1, 'treating', 'C001', 1);
-insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p2', 20, 2, 'treating', 'C002', 2);
-insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p3', 20, 3, 'treating', 'C003', 3);
+insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p1', 20, 'light', 'treating', 'C001', 'light');
+insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p2', 20, 'severe', 'treating', 'C002', 'severe');
+insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p3', 20, 'critical', 'treating', 'C003', 'critical');
 
 
 create table if not exists bed
 (
     bed_id int auto_increment not null,
     patient_id int,
-    treatment_region_level int not null check ( treatment_region_level >= 1 and treatment_region_level <= 3 ),
+    treatment_region_level varchar(10) not null check ( treatment_region_level in ('light', 'severe', 'critical') ),
     primary key (bed_id),
     foreign key (treatment_region_level) references treatment_region(level)
 )charset = utf8;
-insert into bed(patient_id, treatment_region_level) VALUES (1, 1);
-insert into bed(patient_id, treatment_region_level) VALUES (2, 2);
-insert into bed(patient_id, treatment_region_level) VALUES (3, 3);
+insert into bed(patient_id, treatment_region_level) VALUES (1, 'light');
+insert into bed(patient_id, treatment_region_level) VALUES (2, 'severe');
+insert into bed(patient_id, treatment_region_level) VALUES (3, 'critical');
 
 
 create table if not exists checklist
@@ -126,15 +126,15 @@ create table if not exists checklist
     test_result varchar(10) not null check ( test_result in ('positive', 'negative') ),
     date datetime not null,
     # ToDo: 这个病情评级和上边病人的病情评级严格来说没有 reference 的必要，到时候如果这边有新的记录记得同步病人的病情评级属性
-    disease_level int not null check ( disease_level >= 1 and disease_level <= 3 ),
+    disease_level varchar(10) not null check ( disease_level in ('light', 'severe', 'critical') ),
     doctor_id varchar(20) not null,
     patient_id int not null,
     primary key (id),
     foreign key (doctor_id) references doctor(id),
     foreign key (patient_id) references patient(patient_id)
 )charset = utf8;
-insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('positive', '2020-12-20 13:30:20', 3, 'D003', 1);
-insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-25 13:30:20', 1, 'D001', 3);
+insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('positive', '2020-12-20 13:30:20', 'critical', 'D003', 1);
+insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-25 13:30:20', 'light', 'D001', 3);
 
 
 create table if not exists patient_status

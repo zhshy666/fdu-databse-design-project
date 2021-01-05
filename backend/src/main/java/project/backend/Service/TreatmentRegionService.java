@@ -17,8 +17,8 @@ public class TreatmentRegionService {
         this.treatmentRegionRepo = treatmentRegionRepo;
     }
 
-    public List<Integer> getTreatmentRegions(String id) {
-        List<Integer> list;
+    public List<String> getTreatmentRegions(String id) {
+        List<String> list;
         list = treatmentRegionRepo.findLevelByDoctorId(id);
         return list;
     }

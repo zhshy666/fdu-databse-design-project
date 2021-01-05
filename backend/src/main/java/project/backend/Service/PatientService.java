@@ -27,7 +27,7 @@ public class PatientService {
         this.checklistRepo = checklistRepo;
     }
 
-    public void getAllPatients(Integer level, List<Patient> list, String type, String condition) {
+    public void getAllPatients(String level, List<Patient> list, String type, String condition) {
         patientRepo.findPatientsByTreatmentRegionLevelAndCondition(level, list, type, condition);
     }
 
@@ -66,7 +66,7 @@ public class PatientService {
         }
     }
 
-    public void getPatientsNeedTransfer(String type, List<Patient> needTransfer, Integer level) {
+    public void getPatientsNeedTransfer(String type, List<Patient> needTransfer, String level) {
         patientRepo.findPatientsNeedTransfer(type, needTransfer, level);
     }
 

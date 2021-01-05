@@ -14,18 +14,18 @@ import java.util.List;
 
 @Repository
 public class TreatmentRegionRepo {
-    public List<Integer> findLevelByDoctorId(String id) {
+    public List<String> findLevelByDoctorId(String id) {
         Connection conn = Util.connectSQL(Config.DB_URL, Config.ROOT, Config.PASSWORD);
         // query
         String sql = "select * from database_project.treatment_region where doctor_id = ?";
         ResultSet rs;
-        List<Integer> levels = new LinkedList<>();
+        List<String> levels = new LinkedList<>();
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, id);
             rs = preparedStatement.executeQuery();
             while (rs.next()){
-                levels.add(rs.getInt("level"));
+                levels.add(rs.getString("level"));
             }
         }
         catch (Exception e){

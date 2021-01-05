@@ -39,10 +39,10 @@ public class DoctorController {
         String condition = request.getCondition();
 
         // 2 找到该医生对应的治疗区域
-        List<Integer> levels = treatmentRegionService.getTreatmentRegions(id);
+        List<String> levels = treatmentRegionService.getTreatmentRegions(id);
         // 获取所有的 patients
         List<Patient> patients = new LinkedList<>();
-        for(Integer level : levels) {
+        for(String level : levels) {
             patientService.getAllPatients(level, patients, Config.DOCTOR, condition);
         }
 
@@ -62,7 +62,7 @@ public class DoctorController {
         }
         else if (condition.equals("2")){
             List<Patient> needTransfer = new LinkedList<>();
-            for (Integer level : levels) {
+            for (String level : levels) {
                 patientService.getPatientsNeedTransfer(Config.DOCTOR, needTransfer, level);
             }
             ans.put("1", needTransfer);
