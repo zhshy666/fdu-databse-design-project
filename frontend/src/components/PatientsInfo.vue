@@ -97,7 +97,7 @@
 <script>
 import logo from "./Logo"
 export default {
-  name:"PatientInfo",
+  name:"PatientsInfo",
   components:{logo},
   data(){
   return{    
