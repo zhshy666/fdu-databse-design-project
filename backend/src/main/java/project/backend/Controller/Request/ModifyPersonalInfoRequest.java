@@ -2,13 +2,11 @@ package project.backend.Controller.Request;
 
 public class ModifyPersonalInfoRequest {
     private String id;
-    private String name;
     private String password;
     private int age;
 
-    public ModifyPersonalInfoRequest(String id, String name, String password, int age) {
+    public ModifyPersonalInfoRequest(String id, String password, int age) {
         this.id = id;
-        this.name = name;
         this.password = password;
         this.age = age;
     }
@@ -19,14 +17,6 @@ public class ModifyPersonalInfoRequest {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getPassword() {

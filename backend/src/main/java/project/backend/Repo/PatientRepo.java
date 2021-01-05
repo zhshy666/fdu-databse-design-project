@@ -20,7 +20,7 @@ public class PatientRepo {
         // query
         String sql;
         String[] map = null;
-        boolean flag = condition.equals("1") || condition.equals("2");
+        boolean flag = condition.equals("0") || condition.equals("1") || condition.equals("2");
         if (flag){
             sql = "select * from database_project.patient where treatment_region_level = ?";
         }

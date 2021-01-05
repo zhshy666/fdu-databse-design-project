@@ -34,16 +34,15 @@ public class DoctorRepo {
         return doctor;
     }
 
-    public void updateDoctorById(String id, String name, String password, int age) {
+    public void updateDoctorById(String id, String password, int age) {
         Connection conn = Util.connectSQL(Config.DB_URL, Config.DOCTOR, Config.PASSWORD_D);
         // update
-        String sql = "update database_project.doctor set name = ?, password = ?, age = ? where id = ?";
+        String sql = "update database_project.doctor set password = ?, age = ? where id = ?";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, name);
-            preparedStatement.setString(2, password);
-            preparedStatement.setInt(3, age);
-            preparedStatement.setString(4, id);
+            preparedStatement.setString(1, password);
+            preparedStatement.setInt(2, age);
+            preparedStatement.setString(3, id);
             preparedStatement.executeUpdate();
         }
         catch (Exception e){

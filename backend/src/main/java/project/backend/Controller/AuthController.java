@@ -32,7 +32,7 @@ public class AuthController {
     @PostMapping("/modifyPersonalInfo")
     public ResponseEntity<?> modifyPersonalInfo(@RequestBody ModifyPersonalInfoRequest request){
         String id = request.getId();
-        String message = authService.updateUserInfo(id, request.getName(), request.getPassword(), request.getAge());
+        String message = authService.updateUserInfo(id, request.getPassword(), request.getAge());
         return ResponseEntity.ok(message);
     }
 }

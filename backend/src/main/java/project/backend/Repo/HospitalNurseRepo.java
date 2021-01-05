@@ -1,7 +1,6 @@
 package project.backend.Repo;
 
 import org.springframework.stereotype.Repository;
-import project.backend.Entity.ChiefNurse;
 import project.backend.Entity.HospitalNurse;
 import project.backend.Utils.Config;
 import project.backend.Utils.Util;
@@ -34,16 +33,15 @@ public class HospitalNurseRepo {
         return hospitalNurse;
     }
 
-    public void updateNurseById(String id, String name, String password, int age) {
+    public void updateNurseById(String id, String password, int age) {
         Connection conn = Util.connectSQL(Config.DB_URL, Config.HOSPITAL_NURSE, Config.PASSWORD_H);
         // update
-        String sql = "update database_project.hospital_nurse set name = ?, password = ?, age = ? where id = ?";
+        String sql = "update database_project.hospital_nurse set password = ?, age = ? where id = ?";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, name);
-            preparedStatement.setString(2, password);
-            preparedStatement.setInt(3, age);
-            preparedStatement.setString(4, id);
+            preparedStatement.setString(1, password);
+            preparedStatement.setInt(2, age);
+            preparedStatement.setString(3, id);
             preparedStatement.executeUpdate();
         }
         catch (Exception e){

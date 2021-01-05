@@ -6,11 +6,15 @@ public class Staff{
     private String id;
     private String type;
     private String name;
+    private String gender;
+    private int age;
 
-    public Staff(String id, String type, String name) {
+    public Staff(String id, String type, String name, String gender, int age) {
         this.id = id;
         this.type = type;
         this.name = name;
+        this.gender = gender;
+        this.age = age;
     }
 
     public void setId(String id) {
@@ -37,4 +41,19 @@ public class Staff{
         this.name = name;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
 }
