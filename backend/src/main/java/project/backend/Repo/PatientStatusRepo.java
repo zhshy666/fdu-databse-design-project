@@ -1,12 +1,12 @@
 package project.backend.Repo;
 
 import org.springframework.stereotype.Repository;
-import project.backend.Entity.Patient;
 import project.backend.Utils.Util;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,7 +24,19 @@ public class PatientStatusRepo {
             preparedStatement.setInt(1, patient_id);
             rs = preparedStatement.executeQuery();
             int i = 0;
-            while (rs.next() && i < 3){
+            Date lastDate = null;
+            while (rs.next()){
+                if (i == 0){
+                    // 获取最新的日期，减三天作为一个阈值
+                    Date latestDate = rs.getDate("date");
+                    lastDate = new Date(latestDate.getTime() - 3 * 24 * 60 * 60 * 1000);
+                }
+                else {
+                    Date date = rs.getDate("date");
+                    if (date.compareTo(lastDate) < 0){
+                        break;
+                    }
+                }
                 list.add(rs.getDouble("temperature"));
                 i++;
             }

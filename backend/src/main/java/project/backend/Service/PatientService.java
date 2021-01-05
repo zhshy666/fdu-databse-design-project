@@ -36,17 +36,15 @@ public class PatientService {
         List<Patient> checkMatch = new LinkedList<>();
         for (Patient patient : allPatients){
             List<Double> temperatureRes = patientStatusRepo.findTemperaturesByPatientId(type, patient.getPatient_id());
-            if (temperatureRes.size() == 3){
-                boolean flag = true;
-                for (Double d : temperatureRes){
-                    if (d >= 37.3){
-                        flag = false;
-                        break;
-                    }
+            boolean flag = true;
+            for (Double d : temperatureRes){
+                if (d >= 37.3){
+                    flag = false;
+                    break;
                 }
-                if (flag){
-                    temperatureMatch.add(patient);
-                }
+            }
+            if (flag){
+                temperatureMatch.add(patient);
             }
 
             List<Checklist> checkRes = checklistRepo.findByPatientId(type, patient.getPatient_id());
