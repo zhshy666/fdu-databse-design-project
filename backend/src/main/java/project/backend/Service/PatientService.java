@@ -30,8 +30,12 @@ public class PatientService {
         this.checklistRepo = checklistRepo;
     }
 
-    public void getAllPatients(String level, List<Patient> list, String type, String condition) {
-        patientRepo.findPatientsByTreatmentRegionLevelAndCondition(level, list, type, condition);
+    public List<Patient> getAllPatients(List<String> levels, String type) {
+        List<Patient> list = new LinkedList<>();
+        for (String level : levels) {
+            patientRepo.findPatientsByTreatmentRegionLevel(level, list, type);
+        }
+        return list;
     }
 
     public List<Integer> getPatientIdsWhoCanBeDischarged(String type, List<Patient> allPatients) {

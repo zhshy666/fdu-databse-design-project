@@ -9,8 +9,8 @@ public class PatientInfo {
     private String life_status;
     private String nurse_id;
     private int treatment_region_level;
-    private int canBeDischarged;
-    private int needTransfer;
+    private int can_be_discharged;
+    private int need_transfer;
 
     public PatientInfo(int patient_id, String name, String gender, int age,
                        String disease_level, String life_status, String nurse_id, int treatment_region_level) {
@@ -88,19 +88,19 @@ public class PatientInfo {
         this.treatment_region_level = treatment_region_level;
     }
 
-    public int getCanBeDischarged() {
-        return canBeDischarged;
+    public int getCan_be_discharged() {
+        return can_be_discharged;
     }
 
-    public void setCanBeDischarged(int canBeDischarged) {
-        this.canBeDischarged = canBeDischarged;
+    public void setCan_be_discharged(int can_be_discharged) {
+        this.can_be_discharged = can_be_discharged;
     }
 
-    public int getNeedTransfer() {
-        return needTransfer;
+    public int getNeed_transfer() {
+        return need_transfer;
     }
 
-    public void setNeedTransfer(int needTransfer) {
-        this.needTransfer = needTransfer;
+    public void setNeed_transfer(int need_transfer) {
+        this.need_transfer = need_transfer;
     }
 }

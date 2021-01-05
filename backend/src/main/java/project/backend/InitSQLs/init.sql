@@ -2,11 +2,12 @@ create schema if not exists database_project;
 
 use database_project;
 
+# doctor
 drop table if exists staff;
 drop table if exists patient_status;
 drop table if exists checklist;
-drop table if exists patient;
 drop table if exists bed;
+drop table if exists patient;
 drop table if exists treatment_region;
 drop table if exists doctor;
 create table if not exists doctor
@@ -23,6 +24,7 @@ insert into doctor(id, name, password, age, gender) VALUES ('D002', 'doctor2', '
 insert into doctor(id, name, password, age, gender) VALUES ('D003', 'doctor3', '123456', 28, 'female');
 
 
+# chief nurse
 drop table if exists chief_nurse;
 create table if not exists chief_nurse
 (
@@ -38,6 +40,7 @@ insert into chief_nurse(id, name, password, age, gender) VALUES ('C002', 'chief_
 insert into chief_nurse(id, name, password, age, gender) VALUES ('C003', 'chief_nurse3', '123456', 28, 'female');
 
 
+# emergency nurse
 drop table if exists emergency_nurse;
 create table if not exists emergency_nurse
 (
@@ -53,6 +56,7 @@ insert into emergency_nurse(id, name, password, age, gender) VALUES ('E002', 'em
 insert into emergency_nurse(id, name, password, age, gender) VALUES ('E003', 'emergency_nurse3', '123456', 28, 'female');
 
 
+# hospital nurse
 drop table if exists hospital_nurse;
 create table if not exists hospital_nurse
 (
@@ -69,6 +73,7 @@ insert into hospital_nurse(id, name, password, age, gender) VALUES ('H002', 'hos
 insert into hospital_nurse(id, name, password, age, gender) VALUES ('H003', 'hospital_nurse3', '123456', 28, 'female');
 
 
+# treatment region
 create table if not exists treatment_region
 (
     level varchar(10) not null check ( level in ('quarantine', 'light', 'severe', 'critical')),  # 1, 2, 3 依次加重，0 表示在隔离区域
@@ -88,6 +93,7 @@ insert into treatment_region(level, nurse_num, nurse_resp_num, doctor_id, nurse_
 insert into treatment_region(level, nurse_num, nurse_resp_num, doctor_id, nurse_id) VALUES ('critical', 10, 1, 'D003', 'C003');
 
 
+# patient
 create table if not exists patient
 (
     patient_id int not null auto_increment,
@@ -102,24 +108,30 @@ create table if not exists patient
     foreign key (nurse_id) references chief_nurse(id),
     foreign key (treatment_region_level) references treatment_region(level)
 )charset = utf8;
+# ToDo: 这里之后是通过病人最开始住院时的检测单拆分得到的，下边只是一个测试
 insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p1', 20, 'light', 'treating', 'C001', 'light');
 insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p2', 20, 'severe', 'treating', 'C002', 'severe');
 insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p3', 20, 'critical', 'treating', 'C003', 'critical');
+insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p11', 25, 'light', 'treating', 'C001', 'quarantine');
 
 
+# bed
 create table if not exists bed
 (
     bed_id int auto_increment not null,
     patient_id int,
     treatment_region_level varchar(10) not null check ( treatment_region_level in ('light', 'severe', 'critical') ),
     primary key (bed_id),
+    foreign key (patient_id) references patient(patient_id),
     foreign key (treatment_region_level) references treatment_region(level)
 )charset = utf8;
 insert into bed(patient_id, treatment_region_level) VALUES (1, 'light');
+insert into bed(patient_id, treatment_region_level) VALUES (4, 'light');
 insert into bed(patient_id, treatment_region_level) VALUES (2, 'severe');
 insert into bed(patient_id, treatment_region_level) VALUES (3, 'critical');
 
 
+# check list
 create table if not exists checklist
 (
     id int auto_increment not null,
@@ -135,8 +147,12 @@ create table if not exists checklist
 )charset = utf8;
 insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('positive', '2020-12-20 13:30:20', 'critical', 'D003', 1);
 insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-25 13:30:20', 'light', 'D001', 3);
+insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('positive', '2020-12-25 13:30:20', 'light', 'D001', 4);
+insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-26 13:30:20', 'light', 'D001', 4);
+insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-27 13:30:20', 'light', 'D001', 4);
 
 
+#  patient status
 create table if not exists patient_status
 (
     id int auto_increment not null,
@@ -156,9 +172,17 @@ insert into patient_status(temperature, symptom, life_status, date, patient_id, 
             VALUES (37.6, 'fever', 'treating', '2020-12-20 13:30:20', 3, 'C001', 1);
 insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
             VALUES (37.1, 'healthy', 'treating', '2020-12-25 13:30:20', 1, 'C001', 2);
+insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
+            VALUES (37.0, 'healthy', 'treating', '2020-12-25 13:30:20', 4, 'C001', 3);
+insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
+            VALUES (37.1, 'healthy', 'treating', '2020-12-26 13:30:20', 4, 'C001', 4);
+insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
+            VALUES (36.1, 'healthy', 'treating', '2020-12-27 13:30:20', 4, 'C001', 5);
 
+# 创建用户并授权
 drop user 'doctor'@'localhost';
 create user 'doctor'@'localhost' identified by '123456';
+# ToDo: 只是当前治疗区域的查看权限，这个具体在查的时候在高层进行控制
 grant select, update on doctor to 'doctor'@'localhost';
 grant select, update on patient to 'doctor'@'localhost';
 grant select on chief_nurse to 'doctor'@'localhost';

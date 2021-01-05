@@ -14,28 +14,16 @@ import java.util.List;
 @Repository
 public class PatientRepo {
     // 如果是 1 或者 2 类型的就直接查，其他的需要设置一下筛选条件
-    public void findPatientsByTreatmentRegionLevelAndCondition(String level, List<Patient> list, String type, String condition) {
+    public void findPatientsByTreatmentRegionLevel(String level, List<Patient> list, String type) {
         Connection conn = Util.connect(type);
         assert conn != null;
         // query
         String sql;
-        String[] map = null;
-        boolean flag = condition.equals("0") || condition.equals("1") || condition.equals("2");
-        if (flag){
-            sql = "select * from database_project.patient where treatment_region_level = ?";
-        }
-        else {
-            map = condition.split("=");
-            sql = "select * from database_project.patient where treatment_region_level = ? and ? = ?";
-        }
+        sql = "select * from database_project.patient where treatment_region_level = ?";
         ResultSet rs;
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, level);
-            if (!flag) {
-                preparedStatement.setString(2, map[0]);
-                preparedStatement.setString(3, map[1]);
-            }
             rs = preparedStatement.executeQuery();
             while (rs.next()){
                 Patient patient = new Patient();

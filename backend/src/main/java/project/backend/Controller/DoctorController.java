@@ -37,16 +37,12 @@ public class DoctorController {
         }
         List<PatientInfo> info = new ArrayList<>();  // 返回值
         String id = request.getId();
-        String condition = request.getCondition();
 
         // 2 找到该医生对应的治疗区域
         List<String> levels = treatmentRegionService.getTreatmentRegions(id);
         // 获取所有的 patients
-        List<Patient> patients = new LinkedList<>();
-        for(String level : levels) {
-            patientService.getAllPatients(level, patients, Config.DOCTOR, condition);
-        }
-
+        List<Patient> patients = patientService.getAllPatients(levels, Config.DOCTOR);
+        // 查找符合指定条件的病人 ID 集合
         List<Integer> patientsCanBeDischarged = patientService.getPatientIdsWhoCanBeDischarged(Config.DOCTOR, patients);
         List<Integer> patientsNeedTransfer = patientService.getPatientIdsNeedTransfer(Config.DOCTOR, levels);
 
@@ -55,10 +51,10 @@ public class DoctorController {
                     patient.getAge(), patient.getDisease_level(), patient.getLife_status(), patient.getNurse_id(),
                     patient.getTreatment_region_level());
             if (patientsCanBeDischarged.contains(patient.getPatient_id())){
-                patientInfo.setCanBeDischarged(1);
+                patientInfo.setCan_be_discharged(1);
             }
             if (patientsNeedTransfer.contains(patient.getPatient_id())){
-                patientInfo.setNeedTransfer(1);
+                patientInfo.setNeed_transfer(1);
             }
             info.add(patientInfo);
         }
