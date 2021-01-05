@@ -1,6 +1,8 @@
 package project.backend.Repo;
 
 import org.springframework.stereotype.Repository;
+import project.backend.Entity.Checklist;
+import project.backend.Entity.PatientStatus;
 import project.backend.Utils.Util;
 
 import java.sql.Connection;
@@ -39,6 +41,30 @@ public class PatientStatusRepo {
                 }
                 list.add(rs.getDouble("temperature"));
                 i++;
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+        return list;
+    }
+
+    public List<PatientStatus> findByPatientId(String type, int patientId) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        List<PatientStatus> list = new LinkedList<>();
+        String sql = "select * from database_project.patient_status where patient_id = ? order by date desc";
+        ResultSet rs;
+        PatientStatus patientStatus;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setInt(1, patientId);
+            rs = preparedStatement.executeQuery();
+            while (rs.next()){
+                patientStatus = new PatientStatus();
+                Util.toObject(rs, patientStatus);
+                list.add(patientStatus);
             }
         }
         catch (Exception e){

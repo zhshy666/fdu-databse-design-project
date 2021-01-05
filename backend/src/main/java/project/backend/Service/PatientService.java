@@ -50,13 +50,12 @@ public class PatientService {
             }
 
             List<Checklist> checkRes = checklistRepo.findByPatientId(type, patient.getPatient_id());
-            if (checkRes.size() == 2){
-                // 获取时间戳
-                if (minusDate(checkRes.get(0), checkRes.get(1)) >= 24){
-                    if (checkRes.get(0).getTest_result().equals("negative") &&
-                            checkRes.get(1).getTest_result().equals("negative")){
-                        checkMatch.add(patient);
-                    }
+            if (checkRes.size() < 2) continue;
+            // 获取时间戳
+            if (minusDate(checkRes.get(0), checkRes.get(1)) >= 24){
+                if (checkRes.get(0).getTest_result().equals("negative") &&
+                        checkRes.get(1).getTest_result().equals("negative")){
+                    checkMatch.add(patient);
                 }
             }
         }
@@ -80,4 +79,32 @@ public class PatientService {
     private int minusDate(Checklist a, Checklist b) {
         return (int) ((a.getDate().getTime() - b.getDate().getTime()) / (1000 * 60 * 60));
     }
+
+    public Patient getPatientById(String type, int patientId) {
+        return patientRepo.findPatientById(type, patientId);
+    }
+
+    public boolean canDischarge(String type, int patientId) {
+        List<Double> temperatureRes = patientStatusRepo.findTemperaturesByPatientId(type, patientId);
+        boolean flag = true;
+        for (Double d : temperatureRes){
+            if (d >= 37.3){
+                flag = false;
+                break;
+            }
+        }
+        if (!flag){
+            return false;
+        }
+
+        List<Checklist> checkRes = checklistRepo.findByPatientId(type, patientId);
+        if (checkRes.size() < 2) return false;
+        // 获取时间戳
+        if (minusDate(checkRes.get(0), checkRes.get(1)) >= 24){
+            return checkRes.get(0).getTest_result().equals("negative") &&
+                    checkRes.get(1).getTest_result().equals("negative");
+        }
+        return false;
+    }
+
 }

@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public class ChecklistRepo {
-    public List<Checklist> findByPatientId(String type, int patient_id) {
+    public List<Checklist> findByPatientId(String type, int patientId) {
         Connection conn = Util.connect(type);
         assert conn != null;
         List<Checklist> list = new LinkedList<>();
@@ -21,14 +21,12 @@ public class ChecklistRepo {
         Checklist checklist;
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setInt(1, patient_id);
+            preparedStatement.setInt(1, patientId);
             rs = preparedStatement.executeQuery();
-            int i = 0;
-            while (rs.next() && i < 2){
+            while (rs.next()){
                 checklist = new Checklist();
                 Util.toObject(rs, checklist);
                 list.add(checklist);
-                i++;
             }
         }
         catch (Exception e){

@@ -2,6 +2,7 @@ package project.backend.Repo;
 
 import org.springframework.stereotype.Repository;
 import project.backend.Entity.Doctor;
+import project.backend.Entity.Patient;
 import project.backend.Utils.Config;
 import project.backend.Utils.Util;
 
@@ -49,5 +50,27 @@ public class DoctorRepo {
             e.printStackTrace();
         }
         Util.close(conn);
+    }
+
+    public Doctor findById(String type, String id) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        String sql = "select * from database_project.doctor where id = ?";
+        ResultSet rs;
+        Doctor doctor = null;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            rs = preparedStatement.executeQuery();
+            if (rs.next()){
+                doctor = new Doctor();
+                Util.toObject(rs, doctor);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+        return doctor;
     }
 }
