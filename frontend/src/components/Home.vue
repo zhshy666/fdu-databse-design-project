@@ -45,9 +45,12 @@
 
         <record-status v-if="this.isDairyStatus"></record-status>
 
-        <patient-info v-if="this.isPatientInfo"></patient-info>
+        <patients-info v-if="this.isPatientInfo"></patients-info>
 
         <nurse-info v-if="this.isNurseInfo"></nurse-info>
+
+        <!-- todo: modify the condition here -->
+        <patient :patientId="1" v-if="false"></patient>
     </el-main>
 </el-container>
 </template>
@@ -56,12 +59,13 @@ import logo from '../components/Logo'
 import AddPatient from './AddPatient.vue'
 import ModifyPersonalInfo from './ModifyPersonalInfo.vue'
 import NurseInfo from './NurseInfo.vue'
-import PatientInfo from './PatientInfo.vue'
+import Patient from './Patient.vue'
+import PatientsInfo from './PatientsInfo.vue'
 import RecordStatus from './RecordStatus.vue'
 
 export default {
   name:"Home",
-  components:{logo,ModifyPersonalInfo, AddPatient,RecordStatus, PatientInfo, NurseInfo},
+  components:{logo,ModifyPersonalInfo, AddPatient,RecordStatus, PatientsInfo, NurseInfo, Patient},
   data(){
       return{        
         isDoctor:false,
