@@ -6,7 +6,7 @@
     :data="patients"
     max-height="510"
     stripe
-    style="width: 120%">
+    >
     <el-table-column
       sortable
       prop="patient_id"
@@ -16,8 +16,8 @@
     <el-table-column      
       sortable
       prop="name"
-      label="Patient Name"
-      width="150">
+      label="Name"
+      width="120">
     </el-table-column>
     <el-table-column      
       prop="gender"
@@ -57,18 +57,7 @@
       <template slot-scope="scope">
         <el-tag           
           :type="parseStatus(scope.row.life_status)"
-          disable-transitions>{{scope.row.life_status}}</el-tag>
-          <el-input
-            class="input-new-tag"
-            v-if="modifyInput"
-            v-model="inputValue"
-            ref="saveTagInput"
-            size="small"
-            @keyup.enter.native="handleInputConfirm"
-            @blur="handleInputConfirm"
-          ></el-input>
-          <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Topic</el-button>
-                
+          disable-transitions>{{scope.row.life_status}}</el-tag>                          
       </template>
     </el-table-column>    
     <el-table-column
@@ -95,10 +84,10 @@
       </template>
     </el-table-column>
     <el-table-column      
-      label="Wait for out"      
-      width="110">
+      label="Checklist"      
+      width="130">
       <template slot-scope="scope">    
-        <el-button size="small">New Test</el-button>        
+        <el-button size="small">New Checklist</el-button>        
       </template>
     </el-table-column>
   </el-table>    
@@ -111,11 +100,8 @@ export default {
   name:"PatientInfo",
   components:{logo},
   data(){
-  return{
-    // pageSize:6,
-    // currentPage:1,
-    patients:[],
-    // total:0,    
+  return{    
+    patients:[],    
     }
   },
   methods:{
@@ -190,7 +176,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .container{
-  padding:30px 20px;
+  padding:30px 5px;
 }
 .input-new-tag {
   width: 103px;
