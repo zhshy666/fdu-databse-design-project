@@ -168,7 +168,7 @@ export default {
       this.$axios
       .post("/modifyLifeStatus", {
         doctor_id:this.$store.state.user.id,
-        patient_id: this.patient.id,
+        patient_id: this.patient.patient_id,
         new_life_status:this.status        
       })
       .then(resp => {
@@ -185,11 +185,12 @@ export default {
       });
     },
     
-    modifyDiseaseLevel(){            
+    modifyDiseaseLevel(){     
+      console.log(this.patient.patient_id);
       this.$axios
       .post("/modifyDiseaseLevel", {
         doctor_id:this.$store.state.user.id,
-        patient_id: this.patient.id,
+        patient_id: this.patient.patient_id,
         new_disease_level:this.diseaseLevel
       })
       .then(resp => {

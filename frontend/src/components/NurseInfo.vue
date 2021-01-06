@@ -98,6 +98,22 @@ export default {
   },
   methods:{
   },
+  created(){
+    this.$axios
+    .post("/getNursesInfo", {
+      id: this.$store.state.user.id,      
+    })
+    .then(resp => {
+      if (resp.status === 200) {
+        console.log(resp.data);
+      } else {
+        console.log(error);
+      }
+    })
+    .catch(error => {
+     console.log(error);
+    });
+  },
   mounted(){
     for (var i = 1; i < 5; i++) {
       this.nurses.push({
