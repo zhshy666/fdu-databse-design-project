@@ -214,6 +214,9 @@ create user 'chief_nurse'@'localhost' identified by '123456';
 grant select, update on chief_nurse to 'chief_nurse'@'localhost';
 grant select on patient to 'chief_nurse'@'localhost';
 grant select, insert, delete on hospital_nurse to 'chief_nurse'@'localhost';
+grant select, insert on checklist to 'chief_nurse'@'localhost';
+grant select on treatment_region to 'chief_nurse'@'localhost';
+grant select on patient_status to 'chief_nurse'@'localhost';
 grant select on bed to 'chief_nurse'@'localhost';
 
 drop user 'emergency_nurse'@'localhost';
@@ -230,4 +233,5 @@ grant select on patient to 'hospital_nurse'@'localhost';
 grant select, update on checklist to 'hospital_nurse'@'localhost';
 grant select, update, insert on patient_status to 'hospital_nurse'@'localhost';
 
-select * from patient
+select * from patient;
+select * from checklist;

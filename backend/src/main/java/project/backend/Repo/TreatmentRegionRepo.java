@@ -80,4 +80,26 @@ public class TreatmentRegionRepo {
         Util.close(conn);
         return treatmentRegion;
     }
+
+    public List<String> findLevelByChiefNurseId(String id, String type) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        // query
+        String sql = "select * from database_project.treatment_region where nurse_id = ?";
+        ResultSet rs;
+        List<String> levels = new LinkedList<>();
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            rs = preparedStatement.executeQuery();
+            while (rs.next()){
+                levels.add(rs.getString("level"));
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+        return levels;
+    }
 }

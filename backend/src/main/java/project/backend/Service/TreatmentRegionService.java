@@ -8,6 +8,7 @@ import project.backend.Entity.TreatmentRegion;
 import project.backend.Repo.BedRepo;
 import project.backend.Repo.HospitalNurseRepo;
 import project.backend.Repo.TreatmentRegionRepo;
+import project.backend.Utils.Config;
 
 import java.util.List;
 
@@ -26,7 +27,11 @@ public class TreatmentRegionService {
     }
 
     public List<String> getTreatmentRegions(String id, String type) {
+        if (type.equals(Config.CHIEF_NURSE)){
+            return treatmentRegionRepo.findLevelByChiefNurseId(id, type);
+        }
         return treatmentRegionRepo.findLevelByDoctorId(id, type);
+
     }
 
     public TreatmentRegion getTreatmentRegionByLevel(String type, String diseaseLevel) {

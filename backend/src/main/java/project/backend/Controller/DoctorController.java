@@ -11,6 +11,7 @@ import project.backend.Entity.*;
 import project.backend.Service.*;
 import project.backend.Utils.Config;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 @RestController
@@ -167,7 +168,8 @@ public class DoctorController {
         }
         String doctorId = request.getDoctor_id();
         int patientId = request.getPatient_id();
-        checklistService.addChecklist(Config.DOCTOR, doctorId, patientId);
+        Timestamp time = new Timestamp(new Date().getTime());
+        checklistService.addChecklist(Config.DOCTOR, doctorId, patientId, time);
 
         // TODO: 站内信，提醒对应的病房护士
 

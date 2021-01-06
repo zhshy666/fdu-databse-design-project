@@ -7,6 +7,7 @@ import project.backend.Utils.Util;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -57,14 +58,15 @@ public class ChecklistRepo {
         return testResult;
     }
 
-    public void insertNewChecklist(String type, String doctorId, int patientId) {
+    public void insertNewChecklist(String type, String doctorId, int patientId, Timestamp time) {
         Connection conn = Util.connect(type);
         assert conn != null;
-        String sql = "insert into database_project.checklist(doctor_id, patient_id) values (?, ?)";
+        String sql = "insert into database_project.checklist(doctor_id, patient_id, date) values (?, ?, ?)";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, doctorId);
             preparedStatement.setInt(2, patientId);
+            preparedStatement.setTimestamp(3, time);
             preparedStatement.executeUpdate();
         }
         catch (Exception e){
