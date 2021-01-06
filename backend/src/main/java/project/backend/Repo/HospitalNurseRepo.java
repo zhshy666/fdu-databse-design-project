@@ -75,25 +75,43 @@ public class HospitalNurseRepo {
         Util.close(conn);
     }
 
-    public void updateRespPatientNum(String type, String nurse_id, int flag) {
+    public void updateRespPatientNum(String type, String nurseId, int flag) {
+        int num = this.findCurrentRespNumByNurseId(type, nurseId) + flag;
         Connection conn = Util.connect(type);
         assert conn != null;
-        String sql = null;
-        if (flag == -1)
-            sql = "update database_project.hospital_nurse set current_resp_num = (select current_resp_num from hospital_nurse where id = ?) - 1 where id = ?";
-        else if (flag == 1)
-            sql = "update database_project.hospital_nurse set current_resp_num = (select current_resp_num from hospital_nurse where id = ?) + 1 where id = ?";
+        String sql = "update database_project.hospital_nurse set current_resp_num = ? where id = ?";
 
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, nurse_id);
-            preparedStatement.setString(2, nurse_id);
+            preparedStatement.setInt(1, num);
+            preparedStatement.setString(2, nurseId);
             preparedStatement.executeUpdate();
         }
         catch (Exception e){
             e.printStackTrace();
         }
         Util.close(conn);
+    }
+
+    private int findCurrentRespNumByNurseId(String type, String nurseId) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        // query
+        String sql = "select current_resp_num from database_project.hospital_nurse where id = ?";
+        ResultSet rs;
+        int num = -1;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, nurseId);
+            rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                num = rs.getInt("current_resp_num");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Util.close(conn);
+        return num;
     }
 
     public HospitalNurse findHospitalNurseByRegionAndRespNum(String type, String region, int num) {

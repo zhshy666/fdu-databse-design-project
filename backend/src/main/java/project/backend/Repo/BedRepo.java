@@ -26,27 +26,25 @@ public class BedRepo {
         Util.close(conn);
     }
 
-    public Bed findBedByRegionAndPatientId(String type, String level, Integer patientId) {
+    public int findFreeBedByRegion(String type, String level) {
         Connection conn = Util.connect(type);
         assert conn != null;
-        String sql = "select * from database_project.bed where treatment_region_level = ? and patient_id = ?";
+        String sql = "select * from database_project.bed where treatment_region_level = ? and patient_id is null";
         ResultSet rs;
-        Bed bed = null;
+        int id = -1;
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, level);
-            preparedStatement.setInt(2, patientId);
             rs = preparedStatement.executeQuery();
             if (rs.next()){
-                bed = new Bed();
-                Util.toObject(rs, bed);
+                id = rs.getInt("bed_id");
             }
         }
         catch (Exception e){
             e.printStackTrace();
         }
         Util.close(conn);
-        return bed;
+        return id;
     }
 
     public void updateBedByBedIdAndPatientId(String type, int bedId, int patientId) {

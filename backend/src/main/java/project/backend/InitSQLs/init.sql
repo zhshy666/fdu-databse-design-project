@@ -109,7 +109,7 @@ create table if not exists patient
     primary key (patient_id),
     foreign key (nurse_id) references hospital_nurse(id),
     foreign key (treatment_region_level) references treatment_region(level),
-    check ( (disease_level = 'dead') or (disease_level != 'dead' and  treatment_region_level is not null) )
+    check ( (life_status = 'dead') or (life_status != 'dead' and  treatment_region_level is not null) )
 )charset = utf8;
 insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p1', 'male', 20, 'light', 'treating', 'H001', 'light');
 insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p2', 'male', 20, 'severe', 'treating', 'H002', 'severe');
@@ -202,10 +202,11 @@ create user 'doctor'@'localhost' identified by '123456';
 grant select, update on doctor to 'doctor'@'localhost';
 grant select, update on patient to 'doctor'@'localhost';
 grant select on chief_nurse to 'doctor'@'localhost';
-grant select on hospital_nurse to 'doctor'@'localhost';
+grant select, update on hospital_nurse to 'doctor'@'localhost';
 grant select, insert on checklist to 'doctor'@'localhost';
 grant select on patient_status to 'doctor'@'localhost';
 grant select on treatment_region to 'doctor'@'localhost';
+grant select, update on bed to 'doctor'@'localhost';
 
 drop user 'chief_nurse'@'localhost';
 create user 'chief_nurse'@'localhost' identified by '123456';
@@ -228,3 +229,4 @@ grant select on patient to 'hospital_nurse'@'localhost';
 grant select, update on checklist to 'hospital_nurse'@'localhost';
 grant select, update, insert on patient_status to 'hospital_nurse'@'localhost';
 
+select * from patient

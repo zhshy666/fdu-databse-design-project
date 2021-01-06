@@ -102,12 +102,21 @@ public class PatientRepo {
     public void updateTreatmentRegionLevelAndNurseIdById(String type, String level, String nurseId, int patientId) {
         Connection conn = Util.connect(type);
         assert conn != null;
-        String sql = "update database_project.patient set treatment_region_level = ? and nurse_id = ? where patient_id = ?";
+        String sql = "update database_project.patient set treatment_region_level = ? where patient_id = ?";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, level);
-            preparedStatement.setString(2, nurseId);
-            preparedStatement.setInt(3, patientId);
+            preparedStatement.setInt(2, patientId);
+            preparedStatement.executeUpdate();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        sql = "update database_project.patient set nurse_id = ? where patient_id = ?";
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, nurseId);
+            preparedStatement.setInt(2, patientId);
             preparedStatement.executeUpdate();
         }
         catch (Exception e){

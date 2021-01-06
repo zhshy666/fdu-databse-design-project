@@ -6,10 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import project.backend.Controller.Request.GetNursesInfoRequest;
-import project.backend.Controller.Request.GetPatientInfoRequest;
-import project.backend.Controller.Request.GetPatientsInfoRequest;
-import project.backend.Controller.Request.ModifyLifeStatusRequest;
+import project.backend.Controller.Request.*;
 import project.backend.Entity.*;
 import project.backend.Service.*;
 import project.backend.Utils.Config;
@@ -163,14 +160,15 @@ public class DoctorController {
         if (!(newStatus.equals("dead") || newStatus.equals("healthy") || newStatus.equals("treating"))){
             return new ResponseEntity<>("Illegal status", HttpStatus.BAD_REQUEST);
         }
+        Patient patient = patientService.getPatientById(Config.DOCTOR, patientId);
+        TreatmentRegion region = treatmentRegionService.getTreatmentRegionByLevel(Config.DOCTOR, patient.getTreatment_region_level());
         patientService.updateLifeStatus(Config.DOCTOR, patientId, newStatus);
 
         // 如果更新为死亡状态，则因为病房护士和床位会空出来，判断是否存在需要进行区域转移的病人，并进行转移
         if (newStatus.equals("dead")){
-            Patient patient = patientService.getPatientById(Config.DOCTOR, patientId);
             Patient patientNeedTransfer;
             // 1 查是否有病人等待转入该治疗区域，处于隔离区的病人优先
-            List<Patient> patientsWaitToTransfer = patientService.getPatientsByDiseaseLevel(Config.ROOT, patient.getDisease_level());
+            List<Patient> patientsWaitToTransfer = patientService.getPatientsByDiseaseLevel(Config.ROOT, region.getLevel());
             if (patientsWaitToTransfer.isEmpty()){
                 return ResponseEntity.ok("success");
             }
@@ -183,7 +181,6 @@ public class DoctorController {
             }
             // 2 转移
             // ToDo: 属于系统自动做的事情，发站内信
-            TreatmentRegion region = treatmentRegionService.getTreatmentRegionByLevel(Config.ROOT, patientNeedTransfer.getDisease_level());
             patientService.appointHospitalNurse(Config.ROOT, patientNeedTransfer, region);
             patientService.appointBed(Config.ROOT, patientNeedTransfer, region);
         }
@@ -192,7 +189,7 @@ public class DoctorController {
     }
 
     @PostMapping("/modifyDiseaseLevel")
-    public ResponseEntity<?> modifyDiseaseLevel(){
+    public ResponseEntity<?> modifyDiseaseLevel(@RequestBody ModifyDiseaseLevelRequest request){
 
         return null;
     }
