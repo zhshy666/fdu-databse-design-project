@@ -20,9 +20,11 @@
       sortable
       prop="name"
       label="Name"
-      width="120">      
+      width="120"
+      >      
       <template slot-scope="scope">
-        <p style="cursor:pointer" @click="lookUpPatient(scope.row.patient_id)">{{scope.row.name}}</p>
+        <!-- <p style="cursor:pointer;color:cornflowerblue" @click="lookUpPatient(scope.row.patient_id)">{{scope.row.name}}</p> -->
+        <p>{{scope.row.name}}</p>
       </template>
     </el-table-column>
     
@@ -101,16 +103,16 @@
     </el-table-column>
 
     <el-table-column      
-      label="Checklist"      
+      label=""      
       width="130">
       <template slot-scope="scope">    
-        <el-button @click="addNewChecklist(scope.row.patient_id)" size="small">New Checklist</el-button>        
+        <!-- <el-button @click="addNewChecklist(scope.row.patient_id)" size="small">New Checklist</el-button>         -->
+        <el-button @click="lookUpPatient(scope.row.patient_id)">See more</el-button>
       </template>
     </el-table-column>
 
   </el-table>    
-
-  <!-- todo: modify the condition here -->
+  
   <patient :patientId="this.specifiedPatientId" v-else></patient>  
 </div>
 </template>
@@ -179,25 +181,25 @@ export default {
     lookUpPatient(id){
       this.specifiedPatientId=id;
     },
-    addNewChecklist(id){            
-      this.$axios
-      .post("/newChecklist", {
-        doctor_id: this.$store.state.user.id,
-        patient_id:id
-      })
-      .then(resp => {
-        if (resp.status === 200) {
-          this.$message.success("Add successfully!");
-        } else {
-          this.$message.error("Something wrong!");
-          console.log(error);
-        }
-      })
-      .catch(error => {
-        this.$message.error("Something wrong!");
-        console.log(error);
-      });
-    }
+    // addNewChecklist(id){            
+    //   this.$axios
+    //   .post("/newChecklist", {
+    //     doctor_id: this.$store.state.user.id,
+    //     patient_id:id
+    //   })
+    //   .then(resp => {
+    //     if (resp.status === 200) {
+    //       this.$message.success("Add successfully!");
+    //     } else {
+    //       this.$message.error("Something wrong!");
+    //       console.log(error);
+    //     }
+    //   })
+    //   .catch(error => {
+    //     this.$message.error("Something wrong!");
+    //     console.log(error);
+    //   });
+    // }
   },
 
   created(){   

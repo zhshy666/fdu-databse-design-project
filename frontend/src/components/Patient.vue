@@ -60,7 +60,7 @@
     <br>
     <br>
     <div class="message">
-      <p v-if="this.patient.can_be_discharged == 1"><i class="el-icon-message"></i>  This patient can discharge now. &nbsp; <el-button type="primary"  size="small">Permit Discharge</el-button></p>      
+      <p v-if="this.patient.can_be_discharged == 1"><i class="el-icon-message"></i>  This patient can discharge now. &nbsp; <el-button type="primary"  size="small" @click="permitDischarge()">Permit Discharge</el-button></p>      
       <p v-if="this.patient.need_transfer == 1"><i class="el-icon-message"></i>  This patient is waiting for being transfered to another region.</p>
     </div>
 
@@ -224,6 +224,23 @@ export default {
       .catch(error => {
         this.$message.error("Something wrong!");
         console.log(error);
+      });
+    },
+    permitDischarge(){
+      this.$axios
+      .post("", {
+        doctor_id: this.$store.state.user.id,
+        patient_id:this.patient.patient_id,   
+      })
+      .then(resp => {
+        if (resp.status === 200) {
+          this.$message.success("Opetate successfully");
+        } else {
+          this.$message.error("Something wrong");      
+        }
+      })
+      .catch(error => {
+        this.$message.error("Something wrong");      
       });
     }
   },

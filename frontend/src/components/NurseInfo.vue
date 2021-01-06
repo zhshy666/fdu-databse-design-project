@@ -116,23 +116,7 @@ export default {
      console.log(error);
     });
   },
-  mounted(){
-    for (var i = 1; i < 5; i++) {
-      this.nurses.push({
-        ID:i,      
-        Name:"Nurse "+i,
-        gender:i%2==0?'Male':'Female',
-        age:i,
-        title:i==1?"chief nurse":"hospital nurse",
-        patientID1:1,
-        patientName1:"LIU",
-        patientID2:2,
-        patientName2:"LIU",
-        patientID3:3,
-        patientName3:"LIU",
-      })      
-    }    
-  }
+
 }
 </script>
 
