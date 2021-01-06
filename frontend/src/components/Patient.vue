@@ -101,7 +101,7 @@
   </el-card>
   <el-card>
     <h3>Coronavirus Check Records</h3>
-    <el-button>Add New Checklist</el-button>
+    <el-button @click="addNewChecklist">Add New Checklist</el-button>
     <el-table
     :data="checklist"    
     style="width: 100%"
@@ -204,6 +204,26 @@ export default {
       })
       .catch(error => {
        console.log(error);
+      });
+    },
+
+    addNewChecklist(){      
+      this.$axios
+      .post("/newChecklist", {
+        doctor_id: this.$store.state.user.id,
+        patient_id:this.patient.patient_id,        
+      })
+      .then(resp => {
+        if (resp.status === 200) {
+          this.$message.success("Add successfully!");
+        } else {
+          this.$message.error("Something wrong!");
+          console.log(error);
+        }
+      })
+      .catch(error => {
+        this.$message.error("Something wrong!");
+        console.log(error);
       });
     }
   },
