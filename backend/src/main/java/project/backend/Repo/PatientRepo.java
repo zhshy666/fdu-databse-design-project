@@ -97,4 +97,21 @@ public class PatientRepo {
         }
         Util.close(conn);
     }
+
+    public void updateTreatmentRegionLevelAndNurseIdById(String type, int patientId) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        String sql = "update database_project.patient set treatment_region_level = ? and nurse_id = ? where patient_id = ?";
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, null);
+            preparedStatement.setString(2, null);
+            preparedStatement.setInt(3, patientId);
+            preparedStatement.executeUpdate();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+    }
 }

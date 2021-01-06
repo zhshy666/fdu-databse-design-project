@@ -39,7 +39,6 @@ public class ChecklistRepo {
     public String findResultByChecklistId(String type, int checklistId) {
         Connection conn = Util.connect(type);
         assert conn != null;
-        List<Checklist> list = new LinkedList<>();
         String sql = "select test_result from database_project.checklist where id = ?";
         ResultSet rs;
         String testResult = null;
