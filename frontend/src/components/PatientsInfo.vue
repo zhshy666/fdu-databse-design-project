@@ -79,7 +79,10 @@
 
     <el-table-column
       prop="need_transfer"
-      label="Need Trans"      
+      label="Need Trans"  
+      :filters="[{ text: 'yes', value: '1' }, { text: 'no', value: '0'}]"
+      :filter-method="filterTransfer"
+      filter-placement="bottom-end"    
       width="110">
       <template slot-scope="scope">    
         <div v-if="scope.row.need_transfer == 0">no</div>
@@ -101,7 +104,7 @@
       label="Checklist"      
       width="130">
       <template slot-scope="scope">    
-        <el-button size="small">New Checklist</el-button>        
+        <el-button @click="addNewChecklist(scope.row.patient_id)" size="small">New Checklist</el-button>        
       </template>
     </el-table-column>
 
@@ -150,7 +153,10 @@ export default {
     filterTag(value, row) {      
       return row.life_status === value;
     },
-    getPatientInfo(condition){            
+    filterTransfer(value,row){
+      return row.need_transfer == value;
+    },
+    getPatientInfo(){            
       this.$axios
       .post("/getPatientsInfo", {
         id: this.$store.state.user.id,        
@@ -172,24 +178,30 @@ export default {
     },
     lookUpPatient(id){
       this.specifiedPatientId=id;
+    },
+    addNewChecklist(id){            
+      this.$axios
+      .post("/newChecklist", {
+        doctor_id: this.$store.state.user.id,
+        patient_id:id
+      })
+      .then(resp => {
+        if (resp.status === 200) {
+          this.$message.success("Add successfully!");
+        } else {
+          this.$message.error("Something wrong!");
+          console.log(error);
+        }
+      })
+      .catch(error => {
+        this.$message.error("Something wrong!");
+        console.log(error);
+      });
     }
   },
+
   created(){   
-    this.getPatientInfo("0");     
-    // for(let i=0;i<20;i++){
-    //   this.patients.push({
-    //     patient_id:i,
-    //     name:"Wang Badan"+i,
-    //     age:12,
-    //     gender:"male",
-    //     life_status:"treating",
-    //     disease_level:"Light",
-    //     treatment_region_level:"Light",
-    //     wait_for_out:"no",
-    //     can_be_discharged:i%2,
-    //   })
-    // }
-    console.log(this.patients);
+    this.getPatientInfo();             
   }  
 }
 </script>
