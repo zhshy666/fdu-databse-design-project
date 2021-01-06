@@ -17,7 +17,7 @@ public class ChecklistRepo {
         Connection conn = Util.connect(type);
         assert conn != null;
         List<Checklist> list = new LinkedList<>();
-        String sql = "select * from database_project.checklist where patient_id = ? order by date desc";
+        String sql = "select * from database_project.checklist where patient_id = ? and test_result is not null order by date desc";
         ResultSet rs;
         Checklist checklist;
         try {
