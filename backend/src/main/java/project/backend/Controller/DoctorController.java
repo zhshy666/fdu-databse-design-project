@@ -189,6 +189,20 @@ public class DoctorController {
         return ResponseEntity.ok(canTransfer);
     }
 
+    @PostMapping("/newChecklist")
+    public ResponseEntity<?> newChecklist(@RequestBody NewChecklistRequest request){
+        if (!request.getDoctor_id().startsWith("D")){
+            return new ResponseEntity<>("Not allowed", HttpStatus.FORBIDDEN);
+        }
+        String doctorId = request.getDoctor_id();
+        int patientId = request.getPatient_id();
+        checklistService.addChecklist(Config.DOCTOR, doctorId, patientId);
+
+        // TODO: 站内信，提醒对应的病房护士
+
+        return ResponseEntity.ok("success");
+    }
+
     // 获取待转入该区域的病人并进行转入
     private void transferToCurrentRegion(TreatmentRegion region){
         Patient patientNeedTransfer;

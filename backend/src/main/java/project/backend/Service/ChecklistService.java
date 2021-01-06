@@ -23,4 +23,8 @@ public class ChecklistService {
     public String getTestResultById(String type, int checklistId) {
         return checklistRepo.findResultByChecklistId(type, checklistId);
     }
+
+    public void addChecklist(String type, String doctorId, int patientId) {
+        checklistRepo.insertNewChecklist(type, doctorId, patientId);
+    }
 }
