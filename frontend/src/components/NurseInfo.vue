@@ -1,6 +1,6 @@
 <template>
 <div class="container">
-    <logo></logo>
+    <logo></logo>    
     <el-table
     :data="nurses"
     stripe
@@ -71,27 +71,30 @@
       width="100">    
       </el-table-column> 
     </el-table-column> 
-
+  <!-- v-if="this.$store.state.user.type=='chief_nurse'"-->
     <el-table-column            
       label="Operation"
-      width="120"
-      v-if="this.$store.state.user.type='cheif_nurse'"
+      width="120"      
+      
       >
       <template slot-scope="scope">
-        <el-button type="danger">Delete</el-button>
+        <el-button 
+          type="danger" 
+          v-if="scope.row.type !='chief_nurse'" 
+          @click="removeNurse(scope.row.id,scope.row.patients)" 
+          :disabled="scope.row.patients.length>0">
+        Remove
+        </el-button>
       </template>
     </el-table-column>
   </el-table>
-
+  
   <br/>
-
-  <el-pagination
-    :hide-on-single-page="true"
-    :page-size = "pageSize"    
-    :current-page.sync="currentPage"   
-    layout="prev, pager, next"
-    :total="total">
-  </el-pagination>
+  <el-row>
+    <el-col :offset="20" :span="3">
+    <el-button type="primary" @click="addNewNurse()">Add new hospital nurse</el-button>  
+    </el-col>
+  </el-row>
 </div>
 </template>
 
@@ -101,14 +104,60 @@ export default {
   name:"NurseInfo",
   components:{logo},
   data(){
-  return{
-      currentPage:1,
-      pageSize:6,
-      total:4,
+  return{      
       nurses:[],
     }
   },
   methods:{
+    removeNurse(id,patients){      
+      this.$axios
+      .post("/deleteHospitalNurse", {
+        chief_nurse_id: this.store.state.user.id,
+        nurse_id:id      
+      })
+      .then(resp => {
+        if (resp.status === 200) {
+          this.$message.success("Remove successfully");
+        } else {
+          this.$message.error("Something wrong");
+        }
+      })
+      .catch(error => {
+        this.$message.error("Something wrong");
+        console.log(error);
+      });
+    },
+    addNewNurse(){
+      this.$prompt('Enter the nurse\'s id', 'Add new hospital nurse', {
+          confirmButtonText: 'confirm',
+          cancelButtonText: 'cancel',                    
+        }).then(({ value }) => {
+          if(value == "" || value == null){
+            this.$message.error("Please input the nurse's id");
+            return;
+          }
+          this.$axios
+          .post("/addHospitalNurse", {
+            chief_nurse_id: this.$store.state.user.id,            
+            nurse_id:value
+          })
+          .then(resp => {
+            if (resp.status === 200) {
+              this.$message({
+                type: 'success',
+                message: 'Add successfully',
+              });          
+            } else {
+              this.$message.error("Something wrong, check your input and try again");
+            }
+          })
+          .catch(error => {
+            this.$message.error("Something wrong, check your input and try again");
+           console.log(error);
+          });          
+        }).catch(() => {                
+        });
+    }
   },
   created(){
     this.$axios
@@ -126,8 +175,7 @@ export default {
     .catch(error => {
      console.log(error);
     });
-  },
-
+  },  
 }
 </script>
 
