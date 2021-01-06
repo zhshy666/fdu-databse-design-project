@@ -19,7 +19,7 @@
 
         <el-menu-item index="record-status" v-if="this.isHospitalNurse">
             <i class="el-icon-s-claim"></i>
-            <span slot="title">Record dairy status</span>
+            <span slot="title">Record patient status</span>
         </el-menu-item>
 
         <el-menu-item index = "patient-info">
@@ -48,9 +48,7 @@
         <patients-info v-if="this.isPatientInfo"></patients-info>
 
         <nurse-info v-if="this.isNurseInfo"></nurse-info>
-
-        <!-- todo: modify the condition here -->
-        <patient :patientId="1" v-if="false"></patient>
+        
     </el-main>
 </el-container>
 </template>
@@ -59,13 +57,12 @@ import logo from '../components/Logo'
 import AddPatient from './AddPatient.vue'
 import ModifyPersonalInfo from './ModifyPersonalInfo.vue'
 import NurseInfo from './NurseInfo.vue'
-import Patient from './Patient.vue'
 import PatientsInfo from './PatientsInfo.vue'
 import RecordStatus from './RecordStatus.vue'
 
 export default {
   name:"Home",
-  components:{logo,ModifyPersonalInfo, AddPatient,RecordStatus, PatientsInfo, NurseInfo, Patient},
+  components:{logo,ModifyPersonalInfo, AddPatient,RecordStatus, PatientsInfo, NurseInfo},
   data(){
       return{        
         isDoctor:false,

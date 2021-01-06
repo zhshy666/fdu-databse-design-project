@@ -1,11 +1,13 @@
 <template>
-    <logo></logo>    
+<div >
+  <p>Name: this is a name</p>       
+</div>
 </template>
 <script>
-import logo from "./Logo"
+
 export default {
   name:"Patient",
-  components:{logo},
+  components:{},
   props:["patientId"],
   data(){
   return{
@@ -14,10 +16,10 @@ export default {
   methods:{
   },
   created(){
-      this.axios
+      this.$axios
       .post("/getPatientInfo", {
         id: this.$store.state.user.id,
-        patientId:this.patientId
+        patient_id:this.patientId
       })
       .then(resp => {
         if (resp.status === 200) {

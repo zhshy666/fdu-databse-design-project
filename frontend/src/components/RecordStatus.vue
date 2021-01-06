@@ -49,24 +49,24 @@
 
       <el-form-item prop="level" size="medium" label="Disease Level">
         <el-radio-group v-model="recordStatus.level" size="medium">
-            <el-radio border label="Light"></el-radio>
-            <el-radio border label="Severe"></el-radio>
-            <el-radio border label="Critical"></el-radio>            
+            <el-radio border label="light"></el-radio>
+            <el-radio border label="severe"></el-radio>
+            <el-radio border label="critical"></el-radio>            
         </el-radio-group>
       </el-form-item>      
 
       <el-form-item prop="status" size="medium" label="Life Status">
         <el-radio-group v-model="recordStatus.status" size="medium">
-            <el-radio border label="Recoveried"></el-radio>
-            <el-radio border label="Treating"></el-radio>
-            <el-radio border label="Dead"></el-radio>
+            <el-radio border label="recoveried"></el-radio>
+            <el-radio border label="treating"></el-radio>
+            <el-radio border label="dead"></el-radio>
         </el-radio-group>
       </el-form-item> 
 
       <el-form-item prop="testResult" size="medium" label="Coronavirus test">
         <el-radio-group v-model="recordStatus.testResult" size="medium">
-            <el-radio border label="Positive"></el-radio>
-            <el-radio border label="Negative"></el-radio>            
+            <el-radio border label="positive"></el-radio>
+            <el-radio border label="negative"></el-radio>            
         </el-radio-group>
       </el-form-item> 
 
@@ -104,10 +104,10 @@ export default {
         patientName:"Tom",
         temperature:38,
         symptom:"Cough and fever",
-        level:"Light",
-        status:"Treating",        
+        level:"light",
+        status:"treating",        
         date:"",
-        testResult:"Positive",
+        testResult:"positive",
       }
     }
   },

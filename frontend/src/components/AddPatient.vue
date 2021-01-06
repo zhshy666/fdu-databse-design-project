@@ -20,8 +20,8 @@
 
       <el-form-item prop="gender" size="medium" label="Gender">
         <el-radio-group v-model="newPatient.gender" size="medium">
-            <el-radio border label="Male"></el-radio>
-            <el-radio border label="Female"></el-radio>
+            <el-radio border label="male"></el-radio>
+            <el-radio border label="female"></el-radio>
         </el-radio-group>
       </el-form-item>
 
@@ -36,16 +36,16 @@
 
       <el-form-item prop="level" size="medium" label="Disease Level">
         <el-radio-group v-model="newPatient.level" size="medium">
-            <el-radio border label="Light"></el-radio>
-            <el-radio border label="Severe"></el-radio>
-            <el-radio border label="Critical"></el-radio>            
+            <el-radio border label="light"></el-radio>
+            <el-radio border label="severe"></el-radio>
+            <el-radio border label="critical"></el-radio>            
         </el-radio-group>
       </el-form-item> 
 
       <el-form-item size="medium" label="Coronavirus test">
         <el-radio-group v-model="newPatient.testResult" size="medium">
-            <el-radio border label="Positive"></el-radio>
-            <el-radio border label="Negative"></el-radio>            
+            <el-radio border label="positive"></el-radio>
+            <el-radio border label="negative"></el-radio>            
         </el-radio-group>
       </el-form-item> 
 
@@ -79,10 +79,10 @@ export default {
         loading:false,
         newPatient:{
             name:"Zhang San",
-            gender:"Male",
+            gender:"male",
             age:21,
-            level:"Severe",
-            testResult:"Positive",
+            level:"severe",
+            testResult:"positive",
             date:"",
         },        
     }

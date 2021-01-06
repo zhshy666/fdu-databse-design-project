@@ -1,24 +1,31 @@
 
 <template>
 <div class = "container">
-    <logo></logo>
+    <logo></logo>    
     <el-table
+    v-if="this.specifiedPatientId==null"
     :data="patients"
     max-height="510"
     stripe
     >
+
     <el-table-column
       sortable
       prop="patient_id"
       label="ID"
       width="60">
     </el-table-column>
+
     <el-table-column      
       sortable
       prop="name"
       label="Name"
-      width="120">
+      width="120">      
+      <template slot-scope="scope">
+        <p style="cursor:pointer" @click="lookUpPatient(scope.row.patient_id)">{{scope.row.name}}</p>
+      </template>
     </el-table-column>
+    
     <el-table-column      
       prop="gender"
       label="Gender"
@@ -27,12 +34,14 @@
       :filter-method="filterGender"
       filter-placement="bottom-end">      
     </el-table-column>
+
     <el-table-column
       prop="age"
       label="Age"
       sortable
       width="90">
     </el-table-column>    
+
     <el-table-column
       prop="disease_level"
       label="Disease Level"      
@@ -47,6 +56,7 @@
           disable-transitions>{{scope.row.disease_level}}</el-tag>
       </template>
     </el-table-column>    
+
     <el-table-column
       prop="status"
       label="Life Status"      
@@ -60,11 +70,13 @@
           disable-transitions>{{scope.row.life_status}}</el-tag>                          
       </template>
     </el-table-column>    
+
     <el-table-column
       prop="treatment_region_level"
       label="Treat Region"      
       width="120">
     </el-table-column>
+
     <el-table-column
       prop="need_transfer"
       label="Need Trans"      
@@ -74,6 +86,7 @@
         <div v-else>yes</div>
       </template>
     </el-table-column>
+
     <el-table-column
       prop="discharge"
       label="Discharge?"      
@@ -83,6 +96,7 @@
         <div v-else>no</div>
       </template>
     </el-table-column>
+
     <el-table-column      
       label="Checklist"      
       width="130">
@@ -90,18 +104,23 @@
         <el-button size="small">New Checklist</el-button>        
       </template>
     </el-table-column>
+
   </el-table>    
 
+  <!-- todo: modify the condition here -->
+  <patient :patientId="this.specifiedPatientId" v-else></patient>  
 </div>
 </template>
 <script>
 import logo from "./Logo"
+import Patient from './Patient.vue'
 export default {
   name:"PatientsInfo",
-  components:{logo},
+  components:{logo,Patient},
   data(){
   return{    
     patients:[],    
+    specifiedPatientId:null,
     }
   },
   methods:{
@@ -134,8 +153,7 @@ export default {
     getPatientInfo(condition){            
       this.$axios
       .post("/getPatientsInfo", {
-        id: this.$store.state.user.id,
-        condition:condition,
+        id: this.$store.state.user.id,        
       })
       .then(resp => {
         if (resp.status === 200) {
@@ -151,6 +169,9 @@ export default {
         this.$message.error("Error occurs when geting patient info");
         console.log(error);
       });      
+    },
+    lookUpPatient(id){
+      this.specifiedPatientId=id;
     }
   },
   created(){   
