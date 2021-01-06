@@ -13,7 +13,6 @@ import java.util.List;
 
 @Repository
 public class PatientRepo {
-    // 如果是 1 或者 2 类型的就直接查，其他的需要设置一下筛选条件
     public void findPatientsByTreatmentRegionLevel(String level, List<Patient> list, String type) {
         Connection conn = Util.connect(type);
         assert conn != null;
@@ -76,6 +75,22 @@ public class PatientRepo {
                 Util.toObject(rs, patient);
                 list.add(patient.getPatient_id());
             }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+    }
+
+    public void updatePatientLifeStatusById(String type, int patientId, String newStatus) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        String sql = "update database_project.patient set life_status = ? where patient_id = ?";
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, newStatus);
+            preparedStatement.setInt(2, patientId);
+            preparedStatement.executeUpdate();
         }
         catch (Exception e){
             e.printStackTrace();

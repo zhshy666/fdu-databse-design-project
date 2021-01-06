@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import project.backend.Controller.Request.GetNursesInfoRequest;
 import project.backend.Controller.Request.GetPatientInfoRequest;
 import project.backend.Controller.Request.GetPatientsInfoRequest;
+import project.backend.Controller.Request.ModifyLifeStatusRequest;
 import project.backend.Entity.*;
 import project.backend.Service.*;
 import project.backend.Utils.Config;
@@ -39,7 +40,7 @@ public class DoctorController {
     @PostMapping("/getPatientsInfo")
     public ResponseEntity<?> getPatientsInfo(@RequestBody GetPatientsInfoRequest request){
         // 1 检查是否是医生身份
-        if (!checkAuthority(request.getId())){
+        if (!request.getId().startsWith("D")){
             return new ResponseEntity<>("Not allowed", HttpStatus.FORBIDDEN);
         }
         List<PatientInfo> info = new ArrayList<>();  // 返回值
@@ -71,7 +72,7 @@ public class DoctorController {
 
     @PostMapping("/getPatientInfo")
     public ResponseEntity<?> getPatientInfo(@RequestBody GetPatientInfoRequest request){
-        if (!checkAuthority(request.getId())){
+        if (!request.getId().startsWith("D")){
             return new ResponseEntity<>("Not allowed", HttpStatus.FORBIDDEN);
         }
         int patientId = request.getPatient_id();
@@ -99,15 +100,24 @@ public class DoctorController {
         result.put("2", checklists);
 
         // 3 状态
+        List<PatientStatusInfo> patientStatusInfos = new LinkedList<>();
         List<PatientStatus> patientStatuses = patientStatusService.getPatientStatuses(Config.DOCTOR, patientId);
-        result.put("3", patientStatuses);
+        for (PatientStatus patientStatus: patientStatuses){
+            PatientStatusInfo patientStatusInfo = new PatientStatusInfo(patientStatus.getId(), patientStatus.getTemperature(),
+                    patientStatus.getSymptom(), patientStatus.getLife_status(), patientStatus.getDate(), patientStatus.getNurse_id());
+            int checklistId = patientStatus.getChecklist_id();
+            String testResult = checklistService.getTestResultById(Config.DOCTOR, checklistId);
+            patientStatusInfo.setResult(testResult);
+            patientStatusInfos.add(patientStatusInfo);
+        }
+        result.put("3", patientStatusInfos);
 
         return ResponseEntity.ok(result);
     }
 
     @PostMapping("/getNursesInfo")
     public ResponseEntity<?> getNursesInfo(@RequestBody GetNursesInfoRequest request){
-        if (!checkAuthority(request.getId())){
+        if (!request.getId().startsWith("D")){
             return new ResponseEntity<>("Not allowed", HttpStatus.FORBIDDEN);
         }
         List<NurseInfo> result = new LinkedList<>();
@@ -126,26 +136,37 @@ public class DoctorController {
             NurseInfo nurseInfo = new NurseInfo(hospitalNurse.getId(), hospitalNurse.getName(), hospitalNurse.getAge(),
                     hospitalNurse.getGender());
             nurseInfo.setType("hospital_nurse");
-            List<Patient> respPatients = new LinkedList<>();
-            nurseInfo.setPatients(respPatients);
+            nurseInfo.setPatients(new LinkedList<>());
             result.add(nurseInfo);
         }
         // 拿到该区域的所有病人信息
         List<Patient> patients = patientService.getAllPatients(levels, Config.DOCTOR);
         for (Patient patient: patients){
             String hospitalNurseId = patient.getNurse_id();
-            for (int i = 1; i < result.size(); i++){
+            for (int i = levels.size(); i < result.size(); i++){
                 if (result.get(i).getId().equals(hospitalNurseId)){
                     result.get(i).getPatients().add(patient);
+                    break;
                 }
             }
         }
         return ResponseEntity.ok(result);
     }
 
+    @PostMapping("/modifyLifeStatus")
+    public ResponseEntity<?> modifyLifeStatus(@RequestBody ModifyLifeStatusRequest request){
+        if (!request.getDoctor_id().startsWith("D")){
+            return new ResponseEntity<>("Not allowed", HttpStatus.FORBIDDEN);
+        }
+        String newStatus = request.getNew_life_status();
+        int patientId = request.getPatient_id();
+        if (!(newStatus.equals("dead") || newStatus.equals("healthy") || newStatus.equals("treating"))){
+            return new ResponseEntity<>("Illegal status", HttpStatus.BAD_REQUEST);
+        }
+        patientService.updateLifeStatus(Config.DOCTOR, patientId, newStatus);
 
-
-    private boolean checkAuthority(String type){
-        return type.startsWith("D");
+        return ResponseEntity.ok("success");
     }
+
+
 }

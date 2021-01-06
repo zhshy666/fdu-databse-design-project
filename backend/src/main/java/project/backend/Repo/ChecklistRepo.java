@@ -35,4 +35,26 @@ public class ChecklistRepo {
         Util.close(conn);
         return list;
     }
+
+    public String findResultByChecklistId(String type, int checklistId) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        List<Checklist> list = new LinkedList<>();
+        String sql = "select test_result from database_project.checklist where id = ?";
+        ResultSet rs;
+        String testResult = null;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setInt(1, checklistId);
+            rs = preparedStatement.executeQuery();
+            if (rs.next()){
+                testResult = rs.getString("test_result");
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+        return testResult;
+    }
 }
