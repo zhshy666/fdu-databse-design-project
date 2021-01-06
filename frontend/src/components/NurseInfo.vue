@@ -81,7 +81,7 @@
         <el-button 
           type="danger" 
           v-if="scope.row.type !='chief_nurse'" 
-          @click="removeNurse(scope.row.id,scope.row.patients)" 
+          @click="removeNurse(scope.row.id)" 
           :disabled="scope.row.patients.length>0">
         Remove
         </el-button>
@@ -109,7 +109,7 @@ export default {
     }
   },
   methods:{
-    removeNurse(id,patients){      
+    removeNurse(id){      
       this.$axios
       .post("/deleteHospitalNurse", {
         chief_nurse_id: this.store.state.user.id,

@@ -16,7 +16,7 @@
       </el-col>
 
       <el-col :span="6">
-        <span class="title">Age</span> | <em>12</em>
+        <span class="title">Age</span> | <em>{{this.patient.age}}</em>
       </el-col>
     </el-row>
     <br>
@@ -228,7 +228,7 @@ export default {
     },
     permitDischarge(){
       this.$axios
-      .post("/permitDischarged", {
+      .post("/permitDischarge", {
         doctor_id: this.$store.state.user.id,
         patient_id:this.patient.patient_id,   
       })
