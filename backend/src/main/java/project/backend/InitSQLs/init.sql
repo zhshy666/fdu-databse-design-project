@@ -8,13 +8,14 @@ drop table if exists patient_status;
 drop table if exists checklist;
 drop table if exists bed;
 drop table if exists patient;
+drop table if exists hospital_nurse;
 drop table if exists treatment_region;
 drop table if exists doctor;
 create table if not exists doctor
 (
     id               varchar(20) not null unique,
     name             varchar(50) not null,
-    password         varchar(50) not null ,
+    password         varchar(50) not null,
     age              int not null check ( age > 0 ),
     gender           varchar(10) default 'male' check ( gender in ('male', 'female') ),
     primary key (id)
@@ -77,7 +78,6 @@ insert into treatment_region(level, nurse_num, nurse_resp_num, doctor_id, nurse_
 
 
 # hospital nurse
-drop table if exists hospital_nurse;
 create table if not exists hospital_nurse
 (
     id               varchar(20) not null unique,
@@ -90,9 +90,9 @@ create table if not exists hospital_nurse
     primary key (id),
     foreign key (treatment_region_level) references treatment_region(level)
 )charset = utf8;
-insert into hospital_nurse(id, name, password, age, gender, treatment_region_level) VALUES ('H001', 'hospital_nurse1', '123456', 26, 'female', 'light');
-insert into hospital_nurse(id, name, password, age, gender, treatment_region_level) VALUES ('H002', 'hospital_nurse2', '123456', 36, 'male', 'severe');
-insert into hospital_nurse(id, name, password, age, gender, treatment_region_level) VALUES ('H003', 'hospital_nurse3', '123456', 28, 'female', 'critical');
+insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H001', 'hospital_nurse1', '123456', 26, 'female', 'light', 3);
+insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H002', 'hospital_nurse2', '123456', 36, 'male', 'severe', 1);
+insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H003', 'hospital_nurse3', '123456', 28, 'female', 'critical', 1);
 
 
 # patient
@@ -105,18 +105,18 @@ create table if not exists patient
     disease_level varchar(10) not null check ( disease_level in ('light', 'severe', 'critical')),
     life_status varchar(10) not null check ( life_status in ('healthy', 'treating', 'dead') ),
     nurse_id varchar(20),
-    treatment_region_level varchar(10) not null,
+    treatment_region_level varchar(10),
     primary key (patient_id),
-    foreign key (nurse_id) references chief_nurse(id),
-    foreign key (treatment_region_level) references treatment_region(level)
+    foreign key (nurse_id) references hospital_nurse(id),
+    foreign key (treatment_region_level) references treatment_region(level),
+    check ( (disease_level = 'dead') or (disease_level != 'dead' and  treatment_region_level is not null) )
 )charset = utf8;
-# ToDo: 这里之后是通过病人最开始住院时的检测单拆分得到的，下边只是一个测试
-insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p1', 20, 'light', 'treating', 'C001', 'light');
-insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p2', 20, 'severe', 'treating', 'C002', 'severe');
-insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p3', 20, 'critical', 'treating', 'C003', 'critical');
-insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p11', 25, 'light', 'treating', 'C001', 'light');
-insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p21', 25, 'light', 'treating', 'C001', 'quarantine');
-insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('Alice', 33, 'severe', 'treating', 'C001', 'light');
+insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p1', 'male', 20, 'light', 'treating', 'H001', 'light');
+insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p2', 'male', 20, 'severe', 'treating', 'H002', 'severe');
+insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p3', 'female', 20, 'critical', 'treating', 'H003', 'critical');
+insert into patient(name, gender, age, disease_level, life_status, treatment_region_level) VALUES ('p21', 'female', 25, 'light', 'treating', 'quarantine');
+insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('Alice', 'female', 33,  'severe', 'treating', 'H001', 'light');
+insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('Bob', 'male', 23,  'light', 'treating', 'H001', 'light');
 create index patient_treatment_region_level on patient(treatment_region_level);
 
 
@@ -124,17 +124,28 @@ create index patient_treatment_region_level on patient(treatment_region_level);
 create table if not exists bed
 (
     bed_id int auto_increment not null,
-    patient_id int,
+    patient_id int default null,
     treatment_region_level varchar(10) not null check ( treatment_region_level in ('light', 'severe', 'critical') ),
     primary key (bed_id),
     foreign key (patient_id) references patient(patient_id),
     foreign key (treatment_region_level) references treatment_region(level)
 )charset = utf8;
+# insert into bed(treatment_region_level) values ('light');
+# insert into bed(treatment_region_level) values ('light');
+# insert into bed(treatment_region_level) values ('light');
+# insert into bed(treatment_region_level) values ('severe');
+# insert into bed(treatment_region_level) values ('severe');
+# insert into bed(treatment_region_level) values ('severe');
+# insert into bed(treatment_region_level) values ('critical');
+# insert into bed(treatment_region_level) values ('critical');
+# insert into bed(treatment_region_level) values ('critical');
+# TODO: 理论上像上边那样新增床位，下边的只是为了测试
 insert into bed(patient_id, treatment_region_level) VALUES (1, 'light');
 insert into bed(patient_id, treatment_region_level) VALUES (2, 'severe');
 insert into bed(patient_id, treatment_region_level) VALUES (3, 'critical');
-insert into bed(patient_id, treatment_region_level) VALUES (4, 'light');
+# insert into bed(patient_id, treatment_region_level) VALUES (4, 'light');
 insert into bed(patient_id, treatment_region_level) VALUES (5, 'light');
+insert into bed(patient_id, treatment_region_level) VALUES (6, 'light');
 
 
 # check list
@@ -188,13 +199,13 @@ insert into patient_status(temperature, symptom, life_status, date, patient_id, 
 # 创建用户并授权
 drop user 'doctor'@'localhost';
 create user 'doctor'@'localhost' identified by '123456';
-# ToDo: 只是当前治疗区域的查看权限，这个具体在查的时候在高层进行控制
 grant select, update on doctor to 'doctor'@'localhost';
 grant select, update on patient to 'doctor'@'localhost';
 grant select on chief_nurse to 'doctor'@'localhost';
 grant select on hospital_nurse to 'doctor'@'localhost';
 grant select, insert on checklist to 'doctor'@'localhost';
 grant select on patient_status to 'doctor'@'localhost';
+grant select on treatment_region to 'doctor'@'localhost';
 
 drop user 'chief_nurse'@'localhost';
 create user 'chief_nurse'@'localhost' identified by '123456';
