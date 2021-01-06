@@ -4,9 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.backend.Entity.Checklist;
 import project.backend.Entity.Patient;
-import project.backend.Repo.ChecklistRepo;
-import project.backend.Repo.PatientRepo;
-import project.backend.Repo.PatientStatusRepo;
+import project.backend.Repo.*;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,12 +15,17 @@ public class PatientService {
     private PatientRepo patientRepo;
     private PatientStatusRepo patientStatusRepo;
     private ChecklistRepo checklistRepo;
+    private HospitalNurseRepo hospitalNurseRepo;
+    private BedRepo bedRepo;
 
     @Autowired
-    public PatientService(PatientRepo patientRepo, PatientStatusRepo patientStatusRepo, ChecklistRepo checklistRepo) {
+    public PatientService(PatientRepo patientRepo, PatientStatusRepo patientStatusRepo, ChecklistRepo checklistRepo,
+                          HospitalNurseRepo hospitalNurseRepo, BedRepo bedRepo) {
         this.patientRepo = patientRepo;
         this.patientStatusRepo = patientStatusRepo;
         this.checklistRepo = checklistRepo;
+        this.hospitalNurseRepo = hospitalNurseRepo;
+        this.bedRepo = bedRepo;
     }
 
     public List<Patient> getAllPatients(List<String> levels, String type) {
@@ -112,12 +116,12 @@ public class PatientService {
         if (!newStatus.equals("dead")){
             return;
         }
-        System.out.println("dead");
-        // 1 patient - 更新 treatment_region_level 和 nurse_id
-
-
-        // 2 hospital_nurse
-
+        Patient patient = patientRepo.findPatientById(type, patientId);
+        // 1 hospital_nurse
+        hospitalNurseRepo.decreaseRespPatientNum(type, patient.getNurse_id());
+        // 2 patient - 更新 treatment_region_level 和 nurse_id
+        patientRepo.updateTreatmentRegionLevelAndNurseIdById(type, patientId);
         // 3 bed
+        bedRepo.updateBedToFreeByPatientId(type, patientId);
     }
 }

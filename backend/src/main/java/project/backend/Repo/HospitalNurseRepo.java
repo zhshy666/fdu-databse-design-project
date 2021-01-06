@@ -74,4 +74,20 @@ public class HospitalNurseRepo {
         }
         Util.close(conn);
     }
+
+    public void decreaseRespPatientNum(String type, String nurse_id) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        String sql = "update database_project.hospital_nurse set current_resp_num = (select current_resp_num from hospital_nurse where id = ?) - 1 where id = ?";
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, nurse_id);
+            preparedStatement.setString(2, nurse_id);
+            preparedStatement.executeUpdate();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+    }
 }
