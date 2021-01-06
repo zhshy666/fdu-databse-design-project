@@ -203,6 +203,19 @@ public class DoctorController {
         return ResponseEntity.ok("success");
     }
 
+    @PostMapping("/permitDischarge")
+    public ResponseEntity<?> permitDischarge(@RequestBody PermitDischargeRequest request){
+        if (!request.getDoctor_id().startsWith("D")){
+            return new ResponseEntity<>("Not allowed", HttpStatus.FORBIDDEN);
+        }
+        int patientId = request.getPatient_id();
+        Patient patient = patientService.getPatientById(Config.DOCTOR, patientId);
+        patientService.discharge(Config.DOCTOR, patient);
+        TreatmentRegion region = treatmentRegionService.getTreatmentRegionByLevel(Config.DOCTOR, patient.getTreatment_region_level());
+        transferToCurrentRegion(region);
+        return ResponseEntity.ok("success");
+    }
+
     // 获取待转入该区域的病人并进行转入
     private void transferToCurrentRegion(TreatmentRegion region){
         Patient patientNeedTransfer;

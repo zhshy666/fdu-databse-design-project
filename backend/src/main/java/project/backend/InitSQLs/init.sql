@@ -153,15 +153,16 @@ insert into bed(patient_id, treatment_region_level) VALUES (6, 'light');
 create table if not exists checklist
 (
     id int auto_increment not null,
-    test_result varchar(10) not null check ( test_result in ('positive', 'negative') ),
-    date timestamp not null,
-    # ToDo: 这个病情评级和上边病人的病情评级严格来说没有 reference 的必要，到时候如果这边有新的记录记得同步病人的病情评级属性
-    disease_level varchar(10) not null check ( disease_level in ('light', 'severe', 'critical') ),
+    test_result varchar(10),
+    date timestamp,
+    disease_level varchar(10),
     doctor_id varchar(20),
     patient_id int not null,
     primary key (id),
     foreign key (doctor_id) references doctor(id),
-    foreign key (patient_id) references patient(patient_id)
+    foreign key (patient_id) references patient(patient_id),
+    check ( (disease_level is null) or (disease_level is not null and disease_level in ('light', 'severe', 'critical')) ),
+    check ( (test_result is null) or (test_result is not null and test_result in ('positive', 'negative')) )
 )charset = utf8;
 insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('positive', '2020-12-20 13:30:20', 'critical', 'D002', 2);
 insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-25 13:30:20', 'light', 'D003', 3);

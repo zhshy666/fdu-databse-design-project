@@ -170,4 +170,13 @@ public class PatientService {
         bedRepo.updateBedByBedIdAndPatientId(type, bedId, patientId);
         return true;
     }
+
+    public void discharge(String type, Patient patient) {
+        // 1 hospital_nurse
+        hospitalNurseRepo.updateRespPatientNum(type, patient.getNurse_id(), -1);
+        // 2 patient - 更新 treatment_region_level 和 nurse_id 为 null
+        patientRepo.updateTreatmentRegionLevelAndNurseIdById(type, null, null, patient.getPatient_id());
+        // 3 bed
+        bedRepo.updateBedToFreeByPatientId(type, patient.getPatient_id());
+    }
 }
