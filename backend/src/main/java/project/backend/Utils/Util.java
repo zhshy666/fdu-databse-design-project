@@ -36,6 +36,8 @@ public class Util {
                 return Util.connectSQL(Config.DB_URL, Config.EMERGENCY_NURSE, Config.PASSWORD_E);
             case "hospital_nurse":
                 return Util.connectSQL(Config.DB_URL, Config.HOSPITAL_NURSE, Config.PASSWORD_H);
+            case "root":
+                return Util.connectSQL(Config.DB_URL, Config.ROOT, Config.PASSWORD);
             default:
                 System.out.println("Error");
         }

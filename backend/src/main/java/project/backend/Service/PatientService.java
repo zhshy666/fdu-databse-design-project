@@ -135,13 +135,12 @@ public class PatientService {
         HospitalNurse hospitalNurse = hospitalNurseRepo.findHospitalNurseByRegionAndRespNum(type, region.getLevel(), num);
         // 2 更新 patient 表
         patientRepo.updateTreatmentRegionLevelAndNurseIdById(type, region.getLevel(), hospitalNurse.getId(), patientNeedTransfer.getPatient_id());
-
     }
 
     public void appointBed(String type, Patient patientNeedTransfer, TreatmentRegion region) {
         // 1 找该区域一个空闲的床位
-        Bed bed = bedRepo.findBedByRegionAndPatientId(type, region.getLevel(), null);
+        int bedId = bedRepo.findFreeBedByRegion(type, region.getLevel());
         // 2 更新床位信息
-        bedRepo.updateBedByBedIdAndPatientId(type, bed.getBed_id(), patientNeedTransfer.getPatient_id());
+        bedRepo.updateBedByBedIdAndPatientId(type, bedId, patientNeedTransfer.getPatient_id());
     }
 }
