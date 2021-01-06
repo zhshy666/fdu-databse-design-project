@@ -238,3 +238,4 @@ grant select, update, insert on patient_status to 'hospital_nurse'@'localhost';
 # select * from patient;
 # select * from checklist;
 select * from hospital_nurse;
+select * from bed;

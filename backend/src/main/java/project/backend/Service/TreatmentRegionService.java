@@ -2,10 +2,7 @@ package project.backend.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import project.backend.Entity.Bed;
-import project.backend.Entity.HospitalNurse;
 import project.backend.Entity.TreatmentRegion;
-import project.backend.Repo.BedRepo;
 import project.backend.Repo.HospitalNurseRepo;
 import project.backend.Repo.TreatmentRegionRepo;
 import project.backend.Utils.Config;
@@ -16,14 +13,11 @@ import java.util.List;
 public class TreatmentRegionService {
     private TreatmentRegionRepo treatmentRegionRepo;
     private HospitalNurseRepo hospitalNurseRepo;
-    private BedRepo bedRepo;
 
     @Autowired
-    public TreatmentRegionService(TreatmentRegionRepo treatmentRegionRepo, HospitalNurseRepo hospitalNurseRepo,
-                                  BedRepo bedRepo) {
+    public TreatmentRegionService(TreatmentRegionRepo treatmentRegionRepo, HospitalNurseRepo hospitalNurseRepo) {
         this.treatmentRegionRepo = treatmentRegionRepo;
         this.hospitalNurseRepo = hospitalNurseRepo;
-        this.bedRepo = bedRepo;
     }
 
     public List<String> getTreatmentRegions(String id, String type) {
@@ -40,10 +34,5 @@ public class TreatmentRegionService {
 
     public TreatmentRegion getTreatmentRegionByChiefNurseId(String type, String chiefNurseId) {
         return treatmentRegionRepo.findByChiefNurseId(type, chiefNurseId);
-    }
-
-    public boolean hasEmptyBed(String type, String level) {
-        int bedId = bedRepo.findFreeBedByRegion(type, level);
-        return bedId != -1;
     }
 }

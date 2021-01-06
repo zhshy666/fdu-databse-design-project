@@ -7,13 +7,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import project.backend.Controller.Request.DeleteOrAddHospitalNurseRequest;
+import project.backend.Controller.Request.GetBedInfoRequest;
+import project.backend.Entity.Bed;
+import project.backend.Entity.BedInfo;
 import project.backend.Entity.Patient;
 import project.backend.Entity.TreatmentRegion;
+import project.backend.Service.BedService;
 import project.backend.Service.HospitalNurseService;
 import project.backend.Service.PatientService;
 import project.backend.Service.TreatmentRegionService;
 import project.backend.Utils.Config;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Controller
@@ -21,13 +26,15 @@ public class ChiefNurseController {
     private HospitalNurseService hospitalNurseService;
     private TreatmentRegionService treatmentRegionService;
     private PatientService patientService;
+    private BedService bedService;
 
     @Autowired
     public ChiefNurseController(HospitalNurseService hospitalNurseService, TreatmentRegionService treatmentRegionService,
-                                PatientService patientService) {
+                                PatientService patientService, BedService bedService) {
         this.hospitalNurseService = hospitalNurseService;
         this.treatmentRegionService = treatmentRegionService;
         this.patientService = patientService;
+        this.bedService = bedService;
     }
 
     @PostMapping("/deleteHospitalNurse")
@@ -53,13 +60,43 @@ public class ChiefNurseController {
 
         // 是否有空的床位
         if (flag) {
-            boolean canTransfer = treatmentRegionService.hasEmptyBed(Config.CHIEF_NURSE, region.getLevel());
+            boolean canTransfer = bedService.hasEmptyBed(Config.CHIEF_NURSE, region.getLevel());
             if (canTransfer) transferToCurrentRegion(region);
         }
         else {
             return new ResponseEntity<>("Info error", HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok("success");
+    }
+
+    @PostMapping("/getBedInfo")
+    public ResponseEntity<?> getBedInfo(@RequestBody GetBedInfoRequest request){
+        if (!request.getChief_nurse_id().startsWith("C")){
+            return new ResponseEntity<>("Not allowed", HttpStatus.FORBIDDEN);
+        }
+        String chiefNurseId = request.getChief_nurse_id();
+        List<BedInfo> result = new LinkedList<>();
+        TreatmentRegion region = treatmentRegionService.getTreatmentRegionByChiefNurseId(Config.CHIEF_NURSE, chiefNurseId);
+
+        // 获取该区域的所有病床
+        List<Bed> beds = bedService.getBedsByRegionLevel(Config.CHIEF_NURSE, region.getLevel());
+        for (Bed bed: beds){
+            BedInfo bedInfo;
+            if (bed.getPatient_id() != null){
+                // 对应的病人
+                Patient patient = patientService.getPatientById(Config.CHIEF_NURSE, bed.getPatient_id());
+                bedInfo = new BedInfo(patient.getPatient_id(), patient.getName(), patient.getGender(),
+                        patient.getAge(), patient.getDisease_level(), patient.getLife_status(), patient.getNurse_id(),
+                        patient.getTreatment_region_level());
+            }
+            else {
+                bedInfo = new BedInfo();
+                bedInfo.setPatient_id(null);
+            }
+            bedInfo.setBed_id(bed.getBed_id());
+            result.add(bedInfo);
+        }
+        return ResponseEntity.ok(result);
     }
 
     // 获取待转入该区域的病人并进行转入

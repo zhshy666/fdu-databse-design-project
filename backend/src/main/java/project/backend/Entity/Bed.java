@@ -2,7 +2,7 @@ package project.backend.Entity;
 
 public class Bed {
     private int bed_id;
-    private int patient_id;
+    private Integer patient_id;
     private String treatment_region_level;
 
     public Bed(){}
@@ -15,11 +15,11 @@ public class Bed {
         this.bed_id = bed_id;
     }
 
-    public int getPatient_id() {
+    public Integer getPatient_id() {
         return patient_id;
     }
 
-    public void setPatient_id(int patient_id) {
+    public void setPatient_id(Integer patient_id) {
         this.patient_id = patient_id;
     }
 
