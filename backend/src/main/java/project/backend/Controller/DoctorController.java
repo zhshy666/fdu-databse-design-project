@@ -34,39 +34,6 @@ public class DoctorController {
         this.chiefNurseService = chiefNurseService;
     }
 
-    @PostMapping("/getPatientsInfo")
-    public ResponseEntity<?> getPatientsInfo(@RequestBody GetPatientsInfoRequest request){
-        // 1 检查是否是医生身份
-        if (!request.getId().startsWith("D")){
-            return new ResponseEntity<>("Not allowed", HttpStatus.FORBIDDEN);
-        }
-        List<PatientInfo> info = new ArrayList<>();  // 返回值
-        String id = request.getId();
-
-        // 2 找到该医生对应的治疗区域
-        List<String> levels = treatmentRegionService.getTreatmentRegions(id, Config.DOCTOR);
-        // 获取所有的 patients
-        List<Patient> patients = patientService.getAllPatients(levels, Config.DOCTOR);
-        // 查找符合指定条件的病人 ID 集合
-        List<Integer> patientsCanBeDischarged = patientService.getPatientIdsWhoCanBeDischarged(Config.DOCTOR, patients);
-        List<Integer> patientsNeedTransfer = patientService.getPatientIdsNeedTransfer(Config.DOCTOR, levels);
-
-        for (Patient patient : patients){
-            PatientInfo patientInfo = new PatientInfo(patient.getPatient_id(), patient.getName(), patient.getGender(),
-                    patient.getAge(), patient.getDisease_level(), patient.getLife_status(), patient.getNurse_id(),
-                    patient.getTreatment_region_level());
-            if (patientsCanBeDischarged.contains(patient.getPatient_id())){
-                patientInfo.setCan_be_discharged(1);
-            }
-            if (patientsNeedTransfer.contains(patient.getPatient_id())){
-                patientInfo.setNeed_transfer(1);
-            }
-            info.add(patientInfo);
-        }
-
-        return ResponseEntity.ok(info);
-    }
-
     @PostMapping("/getPatientInfo")
     public ResponseEntity<?> getPatientInfo(@RequestBody GetPatientInfoRequest request){
         if (!request.getId().startsWith("D")){
@@ -77,7 +44,11 @@ public class DoctorController {
         // 1 基础信息
         List<String> levels = treatmentRegionService.getTreatmentRegions(request.getId(), Config.DOCTOR);
         Patient patient = patientService.getPatientById(Config.DOCTOR, patientId);
-        boolean canDischarge = patientService.canDischarge(Config.DOCTOR, patientId);
+        boolean canDischarge = false;
+        if (patient.getTreatment_region_level().equals("light") && patient.getDisease_level().equals("light")){
+            canDischarge = patientService.canDischarge(Config.DOCTOR, patientId);
+        }
+
         boolean needTransfer = false;
         for (String level : levels){
             if (patient.getTreatment_region_level().equals(level) && !patient.getDisease_level().equals(level)) {
@@ -226,7 +197,7 @@ public class DoctorController {
         }
         patientNeedTransfer = patientsWaitToTransfer.get(0);
         for (Patient p : patientsWaitToTransfer){
-            if (p.getTreatment_region_level().equals("quarantine")){
+            if (p.getTreatment_region_level() != null && p.getTreatment_region_level().equals("quarantine")){
                 patientNeedTransfer = p;
                 break;
             }

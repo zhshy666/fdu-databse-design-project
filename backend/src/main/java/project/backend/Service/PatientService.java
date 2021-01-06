@@ -43,6 +43,12 @@ public class PatientService {
         List<Patient> checkMatch = new LinkedList<>();
         List<Integer> patients = new LinkedList<>();
         for (Patient patient : allPatients){
+            if (!patient.getTreatment_region_level().equals("light")){
+                continue;
+            }
+            if (!patient.getDisease_level().equals("light")){
+                continue;
+            }
             List<Double> temperatureRes = patientStatusRepo.findTemperaturesByPatientId(type, patient.getPatient_id());
             boolean flag = true;
             for (Double d : temperatureRes){

@@ -91,8 +91,8 @@ create table if not exists hospital_nurse
     foreign key (treatment_region_level) references treatment_region(level)
 )charset = utf8;
 insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H001', 'hospital_nurse1', '123456', 26, 'female', 'light', 3);
-insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H004', 'hospital_nurse4', '123456', 26, 'female', 'severe', 0);
 insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H002', 'hospital_nurse2', '123456', 36, 'male', 'severe', 1);
+insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H004', 'hospital_nurse4', '123456', 36, 'male', 'severe', 0);
 insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H003', 'hospital_nurse3', '123456', 28, 'female', 'critical', 1);
 
 
@@ -109,8 +109,7 @@ create table if not exists patient
     treatment_region_level varchar(10),
     primary key (patient_id),
     foreign key (nurse_id) references hospital_nurse(id),
-    foreign key (treatment_region_level) references treatment_region(level),
-    check ( (life_status = 'dead') or (life_status != 'dead' and  treatment_region_level is not null) )
+    foreign key (treatment_region_level) references treatment_region(level)
 )charset = utf8;
 insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('Cathy', 'female', 20, 'light', 'treating', 'H001', 'light');
 insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('Dan', 'male', 20, 'severe', 'treating', 'H002', 'severe');
@@ -135,7 +134,7 @@ create table if not exists bed
 # insert into bed(treatment_region_level) values ('light');
 # insert into bed(treatment_region_level) values ('light');
 insert into bed(treatment_region_level) values ('severe');
-insert into bed(treatment_region_level) values ('severe');
+# insert into bed(treatment_region_level) values ('severe');
 # insert into bed(treatment_region_level) values ('severe');
 # insert into bed(treatment_region_level) values ('critical');
 # insert into bed(treatment_region_level) values ('critical');
