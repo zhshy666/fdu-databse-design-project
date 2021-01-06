@@ -107,4 +107,17 @@ public class PatientService {
         return false;
     }
 
+    public void updateLifeStatus(String type, int patientId, String newStatus) {
+        patientRepo.updatePatientLifeStatusById(type, patientId, newStatus);
+        if (!newStatus.equals("dead")){
+            return;
+        }
+        System.out.println("dead");
+        // 1 patient - 更新 treatment_region_level 和 nurse_id
+
+
+        // 2 hospital_nurse
+
+        // 3 bed
+    }
 }

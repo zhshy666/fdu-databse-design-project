@@ -19,4 +19,8 @@ public class ChecklistService {
     public List<Checklist> getChecklists(String type, int patientId) {
         return checklistRepo.findByPatientId(type, patientId);
     }
+
+    public String getTestResultById(String type, int checklistId) {
+        return checklistRepo.findResultByChecklistId(type, checklistId);
+    }
 }

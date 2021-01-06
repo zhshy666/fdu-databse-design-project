@@ -5,16 +5,14 @@ import java.util.List;
 public class NurseInfo {
     private String id;
     private String name;
-    private String password;
     private int age;
     private String gender;
     private String type;
     private List<Patient> patients;
 
-    public NurseInfo(String id, String name, String password, int age, String gender) {
+    public NurseInfo(String id, String name, int age, String gender) {
         this.id = id;
         this.name = name;
-        this.password = password;
         this.age = age;
         this.gender = gender;
     }
@@ -33,14 +31,6 @@ public class NurseInfo {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public int getAge() {

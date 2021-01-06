@@ -1,6 +1,7 @@
 package project.backend.Repo;
 
 import org.springframework.stereotype.Repository;
+import project.backend.Entity.ChiefNurse;
 import project.backend.Entity.HospitalNurse;
 import project.backend.Utils.Config;
 import project.backend.Utils.Util;
@@ -8,6 +9,8 @@ import project.backend.Utils.Util;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.LinkedList;
+import java.util.List;
 
 @Repository
 public class HospitalNurseRepo {
@@ -43,6 +46,28 @@ public class HospitalNurseRepo {
             preparedStatement.setInt(2, age);
             preparedStatement.setString(3, id);
             preparedStatement.executeUpdate();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+    }
+
+    public void findHospitalNursesByRegion(String type, String level, List<HospitalNurse> hospitalNurses) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        String sql = "select * from database_project.hospital_nurse where treatment_region_level = ?";
+        ResultSet rs;
+        HospitalNurse hospitalNurse;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, level);
+            rs = preparedStatement.executeQuery();
+            while (rs.next()){
+                hospitalNurse = new HospitalNurse();
+                Util.toObject(rs, hospitalNurse);
+                hospitalNurses.add(hospitalNurse);
+            }
         }
         catch (Exception e){
             e.printStackTrace();
