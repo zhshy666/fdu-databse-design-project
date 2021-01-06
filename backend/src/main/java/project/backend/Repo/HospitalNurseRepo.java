@@ -75,10 +75,15 @@ public class HospitalNurseRepo {
         Util.close(conn);
     }
 
-    public void decreaseRespPatientNum(String type, String nurse_id) {
+    public void updateRespPatientNum(String type, String nurse_id, int flag) {
         Connection conn = Util.connect(type);
         assert conn != null;
-        String sql = "update database_project.hospital_nurse set current_resp_num = (select current_resp_num from hospital_nurse where id = ?) - 1 where id = ?";
+        String sql = null;
+        if (flag == -1)
+            sql = "update database_project.hospital_nurse set current_resp_num = (select current_resp_num from hospital_nurse where id = ?) - 1 where id = ?";
+        else if (flag == 1)
+            sql = "update database_project.hospital_nurse set current_resp_num = (select current_resp_num from hospital_nurse where id = ?) + 1 where id = ?";
+
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, nurse_id);
@@ -89,5 +94,30 @@ public class HospitalNurseRepo {
             e.printStackTrace();
         }
         Util.close(conn);
+    }
+
+    public HospitalNurse findHospitalNurseByRegionAndRespNum(String type, String region, int num) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        // query
+        String sql = "select * from database_project.hospital_nurse where treatment_region_level = ? and current_resp_num < ?";
+        ResultSet rs;
+        HospitalNurse hospitalNurse = null;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, region);
+            preparedStatement.setInt(2, num);
+            rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                hospitalNurse = new HospitalNurse();
+                Util.toObject(rs, hospitalNurse);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Util.close(conn);
+        assert hospitalNurse != null;
+        this.updateRespPatientNum(type, hospitalNurse.getId(), 1);
+        return hospitalNurse;
     }
 }

@@ -3,6 +3,7 @@ package project.backend.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.backend.Entity.ChiefNurse;
+import project.backend.Entity.TreatmentRegion;
 import project.backend.Repo.TreatmentRegionRepo;
 
 import java.util.List;
@@ -18,5 +19,9 @@ public class TreatmentRegionService {
 
     public List<String> getTreatmentRegions(String id, String type) {
         return treatmentRegionRepo.findLevelByDoctorId(id, type);
+    }
+
+    public TreatmentRegion getTreatmentRegionByLevel(String type, String diseaseLevel) {
+        return treatmentRegionRepo.findByLevel(type, diseaseLevel);
     }
 }

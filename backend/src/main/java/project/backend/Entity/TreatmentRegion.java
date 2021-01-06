@@ -1,17 +1,17 @@
 package project.backend.Entity;
 
 public class TreatmentRegion {
-    private int level;
+    private String level;
     private int nurse_num;
     private int nurse_resp_num;
 
     public TreatmentRegion(){}
 
-    public int getLevel() {
+    public String getLevel() {
         return level;
     }
 
-    public void setLevel(int level) {
+    public void setLevel(String level) {
         this.level = level;
     }
 

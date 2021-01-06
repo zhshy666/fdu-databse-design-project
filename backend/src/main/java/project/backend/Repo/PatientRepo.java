@@ -9,6 +9,7 @@ import project.backend.Utils.Util;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.LinkedList;
 import java.util.List;
 
 @Repository
@@ -98,14 +99,14 @@ public class PatientRepo {
         Util.close(conn);
     }
 
-    public void updateTreatmentRegionLevelAndNurseIdById(String type, int patientId) {
+    public void updateTreatmentRegionLevelAndNurseIdById(String type, String level, String nurseId, int patientId) {
         Connection conn = Util.connect(type);
         assert conn != null;
         String sql = "update database_project.patient set treatment_region_level = ? and nurse_id = ? where patient_id = ?";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, null);
-            preparedStatement.setString(2, null);
+            preparedStatement.setString(1, level);
+            preparedStatement.setString(2, nurseId);
             preparedStatement.setInt(3, patientId);
             preparedStatement.executeUpdate();
         }
@@ -113,5 +114,29 @@ public class PatientRepo {
             e.printStackTrace();
         }
         Util.close(conn);
+    }
+
+    public List<Patient> findPatientByDiseaseLevel(String type, String diseaseLevel) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        String sql = "select * from database_project.patient where disease_level = ?";
+        ResultSet rs;
+        List<Patient> patients = new LinkedList<>();
+        Patient patient;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, diseaseLevel);
+            rs = preparedStatement.executeQuery();
+            while (rs.next()){
+                patient = new Patient();
+                Util.toObject(rs, patient);
+                patients.add(patient);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+        return patients;
     }
 }

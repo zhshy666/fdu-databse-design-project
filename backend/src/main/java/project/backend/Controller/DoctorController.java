@@ -165,8 +165,36 @@ public class DoctorController {
         }
         patientService.updateLifeStatus(Config.DOCTOR, patientId, newStatus);
 
+        // 如果更新为死亡状态，则因为病房护士和床位会空出来，判断是否存在需要进行区域转移的病人，并进行转移
+        if (newStatus.equals("dead")){
+            Patient patient = patientService.getPatientById(Config.DOCTOR, patientId);
+            Patient patientNeedTransfer;
+            // 1 查是否有病人等待转入该治疗区域，处于隔离区的病人优先
+            List<Patient> patientsWaitToTransfer = patientService.getPatientsByDiseaseLevel(Config.ROOT, patient.getDisease_level());
+            if (patientsWaitToTransfer.isEmpty()){
+                return ResponseEntity.ok("success");
+            }
+            patientNeedTransfer = patientsWaitToTransfer.get(0);
+            for (Patient p : patientsWaitToTransfer){
+                if (p.getTreatment_region_level().equals("quarantine")){
+                    patientNeedTransfer = p;
+                    break;
+                }
+            }
+            // 2 转移
+            // ToDo: 属于系统自动做的事情，发站内信
+            TreatmentRegion region = treatmentRegionService.getTreatmentRegionByLevel(Config.ROOT, patientNeedTransfer.getDisease_level());
+            patientService.appointHospitalNurse(Config.ROOT, patientNeedTransfer, region);
+            patientService.appointBed(Config.ROOT, patientNeedTransfer, region);
+        }
+
         return ResponseEntity.ok("success");
     }
 
+    @PostMapping("/modifyDiseaseLevel")
+    public ResponseEntity<?> modifyDiseaseLevel(){
+
+        return null;
+    }
 
 }

@@ -2,9 +2,9 @@ package project.backend.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import project.backend.Entity.Checklist;
-import project.backend.Entity.Patient;
+import project.backend.Entity.*;
 import project.backend.Repo.*;
+import project.backend.Utils.Config;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -118,10 +118,30 @@ public class PatientService {
         }
         Patient patient = patientRepo.findPatientById(type, patientId);
         // 1 hospital_nurse
-        hospitalNurseRepo.decreaseRespPatientNum(type, patient.getNurse_id());
-        // 2 patient - 更新 treatment_region_level 和 nurse_id
-        patientRepo.updateTreatmentRegionLevelAndNurseIdById(type, patientId);
+        hospitalNurseRepo.updateRespPatientNum(type, patient.getNurse_id(), -1);
+        // 2 patient - 更新 treatment_region_level 和 nurse_id 为 null
+        patientRepo.updateTreatmentRegionLevelAndNurseIdById(type, null, null, patientId);
         // 3 bed
         bedRepo.updateBedToFreeByPatientId(type, patientId);
+    }
+
+    public List<Patient> getPatientsByDiseaseLevel(String type, String diseaseLevel) {
+        return patientRepo.findPatientByDiseaseLevel(type, diseaseLevel);
+    }
+
+    public void appointHospitalNurse(String type, Patient patientNeedTransfer, TreatmentRegion region) {
+        // 1 找该区域一个有空的病房护士，增加其 resp_patient_num
+        int num = region.getNurse_resp_num();
+        HospitalNurse hospitalNurse = hospitalNurseRepo.findHospitalNurseByRegionAndRespNum(type, region.getLevel(), num);
+        // 2 更新 patient 表
+        patientRepo.updateTreatmentRegionLevelAndNurseIdById(type, region.getLevel(), hospitalNurse.getId(), patientNeedTransfer.getPatient_id());
+
+    }
+
+    public void appointBed(String type, Patient patientNeedTransfer, TreatmentRegion region) {
+        // 1 找该区域一个空闲的床位
+        Bed bed = bedRepo.findBedByRegionAndPatientId(type, region.getLevel(), null);
+        // 2 更新床位信息
+        bedRepo.updateBedByBedIdAndPatientId(type, bed.getBed_id(), patientNeedTransfer.getPatient_id());
     }
 }
