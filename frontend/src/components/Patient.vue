@@ -23,21 +23,39 @@
     <br>
     <h3> Treatment Info </h3>
     <el-row>          
-      <el-col :span="6">            
+      <el-col :span="4" style="margin-top:5px">            
           <span>Nurse ID</span> | <em>{{this.patient.nurse_id}}</em>
       </el-col>
+      
+      <el-col :span="5">
+          <span >Treatment Region</span> | <el-tag>{{this.patient.treatment_region_level}}</el-tag>          
+      </el-col>   
               
-      <el-col :span="6">
-          <span>Life Status</span> | <el-tag>{{this.patient.life_status}}</el-tag>
+      <el-col :span="7">
+          <span>Life Status</span> | 
+          <el-select size="small" v-model="status" style="width:120px">
+            <el-option
+              v-for="item in getStatusOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+          <el-button size="mini" v-if="status != this.patient.life_status" @click="modifyLifeStatus()">confirm</el-button>
       </el-col>
 
-      <el-col :span="6">
-          <span>Disease Level</span> | <el-tag>{{this.patient.disease_level}}</el-tag>
-      </el-col>
-      
-      <el-col :span="6">
-          <span >Treatment Region</span> | <el-tag>light</el-tag>
-      </el-col>            
+      <el-col :span="7">
+          <span>Disease Level</span> | 
+          <el-select size="small" v-model="diseaseLevel" style="width:100px">
+            <el-option
+              v-for="item in diseaseLevelOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+          <el-button size="mini" v-if="diseaseLevel != this.patient.disease_level" @click="modifyDiseaseLevel()">Confirm</el-button>
+      </el-col>               
     </el-row>        
     <br>
     <br>
@@ -128,12 +146,105 @@ export default {
     patient:null,
     statusRecords:[],
     checklist:[],
+    status:null,   
+    diseaseLevel:null,
+    diseaseLevelOptions:[{
+            value: 'light',
+            label: 'light'
+          },{
+            value: 'severe',
+            label: 'severe',          
+          }, {
+            value: 'critical',
+            label: 'critical'
+          }]
     }
   },
   methods:{
     getTime(time){      
       return time.substr(0,10)+" "+time.substr(11,8);
+    },
+    modifyLifeStatus(){      
+      this.$axios
+      .post("/modifyLifeStatus", {
+        doctor_id:this.$store.state.user.id,
+        patient_id: this.patient.id,
+        new_life_status:this.status        
+      })
+      .then(resp => {
+        if (resp.status === 200) {
+          console.log(resp.data);
+          this.patient.life_status = this.status;
+          this.$message.success("Modify successfully");
+        } else {
+          console.log(error);
+        }
+      })
+      .catch(error => {
+       console.log(error);
+      });
+    },
+    
+    modifyDiseaseLevel(){            
+      this.$axios
+      .post("/modifyDiseaseLevel", {
+        doctor_id:this.$store.state.user.id,
+        patient_id: this.patient.id,
+        new_disease_level:this.diseaseLevel
+      })
+      .then(resp => {
+        if (resp.status === 200) {
+          console.log(resp.data);
+          this.patient.disease_level = this.diseaseLevel;
+          this.$message.success("Modify successfully");
+        } else {
+          console.log(error);
+        }
+      })
+      .catch(error => {
+       console.log(error);
+      });
     }
+  },
+  computed:{
+    getStatusOptions(){
+      let statusOptions = [];
+      switch(this.patient.life_status){        
+        case 'healthy':
+          statusOptions = [
+            {
+            value: 'healthy',
+            label: 'healthy'
+          },{
+            value: 'treating',
+            label: 'treating',          
+          }, {
+            value: 'dead',
+            label: 'dead'
+          }];
+          return statusOptions;
+
+        case 'dead':      
+          statusOptions = [{
+            value: 'dead',
+            label: 'dead'            
+          }];
+          return statusOptions;
+
+        case 'treating':
+          statusOptions = [{
+            value: 'healthy',
+            label: 'healthy',            
+          },{
+            value: 'treating',
+            label: 'treating'
+          },{
+            value: 'dead',
+            label: 'dead',            
+          }];
+          return statusOptions;          
+      }      
+    }  
   },
   created(){
       this.$axios
@@ -144,9 +255,12 @@ export default {
       .then(resp => {
         if (resp.status === 200) {
             console.log(resp.data);
-            this.patient = resp.data[1];
+            this.patient = resp.data[1];            
             this.checklist = resp.data[2];            
-            this.statusRecords = resp.data[3];            
+            this.statusRecords = resp.data[3];                  
+            this.status = this.patient.life_status;                        
+            this.diseaseLevel = this.patient.disease_level;
+
         } else {      
           console.log(error);
         }
