@@ -228,7 +228,7 @@ export default {
     },
     permitDischarge(){
       this.$axios
-      .post("", {
+      .post("/permitDischarged", {
         doctor_id: this.$store.state.user.id,
         patient_id:this.patient.patient_id,   
       })

@@ -49,7 +49,7 @@
       label="Disease Level"      
       width="130"
       :filters="[{ text: 'light', value: 'light' }, { text: 'severe', value: 'severe'},{text:'critical',value:'critical'}]"
-      :filter-method="filterGender"
+      :filter-method="filterDiseaseLevel"
       filter-placement="bottom-end">
       <template slot-scope="scope">
         <el-tag
@@ -63,8 +63,8 @@
       prop="status"
       label="Life Status"      
       width="120"
-      :filters="[{ text: 'recoveried', value: 'recoveried' }, { text: 'treating', value: 'treating'},{text: 'dead', value: 'dead'}]"
-      :filter-method="filterTag"
+      :filters="[{ text: 'healthy', value: 'healthy' }, { text: 'treating', value: 'treating'},{text: 'dead', value: 'dead'}]"
+      :filter-method="filterLifeStatus"
       filter-placement="bottom-end">
       <template slot-scope="scope">
         <el-tag           
@@ -95,16 +95,20 @@
     <el-table-column
       prop="discharge"
       label="Discharge?"      
-      width="100">    
+      :filters="[{ text: 'yes', value: '1' }, { text: 'no', value: '0'}]"
+      :filter-method="filterDischarge"
+      filter-placement="bottom-end"  
+      width="110">    
       <template slot-scope="scope">    
-        <el-button size="small" v-if="scope.row.can_be_discharged == 1 && scope.row.disease_level == 'light'">Permit</el-button>        
+        <!-- <el-button size="small" v-if="scope.row.can_be_discharged == 1 && scope.row.disease_level == 'light'" @click="permitDischarge(scope.row.patient_id)">Permit</el-button> -->
+        <div v-if ="scope.row.can_be_discharged == 1" >yes</div>
         <div v-else>no</div>
       </template>
     </el-table-column>
 
     <el-table-column      
       label=""      
-      width="130">
+      width="130" v-if="this.$store.state.user.type == 'doctor'">
       <template slot-scope="scope">    
         <!-- <el-button @click="addNewChecklist(scope.row.patient_id)" size="small">New Checklist</el-button>         -->
         <el-button @click="lookUpPatient(scope.row.patient_id)">See more</el-button>
@@ -141,7 +145,7 @@ export default {
     },
     parseStatus(status){
       switch(status){
-        case 'Recoveried':
+        case 'healthy':
           return 'success';
         case 'Treating':
           return 'warning';
@@ -152,11 +156,17 @@ export default {
     filterGender(value,row){
       return row.gender === value;
     },
-    filterTag(value, row) {      
+    filterLifeStatus(value, row) {      
       return row.life_status === value;
+    },
+    filterDiseaseLevel(value,row){
+      return row.disease_level === value;
     },
     filterTransfer(value,row){
       return row.need_transfer == value;
+    },
+    filterDischarge(value,row){
+      return row.can_be_discharged == value;
     },
     getPatientInfo(){            
       this.$axios
@@ -181,6 +191,23 @@ export default {
     lookUpPatient(id){
       this.specifiedPatientId=id;
     },
+    permitDischarge(id){
+      this.$axios
+      .post("/permitDischarged", {
+        doctor_id: this.$store.state.user.id,
+        patient_id:id,   
+      })
+      .then(resp => {
+        if (resp.status === 200) {
+          this.$message.success("Opetate successfully");
+        } else {
+          this.$message.error("Something wrong");      
+        }
+      })
+      .catch(error => {
+        this.$message.error("Something wrong");      
+      });
+    }
     // addNewChecklist(id){            
     //   this.$axios
     //   .post("/newChecklist", {

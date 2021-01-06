@@ -4,7 +4,8 @@
     <el-table
     :data="nurses"
     stripe
-    style="width: 120%">
+    max-height="510"
+    style="width: 100%">
     <el-table-column
       sortable
       prop="id"
@@ -69,7 +70,17 @@
       label="Name"      
       width="100">    
       </el-table-column> 
-    </el-table-column>            
+    </el-table-column> 
+
+    <el-table-column            
+      label="Operation"
+      width="120"
+      v-if="this.$store.state.user.type='cheif_nurse'"
+      >
+      <template slot-scope="scope">
+        <el-button type="danger">Delete</el-button>
+      </template>
+    </el-table-column>
   </el-table>
 
   <br/>
