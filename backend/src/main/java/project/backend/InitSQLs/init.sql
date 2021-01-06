@@ -117,7 +117,7 @@ insert into patient(name, age, disease_level, life_status, nurse_id, treatment_r
 insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p11', 25, 'light', 'treating', 'C001', 'light');
 insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('p21', 25, 'light', 'treating', 'C001', 'quarantine');
 insert into patient(name, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('Alice', 33, 'severe', 'treating', 'C001', 'light');
-create index patient_life_status on patient(life_status);
+create index patient_treatment_region_level on patient(treatment_region_level);
 
 
 # bed
