@@ -1,7 +1,7 @@
 
 <template>
 <div class = "container">
-    <logo></logo>    
+    <logo></logo>   
     <el-table
     v-if="this.specifiedPatientId==null"
     :data="patients"
@@ -197,6 +197,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .container{
+  margin-left:250px;
   padding:30px 5px;
 }
 .input-new-tag {

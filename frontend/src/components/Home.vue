@@ -155,8 +155,9 @@ export default {
 <style scoped>
 .el-aside{        
     padding:100px 0;
-    height:100vh;    
+    height:100%;    
     background-color:rgba(112, 152, 187, 0.1);
+    position: fixed;
 }
 .el-menu{
     margin-top:50px;
