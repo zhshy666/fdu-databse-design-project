@@ -13,7 +13,7 @@
       sortable
       prop="patient_id"
       label="ID"
-      width="60">
+      width="89">
     </el-table-column>
 
     <el-table-column      
@@ -31,7 +31,7 @@
     <el-table-column      
       prop="gender"
       label="Gender"
-      width="100"
+      width="110"
       :filters="[{ text: 'male', value: 'male' }, { text: 'female', value: 'female'}]"
       :filter-method="filterGender"
       filter-placement="bottom-end">      
@@ -41,7 +41,7 @@
       prop="age"
       label="Age"
       sortable
-      width="90">
+      width="100">
     </el-table-column>    
 
     <el-table-column
@@ -85,7 +85,7 @@
       :filters="[{ text: 'yes', value: '1' }, { text: 'no', value: '0'}]"
       :filter-method="filterTransfer"
       filter-placement="bottom-end"    
-      width="110">
+      width="120">
       <template slot-scope="scope">    
         <div v-if="scope.row.need_transfer == 0">no</div>
         <div v-else>yes</div>
@@ -98,7 +98,7 @@
       :filters="[{ text: 'yes', value: '1' }, { text: 'no', value: '0'}]"
       :filter-method="filterDischarge"
       filter-placement="bottom-end"  
-      width="110">    
+      width="120">    
       <template slot-scope="scope">    
         <!-- <el-button size="small" v-if="scope.row.can_be_discharged == 1 && scope.row.disease_level == 'light'" @click="permitDischarge(scope.row.patient_id)">Permit</el-button> -->
         <div v-if ="scope.row.can_be_discharged == 1" >yes</div>
