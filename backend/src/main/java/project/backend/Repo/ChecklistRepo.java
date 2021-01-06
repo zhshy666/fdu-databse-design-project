@@ -56,4 +56,20 @@ public class ChecklistRepo {
         Util.close(conn);
         return testResult;
     }
+
+    public void insertNewChecklist(String type, String doctorId, int patientId) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        String sql = "insert into database_project.checklist(doctor_id, patient_id) values (?, ?)";
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, doctorId);
+            preparedStatement.setInt(2, patientId);
+            preparedStatement.executeUpdate();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+    }
 }

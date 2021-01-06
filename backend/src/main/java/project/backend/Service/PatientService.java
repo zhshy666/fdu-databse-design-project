@@ -12,6 +12,7 @@ import java.util.List;
 
 @Service
 public class PatientService {
+    private TreatmentRegionRepo treatmentRegionRepo;
     private PatientRepo patientRepo;
     private PatientStatusRepo patientStatusRepo;
     private ChecklistRepo checklistRepo;
@@ -20,12 +21,13 @@ public class PatientService {
 
     @Autowired
     public PatientService(PatientRepo patientRepo, PatientStatusRepo patientStatusRepo, ChecklistRepo checklistRepo,
-                          HospitalNurseRepo hospitalNurseRepo, BedRepo bedRepo) {
+                          HospitalNurseRepo hospitalNurseRepo, BedRepo bedRepo, TreatmentRegionRepo treatmentRegionRepo) {
         this.patientRepo = patientRepo;
         this.patientStatusRepo = patientStatusRepo;
         this.checklistRepo = checklistRepo;
         this.hospitalNurseRepo = hospitalNurseRepo;
         this.bedRepo = bedRepo;
+        this.treatmentRegionRepo = treatmentRegionRepo;
     }
 
     public List<Patient> getAllPatients(List<String> levels, String type) {
@@ -133,6 +135,7 @@ public class PatientService {
         // 1 找该区域一个有空的病房护士，增加其 resp_patient_num
         int num = region.getNurse_resp_num();
         HospitalNurse hospitalNurse = hospitalNurseRepo.findHospitalNurseByRegionAndRespNum(type, region.getLevel(), num);
+        hospitalNurseRepo.updateRespPatientNum(type, hospitalNurse.getId(), 1);
         // 2 更新 patient 表
         patientRepo.updateTreatmentRegionLevelAndNurseIdById(type, region.getLevel(), hospitalNurse.getId(), patientNeedTransfer.getPatient_id());
     }
@@ -142,5 +145,38 @@ public class PatientService {
         int bedId = bedRepo.findFreeBedByRegion(type, region.getLevel());
         // 2 更新床位信息
         bedRepo.updateBedByBedIdAndPatientId(type, bedId, patientNeedTransfer.getPatient_id());
+    }
+
+    public void updateDiseaseLevel(String type, int patientId, String newDiseaseLevel) {
+        patientRepo.updatePatientDiseaseLevelById(type, patientId, newDiseaseLevel);
+    }
+
+    public boolean canTransfer(String type, String level, Patient patient) {
+        int patientId = patient.getPatient_id();
+        TreatmentRegion treatmentRegion = treatmentRegionRepo.findByLevel(type, level);
+        // 1 护士有空闲
+        HospitalNurse hospitalNurse = hospitalNurseRepo.findHospitalNurseByRegionAndRespNum(type, level, treatmentRegion.getNurse_resp_num());
+        if (hospitalNurse == null) return false;
+        // 2 病床有空闲
+        int bedId = bedRepo.findFreeBedByRegion(type, level);
+        if (bedId == -1) return false;
+        // 3 转移
+        // 原治疗区域
+        hospitalNurseRepo.updateRespPatientNum(type, patient.getNurse_id(), -1);
+        bedRepo.updateBedToFreeByPatientId(type, patientId);
+        // 新治疗区域
+        hospitalNurseRepo.updateRespPatientNum(type, hospitalNurse.getId(), 1);
+        patientRepo.updateTreatmentRegionLevelAndNurseIdById(type, level, hospitalNurse.getId(), patientId);
+        bedRepo.updateBedByBedIdAndPatientId(type, bedId, patientId);
+        return true;
+    }
+
+    public void discharge(String type, Patient patient) {
+        // 1 hospital_nurse
+        hospitalNurseRepo.updateRespPatientNum(type, patient.getNurse_id(), -1);
+        // 2 patient - 更新 treatment_region_level 和 nurse_id 为 null
+        patientRepo.updateTreatmentRegionLevelAndNurseIdById(type, null, null, patient.getPatient_id());
+        // 3 bed
+        bedRepo.updateBedToFreeByPatientId(type, patient.getPatient_id());
     }
 }
