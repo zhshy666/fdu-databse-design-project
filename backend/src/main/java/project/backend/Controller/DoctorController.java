@@ -166,23 +166,7 @@ public class DoctorController {
 
         // 如果更新为死亡状态，则因为病房护士和床位会空出来，判断是否存在需要进行区域转移的病人，并进行转移
         if (newStatus.equals("dead")){
-            Patient patientNeedTransfer;
-            // 1 查是否有病人等待转入该治疗区域，处于隔离区的病人优先
-            List<Patient> patientsWaitToTransfer = patientService.getPatientsByDiseaseLevel(Config.ROOT, region.getLevel());
-            if (patientsWaitToTransfer.isEmpty()){
-                return ResponseEntity.ok("success");
-            }
-            patientNeedTransfer = patientsWaitToTransfer.get(0);
-            for (Patient p : patientsWaitToTransfer){
-                if (p.getTreatment_region_level().equals("quarantine")){
-                    patientNeedTransfer = p;
-                    break;
-                }
-            }
-            // 2 转移
-            // ToDo: 属于系统自动做的事情，发站内信
-            patientService.appointHospitalNurse(Config.ROOT, patientNeedTransfer, region);
-            patientService.appointBed(Config.ROOT, patientNeedTransfer, region);
+            transferToCurrentRegion(region);
         }
 
         return ResponseEntity.ok("success");
@@ -196,11 +180,33 @@ public class DoctorController {
         int patientId = request.getPatient_id();
         String newDiseaseLevel = request.getNew_disease_level();
         Patient patient = patientService.getPatientById(Config.DOCTOR, patientId);
+        TreatmentRegion region = treatmentRegionService.getTreatmentRegionByLevel(Config.DOCTOR, patient.getTreatment_region_level());
         // 1 改病情评级
         patientService.updateDiseaseLevel(Config.DOCTOR, patientId, newDiseaseLevel);
         // 2 判断能否转到指定的治疗区域，不能的话还停留在当前区域
-        boolean canTransfer = patientService.canTransfer(Config.DOCTOR, newDiseaseLevel, patientId);
+        boolean canTransfer = patientService.canTransfer(Config.DOCTOR, newDiseaseLevel, patient);
+        if (canTransfer) transferToCurrentRegion(region);
         return ResponseEntity.ok(canTransfer);
     }
 
+    // 获取待转入该区域的病人并进行转入
+    private void transferToCurrentRegion(TreatmentRegion region){
+        Patient patientNeedTransfer;
+        // 1 查是否有病人等待转入该治疗区域，处于隔离区的病人优先
+        List<Patient> patientsWaitToTransfer = patientService.getPatientsByDiseaseLevel(Config.ROOT, region.getLevel());
+        if (patientsWaitToTransfer.isEmpty()){
+            return;
+        }
+        patientNeedTransfer = patientsWaitToTransfer.get(0);
+        for (Patient p : patientsWaitToTransfer){
+            if (p.getTreatment_region_level().equals("quarantine")){
+                patientNeedTransfer = p;
+                break;
+            }
+        }
+        // 2 转移
+        // ToDo: 属于系统自动做的事情，发站内信
+        patientService.appointHospitalNurse(Config.ROOT, patientNeedTransfer, region);
+        patientService.appointBed(Config.ROOT, patientNeedTransfer, region);
+    }
 }
