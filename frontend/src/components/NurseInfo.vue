@@ -2,17 +2,17 @@
 <div class="container">
     <logo></logo>
     <el-table
-    :data="nurses.slice((currentPage- 1)*pageSize,currentPage*pageSize)"
+    :data="nurses"
     stripe
     style="width: 120%">
     <el-table-column
       sortable
-      prop="ID"
+      prop="id"
       label="ID"
       width="60">
     </el-table-column>
     <el-table-column      
-      prop="Name"
+      prop="name"
       label="Name"
       width="120">
     </el-table-column>
@@ -29,7 +29,7 @@
     </el-table-column>            
 
     <el-table-column
-      prop="title"
+      prop="type"
       label="Title"      
       width="120">
     </el-table-column>            
@@ -37,34 +37,35 @@
     <el-table-column
       prop="patients"
       label="Responsibled Patients"      
-      width="450">      
-      <el-table-column
-      prop="patientID1"
+      width="450">   
+
+      <el-table-column            
+      prop="patients[0].patient_id"
       label="ID"      
       width="50">
       </el-table-column> 
       <el-table-column
-      prop="patientName1"
+      prop="patients[0].name"
       label="Name"      
       width="100">    
       </el-table-column>     
       <el-table-column
-      prop="patientID2"
+      prop="patients[1].patient_id"
       label="ID"      
       width="50">
       </el-table-column> 
       <el-table-column
-      prop="patientName2"
+      prop="patients[1].name"
       label="Name"      
       width="100">    
       </el-table-column> 
       <el-table-column
-      prop="patientID3"
+      prop="patients[2].patient_id"
       label="ID"      
       width="50">
       </el-table-column> 
       <el-table-column
-      prop="patientName3"
+      prop="patients[2].name"
       label="Name"      
       width="100">    
       </el-table-column> 
@@ -106,6 +107,7 @@ export default {
     .then(resp => {
       if (resp.status === 200) {
         console.log(resp.data);
+        this.nurses = resp.data;
       } else {
         console.log(error);
       }
