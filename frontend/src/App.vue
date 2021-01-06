@@ -23,4 +23,8 @@ body{
 a{
     text-decoration: none;
 }
+.container{
+  margin-left:250px;
+  padding:30px 5px;
+}
 </style>
