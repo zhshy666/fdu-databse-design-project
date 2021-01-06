@@ -84,44 +84,6 @@ public class DoctorController {
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/getNursesInfo")
-    public ResponseEntity<?> getNursesInfo(@RequestBody GetNursesInfoRequest request){
-        if (!request.getId().startsWith("D")){
-            return new ResponseEntity<>("Not allowed", HttpStatus.FORBIDDEN);
-        }
-        List<NurseInfo> result = new LinkedList<>();
-        // 1 护士长信息
-        List<ChiefNurse> chiefNurses = chiefNurseService.getChiefNurseByDoctorId(Config.DOCTOR, request.getId());
-        for (ChiefNurse nurse: chiefNurses){
-            NurseInfo nurseInfo = new NurseInfo(nurse.getId(), nurse.getName(), nurse.getAge(), nurse.getGender());
-            nurseInfo.setType("chief_nurse");
-            result.add(nurseInfo);
-        }
-
-        // 2 病房护士及各自负责的病人信息
-        List<String> levels = treatmentRegionService.getTreatmentRegions(request.getId(), Config.DOCTOR);
-        List<HospitalNurse> hospitalNurses = hospitalNurseService.getHospitalNursesByRegions(Config.DOCTOR, levels);
-        for (HospitalNurse hospitalNurse: hospitalNurses){
-            NurseInfo nurseInfo = new NurseInfo(hospitalNurse.getId(), hospitalNurse.getName(), hospitalNurse.getAge(),
-                    hospitalNurse.getGender());
-            nurseInfo.setType("hospital_nurse");
-            nurseInfo.setPatients(new LinkedList<>());
-            result.add(nurseInfo);
-        }
-        // 拿到该区域的所有病人信息
-        List<Patient> patients = patientService.getAllPatients(levels, Config.DOCTOR);
-        for (Patient patient: patients){
-            String hospitalNurseId = patient.getNurse_id();
-            for (int i = levels.size(); i < result.size(); i++){
-                if (result.get(i).getId().equals(hospitalNurseId)){
-                    result.get(i).getPatients().add(patient);
-                    break;
-                }
-            }
-        }
-        return ResponseEntity.ok(result);
-    }
-
     @PostMapping("/modifyLifeStatus")
     public ResponseEntity<?> modifyLifeStatus(@RequestBody ModifyLifeStatusRequest request){
         if (!request.getDoctor_id().startsWith("D")){

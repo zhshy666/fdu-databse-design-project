@@ -38,4 +38,12 @@ public class TreatmentRegionService {
         return treatmentRegionRepo.findByLevel(type, diseaseLevel);
     }
 
+    public TreatmentRegion getTreatmentRegionByChiefNurseId(String type, String chiefNurseId) {
+        return treatmentRegionRepo.findByChiefNurseId(type, chiefNurseId);
+    }
+
+    public boolean hasEmptyBed(String type, String level) {
+        int bedId = bedRepo.findFreeBedByRegion(type, level);
+        return bedId != -1;
+    }
 }

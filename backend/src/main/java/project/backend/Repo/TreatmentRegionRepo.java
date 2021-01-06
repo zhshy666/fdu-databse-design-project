@@ -102,4 +102,26 @@ public class TreatmentRegionRepo {
         Util.close(conn);
         return levels;
     }
+
+    public TreatmentRegion findByChiefNurseId(String type, String chiefNurseId) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        String sql = "select * from database_project.treatment_region where nurse_id = ?";
+        ResultSet rs;
+        TreatmentRegion treatmentRegion = null;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, chiefNurseId);
+            rs = preparedStatement.executeQuery();
+            if (rs.next()){
+                treatmentRegion = new TreatmentRegion();
+                Util.toObject(rs, treatmentRegion);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+        return treatmentRegion;
+    }
 }

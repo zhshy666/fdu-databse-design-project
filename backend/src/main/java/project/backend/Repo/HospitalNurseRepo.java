@@ -136,4 +136,59 @@ public class HospitalNurseRepo {
         Util.close(conn);
         return hospitalNurse;
     }
+
+    public void deleteHospitalNurseById(String type, String nurseId) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        String sql = "delete from database_project.hospital_nurse where id = ?";
+
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, nurseId);
+            preparedStatement.executeUpdate();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+    }
+
+    public HospitalNurse findFreeHospitalNurseByNurseId(String type, String nurseId) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        // query
+        String sql = "select * from database_project.hospital_nurse where id = ? and treatment_region_level is null";
+        ResultSet rs;
+        HospitalNurse hospitalNurse = null;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, nurseId);
+            rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                hospitalNurse = new HospitalNurse();
+                Util.toObject(rs, hospitalNurse);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Util.close(conn);
+        return hospitalNurse;
+    }
+
+    public void updateTreatmentRegionLevel(String type, String id, String level) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        String sql = "update database_project.hospital_nurse set treatment_region_level = ? where id = ?";
+
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, level);
+            preparedStatement.setString(2, id);
+            preparedStatement.executeUpdate();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+    }
 }

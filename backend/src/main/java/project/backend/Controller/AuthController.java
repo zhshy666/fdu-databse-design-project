@@ -7,13 +7,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import project.backend.Controller.Request.*;
-import project.backend.Entity.Patient;
-import project.backend.Entity.PatientInfo;
-import project.backend.Entity.Staff;
+import project.backend.Entity.*;
 import project.backend.Service.*;
 import project.backend.Utils.Config;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -21,12 +20,17 @@ public class AuthController {
     private AuthService authService;
     private TreatmentRegionService treatmentRegionService;
     private PatientService patientService;
+    private ChiefNurseService chiefNurseService;
+    private HospitalNurseService hospitalNurseService;
 
     @Autowired
-    public AuthController(AuthService authService, TreatmentRegionService treatmentRegionService, PatientService patientService) {
+    public AuthController(AuthService authService, TreatmentRegionService treatmentRegionService,
+                          PatientService patientService, ChiefNurseService chiefNurseService, HospitalNurseService hospitalNurseService) {
         this.authService = authService;
         this.treatmentRegionService = treatmentRegionService;
         this.patientService = patientService;
+        this.chiefNurseService = chiefNurseService;
+        this.hospitalNurseService = hospitalNurseService;
     }
 
 
@@ -84,4 +88,47 @@ public class AuthController {
 
         return ResponseEntity.ok(info);
     }
+
+    @PostMapping("/getNursesInfo")
+    public ResponseEntity<?> getNursesInfo(@RequestBody GetNursesInfoRequest request){
+        if (!(request.getId().startsWith("D") || request.getId().startsWith("C"))){
+            return new ResponseEntity<>("Not allowed", HttpStatus.FORBIDDEN);
+        }
+        List<NurseInfo> result = new LinkedList<>();
+        String type = Config.DOCTOR;
+        if (request.getId().startsWith("C")){
+            type = Config.CHIEF_NURSE;
+        }
+        // 1 护士长信息
+        List<ChiefNurse> chiefNurses = chiefNurseService.getChiefNurseByDoctorId(type, request.getId());
+        for (ChiefNurse nurse: chiefNurses){
+            NurseInfo nurseInfo = new NurseInfo(nurse.getId(), nurse.getName(), nurse.getAge(), nurse.getGender());
+            nurseInfo.setType("chief_nurse");
+            result.add(nurseInfo);
+        }
+
+        // 2 病房护士及各自负责的病人信息
+        List<String> levels = treatmentRegionService.getTreatmentRegions(request.getId(), type);
+        List<HospitalNurse> hospitalNurses = hospitalNurseService.getHospitalNursesByRegions(type, levels);
+        for (HospitalNurse hospitalNurse: hospitalNurses){
+            NurseInfo nurseInfo = new NurseInfo(hospitalNurse.getId(), hospitalNurse.getName(), hospitalNurse.getAge(),
+                    hospitalNurse.getGender());
+            nurseInfo.setType("hospital_nurse");
+            nurseInfo.setPatients(new LinkedList<>());
+            result.add(nurseInfo);
+        }
+        // 拿到该区域的所有病人信息
+        List<Patient> patients = patientService.getAllPatients(levels, type);
+        for (Patient patient: patients){
+            String hospitalNurseId = patient.getNurse_id();
+            for (int i = levels.size(); i < result.size(); i++){
+                if (result.get(i).getId().equals(hospitalNurseId)){
+                    result.get(i).getPatients().add(patient);
+                    break;
+                }
+            }
+        }
+        return ResponseEntity.ok(result);
+    }
+
 }

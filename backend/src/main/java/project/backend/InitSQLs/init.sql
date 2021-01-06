@@ -91,9 +91,11 @@ create table if not exists hospital_nurse
     foreign key (treatment_region_level) references treatment_region(level)
 )charset = utf8;
 insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H001', 'hospital_nurse1', '123456', 26, 'female', 'light', 3);
-insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H002', 'hospital_nurse2', '123456', 36, 'male', 'severe', 1);
+insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H002', 'hospital_nurse2', '123456', 26, 'female', 'light', 0);
+insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H003', 'hospital_nurse3', '123456', 36, 'male', 'severe', 1);
 insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H004', 'hospital_nurse4', '123456', 36, 'male', 'severe', 0);
-insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H003', 'hospital_nurse3', '123456', 28, 'female', 'critical', 1);
+insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H005', 'hospital_nurse5', '123456', 28, 'female', 'critical', 1);
+insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H006', 'hospital_nurse6', '123456', 28, 'female', null, 0);
 
 
 # patient
@@ -130,7 +132,7 @@ create table if not exists bed
     foreign key (patient_id) references patient(patient_id),
     foreign key (treatment_region_level) references treatment_region(level)
 )charset = utf8;
-# insert into bed(treatment_region_level) values ('light');
+insert into bed(treatment_region_level) values ('light');
 # insert into bed(treatment_region_level) values ('light');
 # insert into bed(treatment_region_level) values ('light');
 insert into bed(treatment_region_level) values ('severe');
@@ -213,7 +215,7 @@ drop user 'chief_nurse'@'localhost';
 create user 'chief_nurse'@'localhost' identified by '123456';
 grant select, update on chief_nurse to 'chief_nurse'@'localhost';
 grant select on patient to 'chief_nurse'@'localhost';
-grant select, insert, delete on hospital_nurse to 'chief_nurse'@'localhost';
+grant select, insert, delete, update on hospital_nurse to 'chief_nurse'@'localhost';
 grant select, insert on checklist to 'chief_nurse'@'localhost';
 grant select on treatment_region to 'chief_nurse'@'localhost';
 grant select on patient_status to 'chief_nurse'@'localhost';
@@ -233,5 +235,6 @@ grant select on patient to 'hospital_nurse'@'localhost';
 grant select, update on checklist to 'hospital_nurse'@'localhost';
 grant select, update, insert on patient_status to 'hospital_nurse'@'localhost';
 
-select * from patient;
-select * from checklist;
+# select * from patient;
+# select * from checklist;
+select * from hospital_nurse;
