@@ -1,4 +1,4 @@
-<template>
+<template v-if="refresh">
 <div >
   <el-card>            
       <h3>Basic Info</h3>    
@@ -141,11 +141,13 @@ export default {
   name:"Patient",
   components:{},
   props:["patientId"],
+  inject:["reload"],
   data(){
   return{
+    refresh:true,
     patient:null,
     statusRecords:[],
-    checklist:[],
+    checklist:[],    
     status:null,   
     diseaseLevel:null,
     diseaseLevelOptions:[{
@@ -207,7 +209,7 @@ export default {
       });
     },
 
-    addNewChecklist(){      
+    addNewChecklist(){         
       this.$axios
       .post("/newChecklist", {
         doctor_id: this.$store.state.user.id,
@@ -226,6 +228,7 @@ export default {
         console.log(error);
       });
     },
+    
     permitDischarge(){
       this.$axios
       .post("/permitDischarge", {
@@ -235,6 +238,7 @@ export default {
       .then(resp => {
         if (resp.status === 200) {
           this.$message.success("Opetate successfully");
+          this.reload();
         } else {
           this.$message.error("Something wrong");      
         }
@@ -242,7 +246,7 @@ export default {
       .catch(error => {
         this.$message.error("Something wrong");      
       });
-    }
+    },
   },
   computed:{
     getStatusOptions(){

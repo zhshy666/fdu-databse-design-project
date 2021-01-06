@@ -22,7 +22,7 @@
             <span slot="title">Record patient status</span>
         </el-menu-item>
 
-        <el-menu-item index = "patient-info" @click="handleSelect('patient-info','')">
+        <el-menu-item index = "patient-info" >
             <i class="el-icon-user"></i>
             <span slot="title">Patient information</span>
         </el-menu-item>
@@ -79,7 +79,7 @@ export default {
       }
   },
   methods:{
-       handleSelect(key, keyPath) {           
+       handleSelect(key, keyPath) {      
            switch(key){
                case "modify":
                    this.isModify = true;
