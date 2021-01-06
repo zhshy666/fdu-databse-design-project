@@ -22,16 +22,18 @@ public class DoctorController {
     private ChecklistService checklistService;
     private PatientStatusService patientStatusService;
     private HospitalNurseService hospitalNurseService;
+    private ChiefNurseService chiefNurseService;
 
     @Autowired
     public DoctorController(TreatmentRegionService treatmentRegionService, PatientService patientService,
                             ChecklistService checklistService, PatientStatusService patientStatusService,
-                            HospitalNurseService hospitalNurseService) {
+                            HospitalNurseService hospitalNurseService, ChiefNurseService chiefNurseService) {
         this.treatmentRegionService = treatmentRegionService;
         this.patientService = patientService;
         this.checklistService = checklistService;
         this.patientStatusService = patientStatusService;
         this.hospitalNurseService = hospitalNurseService;
+        this.chiefNurseService = chiefNurseService;
     }
 
     @PostMapping("/getPatientsInfo")
@@ -110,7 +112,7 @@ public class DoctorController {
         }
         List<NurseInfo> result = new LinkedList<>();
         // 1 护士长信息
-        List<ChiefNurse> chiefNurses = treatmentRegionService.getChiefNurseByDoctorId(Config.DOCTOR, request.getId());
+        List<ChiefNurse> chiefNurses = chiefNurseService.getChiefNurseByDoctorId(Config.DOCTOR, request.getId());
         for (ChiefNurse nurse: chiefNurses){
             NurseInfo nurseInfo = new NurseInfo(nurse.getId(), nurse.getName(), nurse.getAge(), nurse.getGender());
             nurseInfo.setType("chief_nurse");

@@ -9,6 +9,8 @@ import project.backend.Utils.Util;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.LinkedList;
+import java.util.List;
 
 @Repository
 public class ChiefNurseRepo {
@@ -50,5 +52,31 @@ public class ChiefNurseRepo {
             e.printStackTrace();
         }
         Util.close(conn);
+    }
+
+    public List<ChiefNurse> findByIds(String type, List<String> ids) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        String sql = "select * from database_project.chief_nurse where id = ?";
+        ResultSet rs;
+        List<ChiefNurse> chiefNurses = new LinkedList<>();
+        ChiefNurse chiefNurse;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            for (String id: ids) {
+                preparedStatement.setString(1, id);
+                rs = preparedStatement.executeQuery();
+                if (rs.next()) {
+                    chiefNurse = new ChiefNurse();
+                    Util.toObject(rs, chiefNurse);
+                    chiefNurses.add(chiefNurse);
+                }
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+        return chiefNurses;
     }
 }

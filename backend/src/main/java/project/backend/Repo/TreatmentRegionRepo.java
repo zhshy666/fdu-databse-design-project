@@ -37,21 +37,18 @@ public class TreatmentRegionRepo {
         return levels;
     }
 
-    public List<ChiefNurse> findChiefNurseByDoctorId(String type, String id) {
+    public List<String> findChiefNurseIdsByDoctorId(String type, String id) {
         Connection conn = Util.connect(type);
         assert conn != null;
         String sql = "select * from database_project.treatment_region where doctor_id = ?";
         ResultSet rs;
-        List<ChiefNurse> chiefNurses = new LinkedList<>();
-        ChiefNurse chiefNurse;
+        List<String> chiefNurses = new LinkedList<>();
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, id);
             rs = preparedStatement.executeQuery();
             while (rs.next()){
-                chiefNurse = new ChiefNurse();
-                Util.toObject(rs, chiefNurse);
-                chiefNurses.add(chiefNurse);
+                chiefNurses.add(rs.getString("nurse_id"));
             }
         }
         catch (Exception e){
