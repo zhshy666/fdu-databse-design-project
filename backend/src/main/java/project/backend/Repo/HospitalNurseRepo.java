@@ -134,8 +134,6 @@ public class HospitalNurseRepo {
             e.printStackTrace();
         }
         Util.close(conn);
-        assert hospitalNurse != null;
-        this.updateRespPatientNum(type, hospitalNurse.getId(), 1);
         return hospitalNurse;
     }
 }

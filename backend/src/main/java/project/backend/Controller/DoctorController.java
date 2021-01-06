@@ -190,8 +190,17 @@ public class DoctorController {
 
     @PostMapping("/modifyDiseaseLevel")
     public ResponseEntity<?> modifyDiseaseLevel(@RequestBody ModifyDiseaseLevelRequest request){
-
-        return null;
+        if (!request.getDoctor_id().startsWith("D")){
+            return new ResponseEntity<>("Not allowed", HttpStatus.FORBIDDEN);
+        }
+        int patientId = request.getPatient_id();
+        String newDiseaseLevel = request.getNew_disease_level();
+        Patient patient = patientService.getPatientById(Config.DOCTOR, patientId);
+        // 1 改病情评级
+        patientService.updateDiseaseLevel(Config.DOCTOR, patientId, newDiseaseLevel);
+        // 2 判断能否转到指定的治疗区域，不能的话还停留在当前区域
+        boolean canTransfer = patientService.canTransfer(Config.DOCTOR, newDiseaseLevel, patientId);
+        return ResponseEntity.ok(canTransfer);
     }
 
 }

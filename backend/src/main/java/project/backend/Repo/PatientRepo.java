@@ -148,4 +148,20 @@ public class PatientRepo {
         Util.close(conn);
         return patients;
     }
+
+    public void updatePatientDiseaseLevelById(String type, int patientId, String newDiseaseLevel) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        String sql = "update database_project.patient set disease_level = ? where patient_id = ?";
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, newDiseaseLevel);
+            preparedStatement.setInt(2, patientId);
+            preparedStatement.executeUpdate();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+    }
 }
