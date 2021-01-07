@@ -63,7 +63,8 @@
           native-type="submit"          
           size="medium"
           type="primary"
-          style="width:100% "          
+          style="width:100% " 
+          @click="submit"         
         >Submit</el-button>
       </el-form-item>
     </el-form>
@@ -86,8 +87,31 @@ export default {
             date:"",
         },        
     }
-  },
+  },  
   methods:{
+    submit(){
+      this.$axios
+      .post("/registerPatientInfo", {
+        emergency_nurse_id: this.$store.state.user.id,  
+        name:this.newPatient.name,
+        gender:this.newPatient.gender,
+        age:this.newPatient.age,
+        disease_level:this.newPatient.level,      
+        test_result:this.newPatient.testResult,
+        date:this.newPatient.date
+      })
+      .then(resp => {
+        if (resp.status === 200) {
+          this.$message.success("Submit successfully!");
+        } else {
+          this.$message.error("Submit error!");    
+        }
+      })
+      .catch(error => {
+        this.$message.error("Submit error!");    
+        console.log(error);
+      });
+    }
   }
 }
 </script>
