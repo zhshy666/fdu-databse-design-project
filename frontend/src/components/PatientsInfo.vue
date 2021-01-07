@@ -174,8 +174,7 @@ export default {
       .then(resp => {
         if (resp.status === 200) {
           console.log(resp.data);
-          this.patients = resp.data;
-          this.total = this.patients.length;          
+          this.patients = resp.data;                   
         } else {
           this.$message.error("Error occurs when geting patient info");
           console.log(error);
@@ -194,8 +193,7 @@ export default {
       .then(resp => {
         if (resp.status === 200) {
           console.log(resp.data);
-          this.patients = resp.data;
-          this.total = this.patients.length;          
+          this.patients = resp.data;                 
         } else {
           this.$message.error("Error occurs when geting patient info");
           console.log(error);
@@ -207,7 +205,23 @@ export default {
       });
     },
     getRelatedPatientsInfo(){
-
+      this.$axios
+      .post("/getRelatedPatientsInfo", {
+        id: this.$store.state.user.id,        
+      })
+      .then(resp => {
+        if (resp.status === 200) {
+          console.log(resp.data);
+          this.patients = resp.data;                   
+        } else {
+          this.$message.error("Error occurs when geting patient info");
+          console.log(error);
+        }
+      })
+      .catch(error => {
+        this.$message.error("Error occurs when geting patient info");
+        console.log(error);
+      });
     },
     lookUpPatient(id){
       this.specifiedPatientId=id;
@@ -259,7 +273,7 @@ export default {
       case 'emergency_nurse':
         this.getAllPatientsInfo();
         return;
-      case 'hosputal_nurse':
+      case 'hospital_nurse':        
         this.getRelatedPatientsInfo();
         return;
     }    
