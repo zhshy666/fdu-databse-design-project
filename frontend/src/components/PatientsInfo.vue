@@ -22,8 +22,7 @@
       label="Name"
       width="120"
       >      
-      <template slot-scope="scope">
-        <!-- <p style="cursor:pointer;color:cornflowerblue" @click="lookUpPatient(scope.row.patient_id)">{{scope.row.name}}</p> -->
+      <template slot-scope="scope">        
         <p>{{scope.row.name}}</p>
       </template>
     </el-table-column>
@@ -109,8 +108,7 @@
     <el-table-column      
       label=""      
       width="130" v-if="this.$store.state.user.type == 'doctor'">
-      <template slot-scope="scope">    
-        <!-- <el-button @click="addNewChecklist(scope.row.patient_id)" size="small">New Checklist</el-button>         -->
+      <template slot-scope="scope">            
         <el-button @click="lookUpPatient(scope.row.patient_id)">See more</el-button>
       </template>
     </el-table-column>
@@ -188,6 +186,29 @@ export default {
         console.log(error);
       });      
     },
+    getAllPatientsInfo(){
+      this.$axios
+      .post("/getAllPatientsInfo", {
+        id: this.$store.state.user.id,        
+      })
+      .then(resp => {
+        if (resp.status === 200) {
+          console.log(resp.data);
+          this.patients = resp.data;
+          this.total = this.patients.length;          
+        } else {
+          this.$message.error("Error occurs when geting patient info");
+          console.log(error);
+        }
+      })
+      .catch(error => {
+        this.$message.error("Error occurs when geting patient info");
+        console.log(error);
+      });
+    },
+    getRelatedPatientsInfo(){
+
+    },
     lookUpPatient(id){
       this.specifiedPatientId=id;
     },
@@ -229,8 +250,19 @@ export default {
     // }
   },
 
-  created(){   
-    this.getPatientInfo();             
+  created(){  
+    switch(this.$store.state.user.type) {
+      case 'chief_nurse':
+      case 'doctor':
+        this.getPatientInfo();
+        return;
+      case 'emergency_nurse':
+        this.getAllPatientsInfo();
+        return;
+      case 'hosputal_nurse':
+        this.getRelatedPatientsInfo();
+        return;
+    }    
   }  
 }
 </script>
