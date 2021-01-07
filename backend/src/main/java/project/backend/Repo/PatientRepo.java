@@ -185,6 +185,29 @@ public class PatientRepo {
         return getPatientNumber(type);
     }
 
+    public List<Patient> findPatients(String type) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        String sql = "select * from database_project.patient where treatment_region_level is not null";
+        ResultSet rs;
+        List<Patient> patients = new LinkedList<>();
+        Patient patient;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            rs = preparedStatement.executeQuery();
+            while (rs.next()){
+                patient = new Patient();
+                Util.toObject(rs, patient);
+                patients.add(patient);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+        return patients;
+    }
+
     private int getPatientNumber(String type){
         Connection conn = Util.connect(type);
         assert conn != null;
@@ -204,4 +227,6 @@ public class PatientRepo {
         Util.close(conn);
         return num;
     }
+
+
 }

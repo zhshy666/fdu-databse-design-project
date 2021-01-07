@@ -30,7 +30,7 @@ public class PatientService {
         this.treatmentRegionRepo = treatmentRegionRepo;
     }
 
-    public List<Patient> getAllPatients(List<String> levels, String type) {
+    public List<Patient> getPatientsByRegions(List<String> levels, String type) {
         List<Patient> list = new LinkedList<>();
         for (String level : levels) {
             patientRepo.findPatientsByTreatmentRegionLevel(level, list, type);
@@ -191,5 +191,9 @@ public class PatientService {
 
     public int addBasicInfo(String type, Patient patient) {
         return patientRepo.insertBasicInfo(type, patient);
+    }
+
+    public List<Patient> getAllPatients(String type) {
+        return patientRepo.findPatients(type);
     }
 }

@@ -68,7 +68,7 @@ public class AuthController {
         // 2 找到该医生对应的治疗区域
         List<String> levels = treatmentRegionService.getTreatmentRegions(id, type);
         // 获取所有的 patients
-        List<Patient> patients = patientService.getAllPatients(levels, type);
+        List<Patient> patients = patientService.getPatientsByRegions(levels, type);
         // 查找符合指定条件的病人 ID 集合
         List<Integer> patientsCanBeDischarged = patientService.getPatientIdsWhoCanBeDischarged(type, patients);
         List<Integer> patientsNeedTransfer = patientService.getPatientIdsNeedTransfer(type, levels);
@@ -118,7 +118,7 @@ public class AuthController {
             result.add(nurseInfo);
         }
         // 拿到该区域的所有病人信息
-        List<Patient> patients = patientService.getAllPatients(levels, type);
+        List<Patient> patients = patientService.getPatientsByRegions(levels, type);
         for (Patient patient: patients){
             String hospitalNurseId = patient.getNurse_id();
             for (int i = levels.size(); i < result.size(); i++){
