@@ -8,9 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class ChecklistRepo {
@@ -173,11 +171,13 @@ public class ChecklistRepo {
         return num;
     }
 
-    public int findEarliestChecklistIdByHospitalNurseId(String type, String nurseId) {
+    public Map<String, Integer> findEarliestChecklistIdAndPatientIdByHospitalNurseId(String type, String nurseId) {
         Connection conn = Util.connect(type);
         assert conn != null;
-        int id = 0;
-        String sql = "select id from database_project.checklist where patient_id in (" +
+        int id;
+        int patientId;
+        Map<String, Integer> map = null;
+        String sql = "select id, patient_id from database_project.checklist where patient_id in (" +
                 "select patient_id from database_project.patient where nurse_id = ?) " +
                 "and test_result not in ('positive', 'negative') order by date";
         ResultSet rs;
@@ -186,13 +186,17 @@ public class ChecklistRepo {
             preparedStatement.setString(1, nurseId);
             rs = preparedStatement.executeQuery();
             if (rs.next()){
-                id = rs.getInt(1);
+                id = rs.getInt("id");
+                patientId = rs.getInt("patient_id");
+                map = new LinkedHashMap<>();
+                map.put("checklist_id", id);
+                map.put("patient_id", patientId);
             }
         }
         catch (Exception e){
             e.printStackTrace();
         }
         Util.close(conn);
-        return id;
+        return map;
     }
 }

@@ -7,6 +7,7 @@ import project.backend.Repo.ChecklistRepo;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ChecklistService {
@@ -48,7 +49,7 @@ public class ChecklistService {
         return checklists.get(0);
     }
 
-    public int getEarliestChecklistId(String type, String nurseId) {
-        return checklistRepo.findEarliestChecklistIdByHospitalNurseId(type, nurseId);
+    public Map<String, Integer> getEarliestChecklistId(String type, String nurseId) {
+        return checklistRepo.findEarliestChecklistIdAndPatientIdByHospitalNurseId(type, nurseId);
     }
 }

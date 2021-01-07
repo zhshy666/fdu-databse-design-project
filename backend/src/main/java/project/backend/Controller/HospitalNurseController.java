@@ -18,9 +18,7 @@ import project.backend.Utils.Util;
 import javax.print.Doc;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class HospitalNurseController {
@@ -122,15 +120,14 @@ public class HospitalNurseController {
         return ResponseEntity.ok("success");
     }
 
-    @PostMapping("/getChecklistTodo")
+    @PostMapping("/getChecklistToDo")
     public ResponseEntity<?> getChecklistToDo(@RequestBody GetChecklistToDoRequest request){
         if (!request.getId().startsWith("H")){
             return new ResponseEntity<>("Not allowed", HttpStatus.FORBIDDEN);
         }
-        // 1 找工作区域
         String nurseId = request.getId();
-        int checklistId = checklistService.getEarliestChecklistId(Config.HOSPITAL_NURSE, nurseId);
-        return ResponseEntity.ok(checklistId);
+        Map<String, Integer> result = checklistService.getEarliestChecklistId(Config.HOSPITAL_NURSE, nurseId);
+        return ResponseEntity.ok(result);
     }
 
     private void getCanBeDischargedAndSendMessage(int patientId) {
