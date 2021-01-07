@@ -15,6 +15,7 @@ import project.backend.Service.*;
 import project.backend.Utils.Config;
 import project.backend.Utils.Util;
 
+import javax.print.Doc;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,18 +27,18 @@ public class HospitalNurseController {
     private PatientService patientService;
     private ChecklistService checklistService;
     private PatientStatusService patientStatusService;
+    private MessageService messageService;
     private TreatmentRegionService treatmentRegionService;
-    private HospitalNurseService hospitalNurseService;
 
     @Autowired
     public HospitalNurseController(PatientService patientService, ChecklistService checklistService,
-                                   PatientStatusService patientStatusService, TreatmentRegionService treatmentRegionService,
-                                   HospitalNurseService hospitalNurseService) {
+                                   PatientStatusService patientStatusService, MessageService messageService,
+                                   TreatmentRegionService treatmentRegionService) {
         this.patientService = patientService;
         this.checklistService = checklistService;
         this.patientStatusService = patientStatusService;
+        this.messageService = messageService;
         this.treatmentRegionService = treatmentRegionService;
-        this.hospitalNurseService = hospitalNurseService;
     }
 
     @PostMapping("/getRelatedPatientsInfo")
@@ -76,6 +77,9 @@ public class HospitalNurseController {
 
         checklistService.recordChecklist(Config.HOSPITAL_NURSE, checklist);
 
+        // 检查病人是否可以出院
+        this.getCanBeDischargedAndSendMessage(checklist.getPatient_id());
+
         return ResponseEntity.ok("success");
     }
 
@@ -112,6 +116,9 @@ public class HospitalNurseController {
         // 3 写进对应的表中
         patientStatusService.addNewPatientStatus(Config.HOSPITAL_NURSE, patientStatus);
 
+        // 检查病人是否可以出院
+        this.getCanBeDischargedAndSendMessage(request.getId());
+
         return ResponseEntity.ok("success");
     }
 
@@ -124,5 +131,26 @@ public class HospitalNurseController {
         String nurseId = request.getId();
         int checklistId = checklistService.getEarliestChecklistId(Config.HOSPITAL_NURSE, nurseId);
         return ResponseEntity.ok(checklistId);
+    }
+
+    private void getCanBeDischargedAndSendMessage(int patientId) {
+        SimpleDateFormat f = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
+        Date now = new Date();
+        f.format(now);
+        Timestamp time = new Timestamp(now.getTime());
+        Patient patient = patientService.getPatientById(Config.ROOT, patientId);
+        boolean canDischarge = false;
+        if (patient.getTreatment_region_level().equals("light") && patient.getDisease_level().equals("light")){
+            canDischarge = patientService.canDischarge(Config.ROOT, patient.getPatient_id());
+        }
+        if (canDischarge){
+            Message message = new Message();
+            message.setStatus(0);
+            String doctorId = treatmentRegionService.getDoctorIdByRegion(Config.ROOT, patient.getTreatment_region_level());
+            message.setReceiver_id(doctorId);
+            message.setContent("Patient " + patient.getPatient_id() + " can be discharged now.");
+            message.setTime(time);
+            messageService.addNewMessage(Config.ROOT, message);
+        }
     }
 }

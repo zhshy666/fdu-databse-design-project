@@ -65,7 +65,6 @@ public class DoctorController {
 
         // 2 核酸检测单信息
         List<Checklist> checklists = checklistService.getChecklists(Config.DOCTOR, patientId);
-//        System.out.println(checklists.get(0).getDate());
         result.put("2", checklists);
 
         // 3 状态
