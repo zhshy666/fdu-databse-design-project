@@ -63,7 +63,7 @@
 </div>
 </template>
 <script>
-import logo from "./logo"
+import logo from "./Logo"
 export default {
   name:"BedsInfo",
   components:{logo},
