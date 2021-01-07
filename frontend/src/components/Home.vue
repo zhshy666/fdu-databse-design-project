@@ -37,6 +37,11 @@
             <span slot="title">Beds information</span>
         </el-menu-item>
 
+        <el-menu-item index = "checklist" v-if="this.isHospitalNurse">
+            <i class="el-icon-tickets"></i>
+            <span slot="title">Record Check Result</span>
+        </el-menu-item>
+
         <el-menu-item index = "message" v-if="this.isDoctor">
             <i class="el-icon-message"></i>
             <span slot="title">Message</span>
@@ -54,7 +59,9 @@
 
         <nurse-info v-if="this.isNurseInfo"></nurse-info>
 
-        <beds-info v-if="this.isBedsInfo"></beds-info>        
+        <beds-info v-if="this.isBedsInfo"></beds-info>    
+
+        <record-checklist v-if="this.isChecklist"></record-checklist>
     </el-main>
 </el-container>
 </template>
@@ -65,13 +72,14 @@ import BedsInfo from './BedsInfo.vue'
 import ModifyPersonalInfo from './ModifyPersonalInfo.vue'
 import NurseInfo from './NurseInfo.vue'
 import PatientsInfo from './PatientsInfo.vue'
+import RecordChecklist from './RecordChecklist.vue'
 import RecordStatus from './RecordStatus.vue'
 
 export default {
   name:"Home",
-  components:{logo,ModifyPersonalInfo, AddPatient,RecordStatus, PatientsInfo, NurseInfo, BedsInfo},
+  components:{logo,ModifyPersonalInfo, AddPatient,RecordStatus, PatientsInfo, NurseInfo, BedsInfo,RecordChecklist},
   data(){
-      return{        
+      return{ 
         isDoctor:false,
         isChiefNurse:false,
         isEmergencyNurse:false,
@@ -84,6 +92,7 @@ export default {
         isDairyStatus:false,
         isMessage:false,  
         isBedsInfo:false,        
+        isChecklist:false,
       }
   },
   methods:{
@@ -97,6 +106,7 @@ export default {
                    this.isNurseInfo = false;                   
                    this.isMessage = false;
                    this.isBedsInfo = false;
+                   this.isChecklist = false;
                    break;
                 case "new-patient":
                    this.isModify = false;
@@ -106,6 +116,7 @@ export default {
                    this.isNurseInfo = false;                   
                    this.isMessage = false;
                    this.isBedsInfo = false;
+                   this.isChecklist = false;
                    break;
                 case "record-status":
                    this.isModify = false;
@@ -115,6 +126,7 @@ export default {
                    this.isNurseInfo = false;                   
                    this.isBedsInfo = false;
                    this.isMessage = false;
+                   this.isChecklist = false;
                    break;
                 case "patient-info":
                    this.isModify = false;
@@ -124,6 +136,7 @@ export default {
                    this.isNurseInfo = false;                   
                    this.isBedsInfo = false;
                    this.isMessage = false;
+                   this.isChecklist = false;
                    break;
                 case "nurse-info":
                    this.isModify = false;
@@ -133,6 +146,7 @@ export default {
                    this.isNurseInfo = true;                   
                    this.isBedsInfo = false;
                    this.isMessage = false;
+                   this.isChecklist = false;
                    break;
                 case "message":
                    this.isModify = false;
@@ -142,6 +156,7 @@ export default {
                    this.isNurseInfo = false;                   
                    this.isBedsInfo = false;
                    this.isMessage = true;
+                   this.isChecklist = false;
                    break;                
                 case "beds-info":
                    this.isModify = false;
@@ -151,6 +166,17 @@ export default {
                    this.isNurseInfo = false;                   
                    this.isBedsInfo = true;
                    this.isMessage = false;
+                   this.isChecklist = false;
+                   break;                   
+                case "checklist":
+                   this.isModify = false;
+                   this.isNewPatient = false;                   
+                   this.isDairyStatus = false;
+                   this.isPatientInfo = false;
+                   this.isNurseInfo = false;                   
+                   this.isBedsInfo = false;
+                   this.isMessage = false;
+                   this.isChecklist = true;
                    break;                   
            }        
       },            
