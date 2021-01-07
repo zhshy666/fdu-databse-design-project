@@ -47,4 +47,8 @@ public class ChecklistService {
         if (checklists.isEmpty()) return null;
         return checklists.get(0);
     }
+
+    public int getEarliestChecklistId(String type, String nurseId) {
+        return checklistRepo.findEarliestChecklistIdByHospitalNurseId(type, nurseId);
+    }
 }
