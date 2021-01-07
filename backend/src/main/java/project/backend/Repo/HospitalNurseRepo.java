@@ -192,4 +192,24 @@ public class HospitalNurseRepo {
         Util.close(conn);
     }
 
+    public String findRegionByNurseId(String type, String id) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        // query
+        String sql = "select treatment_region_level from database_project.hospital_nurse where id = ?";
+        ResultSet rs;
+        String region = null;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                region = rs.getString("treatment_region_level");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Util.close(conn);
+        return region;
+    }
 }

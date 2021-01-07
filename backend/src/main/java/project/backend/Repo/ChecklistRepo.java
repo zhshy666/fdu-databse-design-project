@@ -172,4 +172,27 @@ public class ChecklistRepo {
         Util.close(conn);
         return num;
     }
+
+    public int findEarliestChecklistIdByHospitalNurseId(String type, String nurseId) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        int id = 0;
+        String sql = "select id from database_project.checklist where patient_id in (" +
+                "select patient_id from database_project.patient where nurse_id = ?) " +
+                "and test_result not in ('positive', 'negative') order by date";
+        ResultSet rs;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, nurseId);
+            rs = preparedStatement.executeQuery();
+            if (rs.next()){
+                id = rs.getInt(1);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+        return id;
+    }
 }

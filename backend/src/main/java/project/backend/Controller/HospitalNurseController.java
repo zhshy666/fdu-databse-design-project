@@ -6,13 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import project.backend.Controller.Request.GetChecklistToDoRequest;
 import project.backend.Controller.Request.GetPatientsInfoRequest;
 import project.backend.Controller.Request.RecordChecklistRequest;
 import project.backend.Controller.Request.RecordPatientStatusRequest;
 import project.backend.Entity.*;
-import project.backend.Service.ChecklistService;
-import project.backend.Service.PatientService;
-import project.backend.Service.PatientStatusService;
+import project.backend.Service.*;
 import project.backend.Utils.Config;
 import project.backend.Utils.Util;
 
@@ -27,13 +26,18 @@ public class HospitalNurseController {
     private PatientService patientService;
     private ChecklistService checklistService;
     private PatientStatusService patientStatusService;
+    private TreatmentRegionService treatmentRegionService;
+    private HospitalNurseService hospitalNurseService;
 
     @Autowired
     public HospitalNurseController(PatientService patientService, ChecklistService checklistService,
-                                   PatientStatusService patientStatusService) {
+                                   PatientStatusService patientStatusService, TreatmentRegionService treatmentRegionService,
+                                   HospitalNurseService hospitalNurseService) {
         this.patientService = patientService;
         this.checklistService = checklistService;
         this.patientStatusService = patientStatusService;
+        this.treatmentRegionService = treatmentRegionService;
+        this.hospitalNurseService = hospitalNurseService;
     }
 
     @PostMapping("/getRelatedPatientsInfo")
@@ -109,5 +113,16 @@ public class HospitalNurseController {
         patientStatusService.addNewPatientStatus(Config.HOSPITAL_NURSE, patientStatus);
 
         return ResponseEntity.ok("success");
+    }
+
+    @PostMapping("/getChecklistTodo")
+    public ResponseEntity<?> getChecklistToDo(@RequestBody GetChecklistToDoRequest request){
+        if (!request.getId().startsWith("H")){
+            return new ResponseEntity<>("Not allowed", HttpStatus.FORBIDDEN);
+        }
+        // 1 找工作区域
+        String nurseId = request.getId();
+        int checklistId = checklistService.getEarliestChecklistId(Config.HOSPITAL_NURSE, nurseId);
+        return ResponseEntity.ok(checklistId);
     }
 }
