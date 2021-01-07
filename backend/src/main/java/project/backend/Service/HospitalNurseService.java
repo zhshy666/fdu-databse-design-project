@@ -30,7 +30,7 @@ public class HospitalNurseService {
     }
 
     public void deleteHospitalNurse(String type, String nurseId) {
-        hospitalNurseRepo.deleteHospitalNurseById(type, nurseId);
+        hospitalNurseRepo.updateTreatmentRegionLevel(type, nurseId, null);
     }
 
     public boolean addHospitalNurse(String type, String nurseId, String level) {
