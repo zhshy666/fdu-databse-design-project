@@ -13,6 +13,7 @@ import project.backend.Entity.Patient;
 import project.backend.Service.ChecklistService;
 import project.backend.Service.PatientService;
 import project.backend.Utils.Config;
+import project.backend.Utils.Util;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -45,15 +46,8 @@ public class EmergencyNurseController {
         boolean canTransfer = patientService.canTransfer(Config.EMERGENCY_NURSE, request.getDisease_level(), patient);
 
         // 2 加入检测单
-        SimpleDateFormat f = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
-        Date time = null;
-        try {
-            time = f.parse(request.getDate());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        assert time != null;
-        Checklist checklist = new Checklist(request.getTest_result(), time, request.getDisease_level());
+        Timestamp timestamp = Util.transferDateFormat(request.getDate());
+        Checklist checklist = new Checklist(request.getTest_result(), timestamp, request.getDisease_level());
         checklist.setPatient_id(patientId);
         checklistService.addInitChecklist(Config.EMERGENCY_NURSE, checklist);
 

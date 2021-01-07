@@ -87,7 +87,7 @@ public class Util {
 
     public static Timestamp transferDateFormat(String dateTime) {
         dateTime = dateTime.replace("Z", " UTC");
-        SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss.SSS Z");
+        SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd'T'HH:mm:ss.SSS Z");
         SimpleDateFormat defaultFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Timestamp newTime = null;
         try {

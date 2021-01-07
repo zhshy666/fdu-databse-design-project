@@ -14,6 +14,7 @@ import project.backend.Service.ChecklistService;
 import project.backend.Service.PatientService;
 import project.backend.Service.PatientStatusService;
 import project.backend.Utils.Config;
+import project.backend.Utils.Util;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -65,16 +66,7 @@ public class HospitalNurseController {
         Checklist checklist = checklistService.getChecklistById(Config.HOSPITAL_NURSE, checklistId);
         checklist.setDisease_level(request.getDisease_level());
         checklist.setTest_result(request.getTest_result());
-        SimpleDateFormat f = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
-        Timestamp timestamp = null;
-        try {
-            Date time = f.parse(request.getDate());
-            String result = f.format(time);
-            timestamp = Timestamp.valueOf(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        assert timestamp != null;
+        Timestamp timestamp = Util.transferDateFormat(request.getDate());
         checklist.setDate(timestamp);
 
         checklistService.recordChecklist(Config.HOSPITAL_NURSE, checklist);

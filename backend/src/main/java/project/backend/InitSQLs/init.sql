@@ -245,8 +245,10 @@ drop user 'emergency_nurse'@'localhost';
 create user 'emergency_nurse'@'localhost' identified by '123456';
 grant select, update on emergency_nurse to 'emergency_nurse'@'localhost';
 grant select, insert on checklist to 'emergency_nurse'@'localhost';
-grant select, insert on patient to 'emergency_nurse'@'localhost';
+grant select, insert, update on patient to 'emergency_nurse'@'localhost';
 grant select on treatment_region to 'emergency_nurse'@'localhost';
+grant select, update on hospital_nurse to 'emergency_nurse'@'localhost';
+grant select, update on bed to 'emergency_nurse'@'localhost';
 
 drop user 'hospital_nurse'@'localhost';
 create user 'hospital_nurse'@'localhost' identified by '123456';
@@ -256,7 +258,7 @@ grant select, update on checklist to 'hospital_nurse'@'localhost';
 grant select, update, insert on patient_status to 'hospital_nurse'@'localhost';
 grant select on treatment_region to 'hospital_nurse'@'localhost';
 
-# select * from patient;
+select * from patient;
 select * from checklist;
 select * from hospital_nurse;
 select * from patient_status;
