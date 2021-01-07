@@ -42,7 +42,7 @@
             <span slot="title">Beds information</span>
         </el-menu-item>        
 
-        <el-menu-item index = "message" v-if="this.isDoctor">
+        <el-menu-item index = "message" v-if="!this.isEmergencyNurse">
             <i class="el-icon-message"></i>
             <span slot="title">Message</span>
         </el-menu-item>
@@ -61,7 +61,9 @@
 
         <nurse-info v-if="this.isNurseInfo"></nurse-info>
 
-        <beds-info v-if="this.isBedsInfo"></beds-info>    
+        <beds-info v-if="this.isBedsInfo"></beds-info>   
+
+        <message  v-if="this.isMessage"></message>
         
     </el-main>
 </el-container>
@@ -70,6 +72,7 @@
 import logo from '../components/Logo'
 import AddPatient from './AddPatient.vue'
 import BedsInfo from './BedsInfo.vue'
+import Message from './Message.vue'
 import ModifyPersonalInfo from './ModifyPersonalInfo.vue'
 import NurseInfo from './NurseInfo.vue'
 import PatientsInfo from './PatientsInfo.vue'
@@ -78,7 +81,7 @@ import RecordStatus from './RecordStatus.vue'
 
 export default {
   name:"Home",
-  components:{logo,ModifyPersonalInfo, AddPatient,RecordStatus, PatientsInfo, NurseInfo, BedsInfo,RecordChecklist},
+  components:{logo,ModifyPersonalInfo, AddPatient,RecordStatus, PatientsInfo, NurseInfo, BedsInfo,RecordChecklist,Message},
   data(){
       return{ 
         isDoctor:false,
