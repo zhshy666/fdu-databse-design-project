@@ -140,7 +140,7 @@ insert into bed(treatment_region_level) values ('severe');
 # insert into bed(treatment_region_level) values ('critical');
 # insert into bed(treatment_region_level) values ('critical');
 # insert into bed(treatment_region_level) values ('critical');
-# TODO: 理论上像上边那样新增床位，下边的只是为了测试
+# TODO: 理论上像上边那样新增床位 下边的只是为了测试
 insert into bed(patient_id, treatment_region_level) VALUES (1, 'light');
 insert into bed(patient_id, treatment_region_level) VALUES (2, 'severe');
 insert into bed(patient_id, treatment_region_level) VALUES (3, 'critical');
