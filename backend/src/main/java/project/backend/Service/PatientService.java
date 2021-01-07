@@ -50,6 +50,7 @@ public class PatientService {
                 continue;
             }
             List<Double> temperatureRes = patientStatusRepo.findTemperaturesByPatientId(type, patient.getPatient_id());
+            if (temperatureRes.size() < 3) continue;
             boolean flag = true;
             for (Double d : temperatureRes){
                 if (d >= 37.3){
@@ -195,5 +196,9 @@ public class PatientService {
 
     public List<Patient> getAllPatients(String type) {
         return patientRepo.findPatients(type);
+    }
+
+    public List<Patient> getPatientsByNurseId(String type, String hospitalNurseId) {
+        return patientRepo.findPatientsByNurseId(type, hospitalNurseId);
     }
 }

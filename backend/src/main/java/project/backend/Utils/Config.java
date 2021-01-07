@@ -6,7 +6,7 @@ public class Config {
     public static String ROOT = "root";
     public static String PASSWORD = "zsy666";
 //    public static String PASSWORD = "admin";
-    public static String DB_URL = "jdbc:mysql://localhost/database_project";
+    public static String DB_URL = "jdbc:mysql://localhost/database_project?serverTimezone=GMT%2B8";
 //    public static String DB_URL = "jdbc:mysql://localhost/database_project?serverTimezone=UTC";
 
     // 4 种身份

@@ -6,16 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import project.backend.Controller.Request.GetAllPatientsInfoRequest;
+import project.backend.Controller.Request.GetPatientsInfoRequest;
 import project.backend.Controller.Request.RegisterPatientInfoRequest;
 import project.backend.Entity.Checklist;
 import project.backend.Entity.Patient;
-import project.backend.Entity.PatientInfo;
 import project.backend.Service.ChecklistService;
 import project.backend.Service.PatientService;
 import project.backend.Utils.Config;
 
-import java.util.LinkedList;
 import java.util.List;
 
 @Controller
@@ -52,7 +50,7 @@ public class EmergencyNurseController {
     }
 
     @PostMapping("/getAllPatientsInfo")
-    public ResponseEntity<?> getAllPatientsInfo(@RequestBody GetAllPatientsInfoRequest request){
+    public ResponseEntity<?> getAllPatientsInfo(@RequestBody GetPatientsInfoRequest request){
         if (!request.getId().startsWith("E")){
             return new ResponseEntity<>("Not allowed", HttpStatus.FORBIDDEN);
         }
