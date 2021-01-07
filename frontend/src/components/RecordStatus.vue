@@ -16,16 +16,7 @@
           v-model="recordStatus.patientID"
           auto-complete="off"                    
         ></el-input>
-      </el-form-item>
-
-      <el-form-item prop="patientName" size="medium" label="Patient Name">
-        <el-input
-          size="medium"
-          type="text"          
-          v-model="recordStatus.patientName"
-          auto-complete="off"                    
-        ></el-input>
-      </el-form-item>
+      </el-form-item>      
 
       <el-form-item prop="temperature" size="medium" label="Temperature">
           <el-input
@@ -94,8 +85,7 @@ export default {
   return{
       loading:false,
       recordStatus:{
-        patientID:"",
-        patientName:"",
+        patientID:"",        
         temperature:"",
         symptom:"",
         level:"",
@@ -109,8 +99,7 @@ export default {
       this.$axios
       .post("/recordPatientStatus", {
         hospital_nurse_id: this.$store.state.user.id,
-        id:this.recordStatus.patientID,
-        name:this.recordStatus.patientName,
+        id:this.recordStatus.patientID,        
         temperature:this.recordStatus.temperature,
         symptom:this.recordStatus.symptom,
         life_status:this.recordStatus.status,
