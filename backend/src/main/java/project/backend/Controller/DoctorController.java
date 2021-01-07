@@ -134,14 +134,15 @@ public class DoctorController {
         Date now = new Date();
         f.format(now);
         Timestamp time = new Timestamp(now.getTime());
-        checklistService.addChecklist(Config.DOCTOR, doctorId, patientId, time);
+        int checklistId = checklistService.addChecklist(Config.DOCTOR, doctorId, patientId, time);
 
         // TODO: 站内信，提醒对应的病房护士
         Message message = new Message();
         message.setStatus(0);
         String hospitalNurseId = patientService.getHospitalNurseIdByPatientId(Config.ROOT, patientId);
         message.setReceiver_id(hospitalNurseId);
-        message.setContent("A new checklist has been appointed for patient " + patientId + ".");
+        message.setContent("A new checklist has been appointed for patient " + patientId + ". " +
+                "The checklist id is " + checklistId + ".");
         message.setTime(time);
         messageService.addNewMessage(Config.ROOT, message);
 

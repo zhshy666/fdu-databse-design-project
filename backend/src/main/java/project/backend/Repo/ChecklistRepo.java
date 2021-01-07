@@ -152,4 +152,24 @@ public class ChecklistRepo {
         }
         Util.close(conn);
     }
+
+    public int findChecklistNum(String type) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        int num = 0;
+        String sql = "select count(*) from database_project.checklist";
+        ResultSet rs;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            rs = preparedStatement.executeQuery();
+            if (rs.next()){
+                num = rs.getInt(1);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+        return num;
+    }
 }
