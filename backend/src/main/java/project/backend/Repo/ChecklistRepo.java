@@ -93,4 +93,62 @@ public class ChecklistRepo {
         }
         Util.close(conn);
     }
+
+    public Checklist findByChecklistId(String type, int checklistId) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        String sql = "select * from database_project.checklist where id = ?";
+        ResultSet rs;
+        Checklist checklist = null;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setInt(1, checklistId);
+            rs = preparedStatement.executeQuery();
+            while (rs.next()){
+                checklist = new Checklist();
+                Util.toObject(rs, checklist);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+        return checklist;
+    }
+
+    public void updateChecklist(String type, Checklist checklist) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        String sql = "update database_project.checklist set disease_level = ? where patient_id = ?";
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, checklist.getDisease_level());
+            preparedStatement.setInt(2, checklist.getPatient_id());
+            preparedStatement.executeUpdate();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        sql = "update database_project.checklist set test_result = ? where patient_id = ?";
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, checklist.getTest_result());
+            preparedStatement.setInt(2, checklist.getPatient_id());
+            preparedStatement.executeUpdate();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        sql = "update database_project.checklist set date = ? where patient_id = ?";
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setTimestamp(1, new Timestamp(checklist.getDate().getTime()));
+            preparedStatement.setInt(2, checklist.getPatient_id());
+            preparedStatement.executeUpdate();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+    }
 }

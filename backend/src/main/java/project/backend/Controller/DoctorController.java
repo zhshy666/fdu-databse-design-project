@@ -12,6 +12,7 @@ import project.backend.Service.*;
 import project.backend.Utils.Config;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -66,6 +67,7 @@ public class DoctorController {
 
         // 2 核酸检测单信息
         List<Checklist> checklists = checklistService.getChecklists(Config.DOCTOR, patientId);
+//        System.out.println(checklists.get(0).getDate());
         result.put("2", checklists);
 
         // 3 状态
@@ -130,7 +132,10 @@ public class DoctorController {
         }
         String doctorId = request.getDoctor_id();
         int patientId = request.getPatient_id();
-        Timestamp time = new Timestamp(new Date().getTime());
+        SimpleDateFormat f = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
+        Date now = new Date();
+        f.format(now);
+        Timestamp time = new Timestamp(now.getTime());
         checklistService.addChecklist(Config.DOCTOR, doctorId, patientId, time);
 
         // TODO: 站内信，提醒对应的病房护士

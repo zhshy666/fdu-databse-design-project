@@ -40,8 +40,8 @@ public class Checklist {
         return date;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDate(Timestamp date) {
+        this.date = new Date(date.getTime());
     }
 
     public void setId(int id) {

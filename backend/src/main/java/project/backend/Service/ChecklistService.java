@@ -32,4 +32,12 @@ public class ChecklistService {
     public void addInitChecklist(String type, Checklist checklist) {
         checklistRepo.insertInitialChecklist(type, checklist);
     }
+
+    public Checklist getChecklistById(String type, int checklistId) {
+        return checklistRepo.findByChecklistId(type, checklistId);
+    }
+
+    public void recordChecklist(String type, Checklist checklist) {
+        checklistRepo.updateChecklist(type, checklist);
+    }
 }
