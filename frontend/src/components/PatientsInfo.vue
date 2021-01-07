@@ -6,6 +6,7 @@
     v-if="this.specifiedPatientId==null"
     :data="patients"
     max-height="510"
+    :style="getPaddingLeft()"
     stripe
     >
 
@@ -72,13 +73,26 @@
       </template>
     </el-table-column>    
 
-    <el-table-column
+    <el-table-column  
+      v-if="this.$store.state.user.type=='emergency_nurse'"  
       prop="treatment_region_level"
       label="Treat Region"      
-      width="120">
+      width="120"
+      :filters="[{ text: 'light', value: 'light' }, { text: 'severe', value: 'severe'},{text: 'critical', value: 'critical'},{ text: 'quarantine', value: 'quarantine'}]"
+      :filter-method="filterRegion"
+      filter-placement="bottom-end">
+    </el-table-column>
+
+    <el-table-column  
+      v-else
+      prop="treatment_region_level"
+      label="Treat Region"      
+      width="120"
+      >
     </el-table-column>
 
     <el-table-column
+      v-if="this.$store.state.user.type=='doctor'|| this.$store.state.user.type=='chief_nurse' "
       prop="need_transfer"
       label="Need Trans"  
       :filters="[{ text: 'yes', value: '1' }, { text: 'no', value: '0'}]"
@@ -92,6 +106,7 @@
     </el-table-column>
 
     <el-table-column
+      v-if="this.$store.state.user.type!='emergency_nurse'"
       prop="discharge"
       label="Discharge?"      
       :filters="[{ text: 'yes', value: '1' }, { text: 'no', value: '0'}]"
@@ -165,6 +180,9 @@ export default {
     },
     filterDischarge(value,row){
       return row.can_be_discharged == value;
+    },
+    filterRegion(value,row){
+      return row.treatment_region_level == value;
     },
     getPatientInfo(){            
       this.$axios
@@ -242,6 +260,18 @@ export default {
       .catch(error => {
         this.$message.error("Something wrong");      
       });
+    },
+    getPaddingLeft(){
+      switch(this.$store.state.user.type) {
+      case 'chief_nurse':
+        return "padding-left:60px";
+      case 'doctor':
+        return "";        
+      case 'emergency_nurse':        
+        return "padding-left:200px";
+      case 'hospital_nurse':                
+        return "padding-left:140px";
+    } 
     }
     // addNewChecklist(id){            
     //   this.$axios

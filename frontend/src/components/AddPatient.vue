@@ -90,6 +90,7 @@ export default {
   },  
   methods:{
     submit(){
+      this.loading = true;
       this.$axios
       .post("/registerPatientInfo", {
         emergency_nurse_id: this.$store.state.user.id,  
@@ -103,13 +104,24 @@ export default {
       .then(resp => {
         if (resp.status === 200) {
           this.$message.success("Submit successfully!");
+          this.loading = false;
+          this.newPatient = {
+            name:"",
+            gender:"",
+            age:"",
+            level:"",
+            testResult:"",
+            date:"",
+          }
         } else {
           this.$message.error("Submit error!");    
+          this.loading = false;
         }
       })
       .catch(error => {
         this.$message.error("Submit error!");    
         console.log(error);
+        this.loading = false;
       });
     }
   }
