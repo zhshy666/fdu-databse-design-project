@@ -19,4 +19,8 @@ public class PatientStatusService {
     public List<PatientStatus> getPatientStatuses(String type, int patientId) {
         return patientStatusRepo.findByPatientId(type, patientId);
     }
+
+    public void addNewPatientStatus(String type, PatientStatus patientStatus) {
+        patientStatusRepo.insertPatientStatus(type, patientStatus);
+    }
 }

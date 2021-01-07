@@ -40,4 +40,10 @@ public class ChecklistService {
     public void recordChecklist(String type, Checklist checklist) {
         checklistRepo.updateChecklist(type, checklist);
     }
+
+    public Checklist getNewestChecklist(String type, int patient_id) {
+        List <Checklist> checklists = checklistRepo.findByPatientId(type, patient_id);
+        if (checklists.isEmpty()) return null;
+        return checklists.get(0);
+    }
 }

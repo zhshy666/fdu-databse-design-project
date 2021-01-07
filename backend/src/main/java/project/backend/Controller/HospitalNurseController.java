@@ -8,12 +8,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import project.backend.Controller.Request.GetPatientsInfoRequest;
 import project.backend.Controller.Request.RecordChecklistRequest;
-import project.backend.Entity.Checklist;
-import project.backend.Entity.Patient;
-import project.backend.Entity.PatientInfo;
-import project.backend.Entity.PatientRelatedInfo;
+import project.backend.Controller.Request.RecordPatientStatusRequest;
+import project.backend.Entity.*;
 import project.backend.Service.ChecklistService;
 import project.backend.Service.PatientService;
+import project.backend.Service.PatientStatusService;
 import project.backend.Utils.Config;
 
 import java.sql.Timestamp;
@@ -26,11 +25,14 @@ import java.util.List;
 public class HospitalNurseController {
     private PatientService patientService;
     private ChecklistService checklistService;
+    private PatientStatusService patientStatusService;
 
     @Autowired
-    public HospitalNurseController(PatientService patientService, ChecklistService checklistService) {
+    public HospitalNurseController(PatientService patientService, ChecklistService checklistService,
+                                   PatientStatusService patientStatusService) {
         this.patientService = patientService;
         this.checklistService = checklistService;
+        this.patientStatusService = patientStatusService;
     }
 
     @PostMapping("/getRelatedPatientsInfo")
@@ -70,6 +72,35 @@ public class HospitalNurseController {
         checklist.setDate(time);
 
         checklistService.recordChecklist(Config.HOSPITAL_NURSE, checklist);
+
+        return ResponseEntity.ok("success");
+    }
+
+    @PostMapping("/recordPatientStatus")
+    public ResponseEntity<?> recordPatientStatus(@RequestBody RecordPatientStatusRequest request){
+        if (!request.getHospital_nurse_id().startsWith("H")){
+            return new ResponseEntity<>("Not allowed", HttpStatus.FORBIDDEN);
+        }
+        PatientStatus patientStatus = new PatientStatus();
+        // 1 基本信息
+        patientStatus.setPatient_id(request.getId());
+        patientStatus.setLife_status(request.getLife_status());
+        patientStatus.setNurse_id(request.getHospital_nurse_id());
+        patientStatus.setTemperature(request.getTemperature());
+        patientStatus.setSymptom(request.getSymptom());
+        Date date = request.getDate();
+        SimpleDateFormat f = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
+        f.format(date);
+        Timestamp time = new Timestamp(date.getTime());
+        patientStatus.setDate(time);
+
+        // 2 找最近一次的核酸检测单
+        Checklist checklist = checklistService.getNewestChecklist(Config.HOSPITAL_NURSE, patientStatus.getPatient_id());
+        assert checklist != null;
+        patientStatus.setChecklist_id(checklist.getId());
+
+        // 3 写进对应的表中
+        patientStatusService.addNewPatientStatus(Config.HOSPITAL_NURSE, patientStatus);
 
         return ResponseEntity.ok("success");
     }

@@ -8,6 +8,7 @@ import project.backend.Utils.Util;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -95,5 +96,28 @@ public class PatientStatusRepo {
         }
         Util.close(conn);
         return list;
+    }
+
+    public void insertPatientStatus(String type, PatientStatus patientStatus) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        Timestamp timestamp = new Timestamp(patientStatus.getDate().getTime());
+        String sql = "insert into database_project.patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id) values (?, ?, ?, ?, ?, ?, ?)";
+
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setDouble(1, patientStatus.getTemperature());
+            preparedStatement.setString(2, patientStatus.getSymptom());
+            preparedStatement.setString(3, patientStatus.getLife_status());
+            preparedStatement.setTimestamp(4, timestamp);
+            preparedStatement.setInt(5, patientStatus.getPatient_id());
+            preparedStatement.setString(6, patientStatus.getNurse_id());
+            preparedStatement.setInt(7, patientStatus.getChecklist_id());
+            preparedStatement.executeUpdate();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
     }
 }
