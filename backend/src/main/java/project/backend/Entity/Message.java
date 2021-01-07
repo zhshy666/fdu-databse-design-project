@@ -1,5 +1,6 @@
 package project.backend.Entity;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Message {
@@ -45,7 +46,7 @@ public class Message {
         return time;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setTime(Timestamp time) {
+        this.time = new Date(time.getTime());
     }
 }
