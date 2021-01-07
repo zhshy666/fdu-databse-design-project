@@ -14,6 +14,12 @@ public class Checklist {
     public Checklist() {
     }
 
+    public Checklist(String test_result, Date date, String disease_level) {
+        this.test_result = test_result;
+        this.date = date;
+        this.disease_level = disease_level;
+    }
+
     public Checklist(Timestamp date) {
         this.date = new Date(date.getTime());
     }

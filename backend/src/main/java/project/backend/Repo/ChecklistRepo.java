@@ -74,4 +74,23 @@ public class ChecklistRepo {
         }
         Util.close(conn);
     }
+
+    public void insertInitialChecklist(String type, Checklist checklist) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        Timestamp timestamp = new Timestamp(checklist.getDate().getTime());
+        String sql = "insert into database_project.checklist(test_result, date, disease_level, patient_id) values (?, ?, ?, ?)";
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, checklist.getTest_result());
+            preparedStatement.setTimestamp(2, timestamp);
+            preparedStatement.setString(3, checklist.getDisease_level());
+            preparedStatement.setInt(4, checklist.getPatient_id());
+            preparedStatement.executeUpdate();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+    }
 }

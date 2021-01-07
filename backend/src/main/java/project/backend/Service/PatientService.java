@@ -157,6 +157,7 @@ public class PatientService {
         patientRepo.updatePatientDiseaseLevelById(type, patientId, newDiseaseLevel);
     }
 
+    // 判断能不能转入 level 区域
     public boolean canTransfer(String type, String level, Patient patient) {
         int patientId = patient.getPatient_id();
         TreatmentRegion treatmentRegion = treatmentRegionRepo.findByLevel(type, level);
@@ -168,8 +169,10 @@ public class PatientService {
         if (bedId == -1) return false;
         // 3 转移
         // 原治疗区域
-        hospitalNurseRepo.updateRespPatientNum(type, patient.getNurse_id(), -1);
-        bedRepo.updateBedToFreeByPatientId(type, patientId);
+        if (!patient.getTreatment_region_level().equals("quarantine")) {
+            hospitalNurseRepo.updateRespPatientNum(type, patient.getNurse_id(), -1);
+            bedRepo.updateBedToFreeByPatientId(type, patientId);
+        }
         // 新治疗区域
         hospitalNurseRepo.updateRespPatientNum(type, hospitalNurse.getId(), 1);
         patientRepo.updateTreatmentRegionLevelAndNurseIdById(type, level, hospitalNurse.getId(), patientId);
@@ -184,5 +187,9 @@ public class PatientService {
         patientRepo.updateTreatmentRegionLevelAndNurseIdById(type, null, null, patient.getPatient_id());
         // 3 bed
         bedRepo.updateBedToFreeByPatientId(type, patient.getPatient_id());
+    }
+
+    public int addBasicInfo(String type, Patient patient) {
+        return patientRepo.insertBasicInfo(type, patient);
     }
 }

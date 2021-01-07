@@ -106,9 +106,9 @@ create table if not exists patient
     gender varchar(10) default 'male' check ( gender in ('male', 'female') ),
     age int not null check ( age > 0 ),
     disease_level varchar(10) not null check ( disease_level in ('light', 'severe', 'critical')),
-    life_status varchar(10) not null check ( life_status in ('healthy', 'treating', 'dead') ),
+    life_status varchar(10) default 'treating' not null check ( life_status in ('healthy', 'treating', 'dead') ),
     nurse_id varchar(20),
-    treatment_region_level varchar(10),
+    treatment_region_level varchar(10) default 'quarantine',
     primary key (patient_id),
     foreign key (nurse_id) references hospital_nurse(id),
     foreign key (treatment_region_level) references treatment_region(level)
@@ -224,8 +224,8 @@ grant select on bed to 'chief_nurse'@'localhost';
 drop user 'emergency_nurse'@'localhost';
 create user 'emergency_nurse'@'localhost' identified by '123456';
 grant select, update on emergency_nurse to 'emergency_nurse'@'localhost';
+grant select, insert on checklist to 'emergency_nurse'@'localhost';
 grant select, insert on patient to 'emergency_nurse'@'localhost';
-grant select, insert on patient_status to 'emergency_nurse'@'localhost';
 grant select on treatment_region to 'emergency_nurse'@'localhost';
 
 drop user 'hospital_nurse'@'localhost';

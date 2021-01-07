@@ -12,6 +12,13 @@ public class Patient {
 
     public Patient(){}
 
+    public Patient(String name, String gender, int age, String disease_level) {
+        this.name = name;
+        this.gender = gender;
+        this.age = age;
+        this.disease_level = disease_level;
+    }
+
     public int getPatient_id() {
         return patient_id;
     }

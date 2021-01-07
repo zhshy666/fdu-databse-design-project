@@ -164,4 +164,44 @@ public class PatientRepo {
         }
         Util.close(conn);
     }
+
+    public int insertBasicInfo(String type, Patient patient) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        String sql = "insert into database_project.patient(name, gender, age, disease_level)" +
+                "values (?, ?, ?, ?)";
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, patient.getName());
+            preparedStatement.setString(2, patient.getGender());
+            preparedStatement.setInt(3, patient.getAge());
+            preparedStatement.setString(4, patient.getDisease_level());
+            preparedStatement.executeUpdate();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+        return getPatientNumber(type);
+    }
+
+    private int getPatientNumber(String type){
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        int num = 0;
+        String sql = "select count(*) from database_project.patient";
+        ResultSet rs;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            rs = preparedStatement.executeQuery();
+            if (rs.next()){
+                num = rs.getInt(1);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+        return num;
+    }
 }

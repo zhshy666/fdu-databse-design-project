@@ -28,4 +28,8 @@ public class ChecklistService {
     public void addChecklist(String type, String doctorId, int patientId, Timestamp time) {
         checklistRepo.insertNewChecklist(type, doctorId, patientId, time);
     }
+
+    public void addInitChecklist(String type, Checklist checklist) {
+        checklistRepo.insertInitialChecklist(type, checklist);
+    }
 }
