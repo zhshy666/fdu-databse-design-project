@@ -61,14 +61,7 @@
             <el-radio border label="treating"></el-radio>
             <el-radio border label="dead"></el-radio>
         </el-radio-group>
-      </el-form-item> 
-
-      <el-form-item prop="testResult" size="medium" label="Coronavirus test">
-        <el-radio-group v-model="recordStatus.testResult" size="medium">
-            <el-radio border label="positive"></el-radio>
-            <el-radio border label="negative"></el-radio>            
-        </el-radio-group>
-      </el-form-item> 
+      </el-form-item>       
 
       <el-form-item prop="date" size="medium" label="Date">
         <el-date-picker
@@ -84,7 +77,8 @@
           native-type="submit"          
           size="medium"
           type="primary"
-          style="width:100% "          
+          style="width:100% "
+          @click="submit()"         
         >Submit</el-button>
       </el-form-item>
     </el-form>
@@ -100,18 +94,41 @@ export default {
   return{
       loading:false,
       recordStatus:{
-        patientID:123,
-        patientName:"Tom",
-        temperature:38,
-        symptom:"Cough and fever",
-        level:"light",
-        status:"treating",        
-        date:"",
-        testResult:"positive",
+        patientID:"",
+        patientName:"",
+        temperature:"",
+        symptom:"",
+        level:"",
+        status:"",        
+        date:"",        
       }
     }
   },
   methods:{
+    submit(){
+      this.$axios
+      .post("/recordPatientStatus", {
+        hospital_nurse_id: this.$store.state.user.id,
+        id:this.recordStatus.patientID,
+        name:this.recordStatus.patientName,
+        temperature:this.recordStatus.temperature,
+        symptom:this.recordStatus.symptom,
+        life_status:this.recordStatus.status,
+        disease_level:this.recordStatus.level,
+        date:this.recordStatus.date,        
+      })
+      .then(resp => {
+        if (resp.status === 200) {
+          this.$message.success("Submit successfully!");
+        } else {
+          this.$message.error("Something wrong!");      
+        }
+      })
+      .catch(error => {
+        this.$message.error("Something wrong!");      
+        console.log(error);
+      });
+    }
   }
 }
 </script>

@@ -22,6 +22,11 @@
             <span slot="title">Record patient status</span>
         </el-menu-item>
 
+        <el-menu-item index = "checklist" v-if="this.isHospitalNurse">
+            <i class="el-icon-tickets"></i>
+            <span slot="title">Record Check Result</span>
+        </el-menu-item>
+
         <el-menu-item index = "patient-info" >
             <i class="el-icon-user"></i>
             <span slot="title">Patient information</span>
@@ -35,12 +40,7 @@
         <el-menu-item index="beds-info" v-if="this.isChiefNurse">
             <i class="el-icon-c-scale-to-original"></i>
             <span slot="title">Beds information</span>
-        </el-menu-item>
-
-        <el-menu-item index = "checklist" v-if="this.isHospitalNurse">
-            <i class="el-icon-tickets"></i>
-            <span slot="title">Record Check Result</span>
-        </el-menu-item>
+        </el-menu-item>        
 
         <el-menu-item index = "message" v-if="this.isDoctor">
             <i class="el-icon-message"></i>
@@ -55,13 +55,14 @@
 
         <record-status v-if="this.isDairyStatus"></record-status>
 
+        <record-checklist v-if="this.isChecklist"></record-checklist>
+
         <patients-info v-if="this.isPatientInfo"></patients-info>
 
         <nurse-info v-if="this.isNurseInfo"></nurse-info>
 
         <beds-info v-if="this.isBedsInfo"></beds-info>    
-
-        <record-checklist v-if="this.isChecklist"></record-checklist>
+        
     </el-main>
 </el-container>
 </template>
