@@ -92,7 +92,7 @@
   <br/>
   <el-row>
     <el-col :offset="20" :span="3">
-    <el-button type="primary" @click="addNewNurse()">Add new hospital nurse</el-button>  
+    <el-button type="primary" @click="addNewNurse()" v-if="this.$store.state.user.type='chief_nurse'">Add new hospital nurse</el-button>  
     </el-col>
   </el-row>
 </div>
@@ -112,12 +112,13 @@ export default {
     removeNurse(id){      
       this.$axios
       .post("/deleteHospitalNurse", {
-        chief_nurse_id: this.store.state.user.id,
+        chief_nurse_id: this.$store.state.user.id,
         nurse_id:id      
       })
       .then(resp => {
         if (resp.status === 200) {
           this.$message.success("Remove successfully");
+          this.getNurseInfo();
         } else {
           this.$message.error("Something wrong");
         }
@@ -147,6 +148,7 @@ export default {
                 type: 'success',
                 message: 'Add successfully',
               });          
+              this.getNurseInfo();
             } else {
               this.$message.error("Something wrong, check your input and try again");
             }
@@ -157,24 +159,27 @@ export default {
           });          
         }).catch(() => {                
         });
+    },
+    getNurseInfo(){
+      this.$axios
+        .post("/getNursesInfo", {
+          id: this.$store.state.user.id,      
+        })
+        .then(resp => {
+          if (resp.status === 200) {
+            console.log(resp.data);
+            this.nurses = resp.data;
+          } else {
+            console.log(error);
+          }
+        })
+        .catch(error => {
+        console.log(error);
+        });
     }
   },
-  created(){
-    this.$axios
-    .post("/getNursesInfo", {
-      id: this.$store.state.user.id,      
-    })
-    .then(resp => {
-      if (resp.status === 200) {
-        console.log(resp.data);
-        this.nurses = resp.data;
-      } else {
-        console.log(error);
-      }
-    })
-    .catch(error => {
-     console.log(error);
-    });
+  created(){ 
+    this.getNurseInfo();
   },  
 }
 </script>
