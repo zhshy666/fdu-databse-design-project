@@ -145,4 +145,25 @@ public class TreatmentRegionRepo {
         Util.close(conn);
         return nurseId;
     }
+
+    public String findDoctorIdByLevel(String type, String level) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        String sql = "select doctor_id from database_project.treatment_region where level = ?";
+        ResultSet rs;
+        String doctorId = null;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, level);
+            rs = preparedStatement.executeQuery();
+            if (rs.next()){
+                doctorId = rs.getString("doctor_id");
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+        return doctorId;
+    }
 }
