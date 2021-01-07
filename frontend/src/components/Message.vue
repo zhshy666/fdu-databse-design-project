@@ -99,4 +99,7 @@ export default {
   color: cornflowerblue;
   font-weight: bold;  
 }
+.el-card{
+    margin:20px;
+}
 </style>

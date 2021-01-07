@@ -16,7 +16,8 @@
           size="medium"
           type="number"          
           v-model="checklist.checklistID"
-          auto-complete="off"                    
+          auto-complete="off" 
+          disabled                   
         ></el-input>
       </el-form-item>   
       <el-form-item prop="patientID" size="medium" label="Patient ID">
@@ -25,6 +26,7 @@
           type="number"          
           v-model="checklist.patientID"
           auto-complete="off"                    
+          disabled
         ></el-input>
       </el-form-item>              
 
@@ -84,30 +86,41 @@ export default {
   },
   methods:{
       submit(){          
+        this.loading = true;
         this.$axios
         .post("/recordChecklist", {
             hospital_nurse_id: this.$store.state.user.id,
-            checklist_id:this.cheklist.checklistID,
-            patient_id:this.cheklist.patientID,                        
-            disease_level:this.cheklist.level,
+            checklist_id:this.checklist.checklistID,
+            patient_id:this.checklist.patientID,                        
+            disease_level:this.checklist.level,
             test_result:this.checklist.testResult,
-            date:this.cheklist.date,        
+            date:this.checklist.date,        
         })
         .then(resp => {
             if (resp.status === 200) {                
-            this.$message.success("Submit successfully!");
+                this.$message.success("Submit successfully!");
+                this.loading = false;
+                this.checklist = {
+                    checklistID:"",
+                    patientID:"",
+                    level:"",
+                    testResult:"",
+                    date:""                    
+                };
+                this.getChecklistToDo();                
             } else {
-            this.$message.error("Something wrong!");      
+                this.$message.error("Something wrong!");      
+                this.loading = false;
             }
         })
         .catch(error => {
             this.$message.error("Something wrong!");      
             console.log(error);
+            this.loading = false;
         });
-    }
-  },
-  created(){
-      this.$axios
+    },
+    getChecklistToDo(){
+    this.$axios
       .post("/getChecklistToDo", {
         id: this.$store.state.user.id,        
       })
@@ -126,6 +139,10 @@ export default {
         this.$message.error("Something error!");
         console.log(error);
       });
+    }
+  },
+  created(){   
+    this.getChecklistToDo();   
   }
 }
 </script>

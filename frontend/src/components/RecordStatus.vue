@@ -11,8 +11,7 @@
     >    
       <el-form-item prop="patientID" size="medium" label="Patient ID">
         <el-input
-          size="medium"
-          type="number"          
+          size="medium"                    
           v-model="recordStatus.patientID"
           auto-complete="off"                    
         ></el-input>
@@ -20,8 +19,7 @@
 
       <el-form-item prop="temperature" size="medium" label="Temperature">
           <el-input
-          size="medium"
-          type="number"          
+          size="medium"            
           v-model="recordStatus.temperature"
           auto-complete="off"                    
         >
@@ -78,24 +76,27 @@
 
 <script>
 import logo from "./Logo"
+import moment from "moment"
 export default {
   name:"RecordStatus",
-  components:{logo},
+  components:{logo,moment},
   data(){
   return{
       loading:false,
       recordStatus:{
-        patientID:"",        
-        temperature:"",
-        symptom:"",
-        level:"",
-        status:"",        
+        patientID:"1",        
+        temperature:"36.5",
+        symptom:"ahd",
+        level:"light",
+        status:"treating",        
         date:"",        
       }
     }
   },
-  methods:{
-    submit(){
+  methods:{    
+    submit(){         
+      console.log(this.recordStatus.date);
+      console.log(moment(Date.parse(this.recordStatus.date)). utcOffset(480).format("yy-MM-DD hh:mm:ss"));
       this.$axios
       .post("/recordPatientStatus", {
         hospital_nurse_id: this.$store.state.user.id,
@@ -104,7 +105,7 @@ export default {
         symptom:this.recordStatus.symptom,
         life_status:this.recordStatus.status,
         disease_level:this.recordStatus.level,
-        date:this.recordStatus.date,        
+        date:moment(Date.parse(this.recordStatus.date)). utcOffset(480).format("yy-MM-DD hh:mm:ss"),                
       })
       .then(resp => {
         if (resp.status === 200) {

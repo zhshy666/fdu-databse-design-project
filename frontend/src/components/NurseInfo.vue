@@ -5,7 +5,7 @@
     :data="nurses"
     stripe
     max-height="510"
-    style="width: 100%">
+    :style="getStyle()">
     <el-table-column
       sortable
       prop="id"
@@ -71,11 +71,10 @@
       width="100">    
       </el-table-column> 
     </el-table-column> 
-  <!-- v-if="this.$store.state.user.type=='chief_nurse'"-->
     <el-table-column            
       label="Operation"
       width="120"      
-      
+      v-if="this.$store.state.user.type=='chief_nurse'"      
       >
       <template slot-scope="scope">
         <el-button 
@@ -92,7 +91,7 @@
   <br/>
   <el-row>
     <el-col :offset="20" :span="3">
-    <el-button type="primary" @click="addNewNurse()" v-if="this.$store.state.user.type='chief_nurse'">Add new hospital nurse</el-button>  
+    <el-button type="primary" @click="addNewNurse()" v-if="this.$store.state.user.type=='chief_nurse'">Add new hospital nurse</el-button>  
     </el-col>
   </el-row>
 </div>
@@ -176,6 +175,11 @@ export default {
         .catch(error => {
         console.log(error);
         });
+    },
+    getStyle(){
+      if(this.$store.state.user.type="doctor"){
+        return "padding-left:50px;border:none";        
+      }
     }
   },
   created(){ 
