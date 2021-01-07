@@ -42,7 +42,7 @@ public class HospitalNurseController {
             return new ResponseEntity<>("Not allowed", HttpStatus.FORBIDDEN);
         }
         String hospitalNurseId = request.getId();
-        List<PatientInfo> result = new LinkedList<>();
+        List<PatientRelatedInfo> result = new LinkedList<>();
 
         List<Patient> patients = patientService.getPatientsByNurseId(Config.HOSPITAL_NURSE, hospitalNurseId);
         List<Integer> patientsCanBeDischarged = patientService.getPatientIdsWhoCanBeDischarged(Config.HOSPITAL_NURSE, patients);
@@ -53,6 +53,7 @@ public class HospitalNurseController {
             if (patientsCanBeDischarged.contains(patient.getPatient_id())) {
                 info.setCan_be_discharged(1);
             }
+            result.add(info);
         }
         return ResponseEntity.ok(result);
     }
