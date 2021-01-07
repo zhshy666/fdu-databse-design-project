@@ -1,5 +1,6 @@
 package project.backend.Controller.Request;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class RegisterPatientInfoRequest {
@@ -9,7 +10,7 @@ public class RegisterPatientInfoRequest {
     private int age;
     private String disease_level;
     private String test_result;
-    private Date date;
+    private String date;
 
     public String getEmergency_nurse_id() {
         return emergency_nurse_id;
@@ -59,11 +60,11 @@ public class RegisterPatientInfoRequest {
         this.test_result = test_result;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }

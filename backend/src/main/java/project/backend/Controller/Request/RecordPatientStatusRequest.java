@@ -10,7 +10,7 @@ public class RecordPatientStatusRequest {
     private String symptom;
     private String life_status;
     private String disease_level;
-    private Date date;
+    private String date;
 
     public String getHospital_nurse_id() {
         return hospital_nurse_id;
@@ -68,11 +68,11 @@ public class RecordPatientStatusRequest {
         this.disease_level = disease_level;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }

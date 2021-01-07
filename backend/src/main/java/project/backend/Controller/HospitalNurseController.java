@@ -65,11 +65,17 @@ public class HospitalNurseController {
         Checklist checklist = checklistService.getChecklistById(Config.HOSPITAL_NURSE, checklistId);
         checklist.setDisease_level(request.getDisease_level());
         checklist.setTest_result(request.getTest_result());
-        Date date = request.getDate();
         SimpleDateFormat f = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
-        f.format(date);
-        Timestamp time = new Timestamp(date.getTime());
-        checklist.setDate(time);
+        Timestamp timestamp = null;
+        try {
+            Date time = f.parse(request.getDate());
+            String result = f.format(time);
+            timestamp = Timestamp.valueOf(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assert timestamp != null;
+        checklist.setDate(timestamp);
 
         checklistService.recordChecklist(Config.HOSPITAL_NURSE, checklist);
 
@@ -88,11 +94,18 @@ public class HospitalNurseController {
         patientStatus.setNurse_id(request.getHospital_nurse_id());
         patientStatus.setTemperature(request.getTemperature());
         patientStatus.setSymptom(request.getSymptom());
-        Date date = request.getDate();
+
         SimpleDateFormat f = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
-        f.format(date);
-        Timestamp time = new Timestamp(date.getTime());
-        patientStatus.setDate(time);
+        Timestamp timestamp = null;
+        try {
+            Date time = f.parse(request.getDate());
+            String result = f.format(time);
+            timestamp = Timestamp.valueOf(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assert timestamp != null;
+        patientStatus.setDate(timestamp);
 
         // 2 找最近一次的核酸检测单
         Checklist checklist = checklistService.getNewestChecklist(Config.HOSPITAL_NURSE, patientStatus.getPatient_id());

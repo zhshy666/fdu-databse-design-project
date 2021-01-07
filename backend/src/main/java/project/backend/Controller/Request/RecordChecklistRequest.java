@@ -7,7 +7,7 @@ public class RecordChecklistRequest {
     private int patient_id;
     private String test_result;
     private String disease_level;
-    private Date date;
+    private String date;
     private int checklist_id;
 
     public String getHospital_nurse_id() {
@@ -42,11 +42,11 @@ public class RecordChecklistRequest {
         this.disease_level = disease_level;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

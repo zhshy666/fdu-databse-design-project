@@ -1,13 +1,14 @@
 package project.backend.Utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import project.backend.Entity.Staff;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,7 +74,6 @@ public class Util {
             if (method.getName().startsWith("set")) {
                 String name = method.getName();
                 name = name.substring(3, 4).toLowerCase() + name.substring(4); // 获取属性名
-//                System.out.println(name + " " + map.get(name));
                 if (map.containsKey(name)) {
                     try {
                         method.invoke(object, map.get(name));
@@ -83,5 +83,20 @@ public class Util {
                 }
             }
         }
+    }
+
+    public static Timestamp transferDateFormat(String dateTime) {
+        dateTime = dateTime.replace("Z", " UTC");
+        SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss.SSS Z");
+        SimpleDateFormat defaultFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Timestamp newTime = null;
+        try {
+            Date time = format.parse(dateTime);
+            String result = defaultFormat.format(time);
+            newTime = Timestamp.valueOf(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return newTime;
     }
 }
