@@ -1,6 +1,7 @@
 <template>
 <div class="container">
     <logo></logo>
+    <el-card v-if="noNeed" style="padding:5px 200px;"> No checklist need to fill in now !</el-card>
     <el-form
       @submit.native.prevent
       status-icon
@@ -8,6 +9,7 @@
       label-width="120px"
       label-position="left"      
       v-loading="loading"
+      v-else
     > 
     <el-form-item prop="checklistID" size="medium" label="Checklist ID">
         <el-input
@@ -70,6 +72,7 @@ export default {
   data(){
     return{
         loading:false,
+        noNeed:false,
         checklist:{
             checklistID:"",
             patientID:"",
@@ -91,7 +94,7 @@ export default {
             date:this.cheklist.date,        
         })
         .then(resp => {
-            if (resp.status === 200) {
+            if (resp.status === 200) {                
             this.$message.success("Submit successfully!");
             } else {
             this.$message.error("Something wrong!");      
@@ -109,8 +112,12 @@ export default {
         id: this.$store.state.user.id,        
       })
       .then(resp => {
-        if (resp.status === 200) {
-            this.checklist.checklistID = resp.data;      
+        if (resp.status === 200) {            
+            this.checklist.checklistID = resp.data.checklist_id;
+            this.checklist.patientID = resp.data.patient_id;
+            if(resp.data==""){
+                this.noNeed = true;
+            }
         } else {
             this.$message.error("Something error!");
         }
