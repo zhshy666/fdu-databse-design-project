@@ -201,4 +201,8 @@ public class PatientService {
     public List<Patient> getPatientsByNurseId(String type, String hospitalNurseId) {
         return patientRepo.findPatientsByNurseId(type, hospitalNurseId);
     }
+
+    public String getHospitalNurseIdByPatientId(String type, int patientId) {
+        return patientRepo.findNurseIdByPatientId(type, patientId);
+    }
 }

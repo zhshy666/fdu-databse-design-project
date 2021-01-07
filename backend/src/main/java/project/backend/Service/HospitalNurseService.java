@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import project.backend.Entity.HospitalNurse;
 import project.backend.Entity.TreatmentRegion;
 import project.backend.Repo.HospitalNurseRepo;
+import project.backend.Repo.PatientRepo;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -12,10 +13,12 @@ import java.util.List;
 @Service
 public class HospitalNurseService {
     private HospitalNurseRepo hospitalNurseRepo;
+    private PatientRepo patientRepo;
 
     @Autowired
-    public HospitalNurseService(HospitalNurseRepo hospitalNurseRepo) {
+    public HospitalNurseService(HospitalNurseRepo hospitalNurseRepo, PatientRepo patientRepo) {
         this.hospitalNurseRepo = hospitalNurseRepo;
+        this.patientRepo = patientRepo;
     }
 
     public List<HospitalNurse> getHospitalNursesByRegions(String type, List<String> levels) {
@@ -40,4 +43,5 @@ public class HospitalNurseService {
         hospitalNurseRepo.updateTreatmentRegionLevel(type, hospitalNurse.getId(), level);
         return true;
     }
+
 }

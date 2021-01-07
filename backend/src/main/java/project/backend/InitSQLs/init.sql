@@ -90,7 +90,7 @@ create table if not exists hospital_nurse
     foreign key (treatment_region_level) references treatment_region(level)
 )charset = utf8;
 insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H001', 'hospital_nurse1', '123456', 26, 'female', 'light', 3);
-# insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H002', 'hospital_nurse2', '123456', 26, 'female', 'light', 0);
+insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H002', 'hospital_nurse2', '123456', 26, 'female', 'light', 0);
 insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H003', 'hospital_nurse3', '123456', 36, 'male', 'severe', 1);
 insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H004', 'hospital_nurse4', '123456', 36, 'male', 'severe', 0);
 insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H005', 'hospital_nurse5', '123456', 28, 'female', 'critical', 1);
@@ -184,7 +184,7 @@ create table if not exists patient_status
     date timestamp not null,
     patient_id int not null,
     nurse_id varchar(20) not null,
-    checklist_id int not null,
+    checklist_id int,
     primary key (id),
     foreign key (patient_id) references patient(patient_id),
     foreign key (nurse_id) references hospital_nurse(id),
@@ -206,6 +206,18 @@ insert into patient_status(temperature, symptom, life_status, date, patient_id, 
             VALUES (36.1, 'healthy', 'treating', '2020-12-27 13:30:20', 5, 'H001', 7);
 insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
             VALUES (36.1, 'healthy', 'treating', '2020-12-27 13:30:20', 6, 'H001', 8);
+
+
+# 站内信
+create table if not exists message
+(
+    id int auto_increment,
+    receiver_id varchar(20) not null,
+    content varchar(100) not null,
+    status int not null,
+    time timestamp not null,
+    primary key (id)
+)charset = utf8;
 
 # 创建用户并授权
 drop user 'doctor'@'localhost';

@@ -8,16 +8,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import project.backend.Controller.Request.DeleteOrAddHospitalNurseRequest;
 import project.backend.Controller.Request.GetBedInfoRequest;
-import project.backend.Entity.Bed;
-import project.backend.Entity.BedInfo;
-import project.backend.Entity.Patient;
-import project.backend.Entity.TreatmentRegion;
-import project.backend.Service.BedService;
-import project.backend.Service.HospitalNurseService;
-import project.backend.Service.PatientService;
-import project.backend.Service.TreatmentRegionService;
+import project.backend.Entity.*;
+import project.backend.Service.*;
 import project.backend.Utils.Config;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,14 +24,19 @@ public class ChiefNurseController {
     private TreatmentRegionService treatmentRegionService;
     private PatientService patientService;
     private BedService bedService;
+    private ChiefNurseService chiefNurseService;
+    private MessageService messageService;
 
     @Autowired
     public ChiefNurseController(HospitalNurseService hospitalNurseService, TreatmentRegionService treatmentRegionService,
-                                PatientService patientService, BedService bedService) {
+                                PatientService patientService, BedService bedService, ChiefNurseService chiefNurseService,
+                                MessageService messageService) {
         this.hospitalNurseService = hospitalNurseService;
         this.treatmentRegionService = treatmentRegionService;
         this.patientService = patientService;
         this.bedService = bedService;
+        this.chiefNurseService = chiefNurseService;
+        this.messageService = messageService;
     }
 
     @PostMapping("/deleteHospitalNurse")
@@ -61,7 +63,7 @@ public class ChiefNurseController {
         // 是否有空的床位
         if (flag) {
             boolean canTransfer = bedService.hasEmptyBed(Config.CHIEF_NURSE, region.getLevel());
-            if (canTransfer) transferToCurrentRegion(region);
+            if (canTransfer) transferToCurrentRegion(region, chiefNurseId);
         }
         else {
             return new ResponseEntity<>("Info error", HttpStatus.BAD_REQUEST);
@@ -100,7 +102,7 @@ public class ChiefNurseController {
     }
 
     // 获取待转入该区域的病人并进行转入
-    private void transferToCurrentRegion(TreatmentRegion region){
+    private void transferToCurrentRegion(TreatmentRegion region, String chiefNurseId){
         Patient patientNeedTransfer;
         // 1 查是否有病人等待转入该治疗区域，处于隔离区的病人优先
         List<Patient> patientsWaitToTransfer = patientService.getPatientsByDiseaseLevel(Config.ROOT, region.getLevel());
@@ -118,5 +120,15 @@ public class ChiefNurseController {
         // ToDo: 发站内信
         patientService.appointHospitalNurse(Config.ROOT, patientNeedTransfer, region);
         patientService.appointBed(Config.ROOT, patientNeedTransfer, region);
+        SimpleDateFormat f = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
+        Date now = new Date();
+        f.format(now);
+        Timestamp time = new Timestamp(now.getTime());
+        Message message = new Message();
+        message.setStatus(0);
+        message.setReceiver_id(chiefNurseId);
+        message.setTime(time);
+        message.setContent("A new patient has been transferred to " + region.getLevel() + ".");
+        messageService.addNewMessage(Config.ROOT, message);
     }
 }

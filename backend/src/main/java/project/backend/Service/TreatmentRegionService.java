@@ -35,4 +35,8 @@ public class TreatmentRegionService {
     public TreatmentRegion getTreatmentRegionByChiefNurseId(String type, String chiefNurseId) {
         return treatmentRegionRepo.findByChiefNurseId(type, chiefNurseId);
     }
+
+    public String getChiefNurseIdByRegion(String type, String level) {
+        return treatmentRegionRepo.findChiefNurseIdByRegion(type, level);
+    }
 }

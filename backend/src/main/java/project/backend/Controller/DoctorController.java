@@ -21,19 +21,17 @@ public class DoctorController {
     private PatientService patientService;
     private ChecklistService checklistService;
     private PatientStatusService patientStatusService;
-    private HospitalNurseService hospitalNurseService;
-    private ChiefNurseService chiefNurseService;
+    private MessageService messageService;
 
     @Autowired
     public DoctorController(TreatmentRegionService treatmentRegionService, PatientService patientService,
                             ChecklistService checklistService, PatientStatusService patientStatusService,
-                            HospitalNurseService hospitalNurseService, ChiefNurseService chiefNurseService) {
+                            MessageService messageService) {
         this.treatmentRegionService = treatmentRegionService;
         this.patientService = patientService;
         this.checklistService = checklistService;
         this.patientStatusService = patientStatusService;
-        this.hospitalNurseService = hospitalNurseService;
-        this.chiefNurseService = chiefNurseService;
+        this.messageService = messageService;
     }
 
     @PostMapping("/getPatientInfo")
@@ -139,6 +137,13 @@ public class DoctorController {
         checklistService.addChecklist(Config.DOCTOR, doctorId, patientId, time);
 
         // TODO: 站内信，提醒对应的病房护士
+        Message message = new Message();
+        message.setStatus(0);
+        String hospitalNurseId = patientService.getHospitalNurseIdByPatientId(Config.ROOT, patientId);
+        message.setReceiver_id(hospitalNurseId);
+        message.setContent("A new checklist has been appointed for patient " + patientId + ".");
+        message.setTime(time);
+        messageService.addNewMessage(Config.ROOT, message);
 
         return ResponseEntity.ok("success");
     }
@@ -175,5 +180,17 @@ public class DoctorController {
         // ToDo: 属于系统自动做的事情，发站内信
         patientService.appointHospitalNurse(Config.ROOT, patientNeedTransfer, region);
         patientService.appointBed(Config.ROOT, patientNeedTransfer, region);
+
+        SimpleDateFormat f = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
+        Date now = new Date();
+        f.format(now);
+        Timestamp time = new Timestamp(now.getTime());
+        String chiefNurseId = treatmentRegionService.getChiefNurseIdByRegion(Config.ROOT, region.getLevel());
+        Message message = new Message();
+        message.setStatus(0);
+        message.setReceiver_id(chiefNurseId);
+        message.setTime(time);
+        message.setContent("A new patient has been transferred to " + region.getLevel() + ".");
+        messageService.addNewMessage(Config.ROOT, message);
     }
 }

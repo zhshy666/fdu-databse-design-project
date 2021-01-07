@@ -252,4 +252,26 @@ public class PatientRepo {
         Util.close(conn);
         return patients;
     }
+
+    public String findNurseIdByPatientId(String type, int patientId) {
+        Connection conn = Util.connect(type);
+        assert conn != null;
+        String sql = "select nurse_id from database_project.patient where patient_id = ?";
+        ResultSet rs;
+        List<Patient> patients = new LinkedList<>();
+        String id = null;
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setInt(1, patientId);
+            rs = preparedStatement.executeQuery();
+            if (rs.next()){
+                id = rs.getString("nurse_id");
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        Util.close(conn);
+        return id;
+    }
 }
