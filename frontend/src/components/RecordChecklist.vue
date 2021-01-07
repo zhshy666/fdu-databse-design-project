@@ -56,7 +56,7 @@
           size="medium"
           type="primary"
           style="width:100% "
-          @click="submit"        
+          @click="submit()"        
         >Submit</el-button>
       </el-form-item>
     </el-form>
@@ -80,28 +80,45 @@ export default {
         }
   },
   methods:{
-      submit(){
+      submit(){          
+        this.$axios
+        .post("/recordChecklist", {
+            hospital_nurse_id: this.$store.state.user.id,
+            checklist_id:this.cheklist.checklistID,
+            patient_id:this.cheklist.patientID,                        
+            disease_level:this.cheklist.level,
+            test_result:this.checklist.testResult,
+            date:this.cheklist.date,        
+        })
+        .then(resp => {
+            if (resp.status === 200) {
+            this.$message.success("Submit successfully!");
+            } else {
+            this.$message.error("Something wrong!");      
+            }
+        })
+        .catch(error => {
+            this.$message.error("Something wrong!");      
+            console.log(error);
+        });
+    }
+  },
+  created(){
       this.$axios
-      .post("/recordChecklist", {
-        hospital_nurse_id: this.$store.state.user.id,
-        checklist_id:this.cheklist.checklistID,
-        patient_id:this.cheklist.patientID,                        
-        disease_level:this.cheklist.level,
-        test_result:this.checklist.testResult,
-        date:this.cheklist.date,        
+      .post("/getChecklistToDo", {
+        id: this.$store.state.user.id,        
       })
       .then(resp => {
         if (resp.status === 200) {
-          this.$message.success("Submit successfully!");
+            this.checklist.checklistID = resp.data;      
         } else {
-          this.$message.error("Something wrong!");      
+            this.$message.error("Something error!");
         }
       })
       .catch(error => {
-        this.$message.error("Something wrong!");      
+        this.$message.error("Something error!");
         console.log(error);
       });
-    }
   }
 }
 </script>

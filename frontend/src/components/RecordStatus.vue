@@ -78,7 +78,7 @@
           size="medium"
           type="primary"
           style="width:100% "
-          @click="submit"         
+          @click="submit()"         
         >Submit</el-button>
       </el-form-item>
     </el-form>
