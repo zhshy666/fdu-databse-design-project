@@ -32,6 +32,11 @@
             <span slot="title">Nurse information</span>
         </el-menu-item>
 
+        <el-menu-item index="beds-info" v-if="this.isChiefNurse">
+            <i class="el-icon-c-scale-to-original"></i>
+            <span slot="title">Beds information</span>
+        </el-menu-item>
+
         <el-menu-item index = "message" v-if="this.isDoctor">
             <i class="el-icon-message"></i>
             <span slot="title">Message</span>
@@ -48,13 +53,15 @@
         <patients-info v-if="this.isPatientInfo"></patients-info>
 
         <nurse-info v-if="this.isNurseInfo"></nurse-info>
-        
+
+        <beds-info v-if="this.isBedsInfo"></beds-info>        
     </el-main>
 </el-container>
 </template>
 <script>
 import logo from '../components/Logo'
 import AddPatient from './AddPatient.vue'
+import BedsInfo from './BedsInfo.vue'
 import ModifyPersonalInfo from './ModifyPersonalInfo.vue'
 import NurseInfo from './NurseInfo.vue'
 import PatientsInfo from './PatientsInfo.vue'
@@ -62,7 +69,7 @@ import RecordStatus from './RecordStatus.vue'
 
 export default {
   name:"Home",
-  components:{logo,ModifyPersonalInfo, AddPatient,RecordStatus, PatientsInfo, NurseInfo},
+  components:{logo,ModifyPersonalInfo, AddPatient,RecordStatus, PatientsInfo, NurseInfo, BedsInfo},
   data(){
       return{        
         isDoctor:false,
@@ -75,7 +82,8 @@ export default {
         isPatientInfo:true,
         isNurseInfo:false,
         isDairyStatus:false,
-        isMessage:false,          
+        isMessage:false,  
+        isBedsInfo:false,        
       }
   },
   methods:{
@@ -88,6 +96,7 @@ export default {
                    this.isPatientInfo = false;
                    this.isNurseInfo = false;                   
                    this.isMessage = false;
+                   this.isBedsInfo = false;
                    break;
                 case "new-patient":
                    this.isModify = false;
@@ -96,6 +105,7 @@ export default {
                    this.isPatientInfo = false;
                    this.isNurseInfo = false;                   
                    this.isMessage = false;
+                   this.isBedsInfo = false;
                    break;
                 case "record-status":
                    this.isModify = false;
@@ -103,6 +113,7 @@ export default {
                    this.isDairyStatus = true;
                    this.isPatientInfo = false;
                    this.isNurseInfo = false;                   
+                   this.isBedsInfo = false;
                    this.isMessage = false;
                    break;
                 case "patient-info":
@@ -111,6 +122,7 @@ export default {
                    this.isDairyStatus = false;
                    this.isPatientInfo = true;
                    this.isNurseInfo = false;                   
+                   this.isBedsInfo = false;
                    this.isMessage = false;
                    break;
                 case "nurse-info":
@@ -119,6 +131,7 @@ export default {
                    this.isDairyStatus = false;
                    this.isPatientInfo = false;
                    this.isNurseInfo = true;                   
+                   this.isBedsInfo = false;
                    this.isMessage = false;
                    break;
                 case "message":
@@ -127,8 +140,18 @@ export default {
                    this.isDairyStatus = false;
                    this.isPatientInfo = false;
                    this.isNurseInfo = false;                   
+                   this.isBedsInfo = false;
                    this.isMessage = true;
                    break;                
+                case "beds-info":
+                   this.isModify = false;
+                   this.isNewPatient = false;                   
+                   this.isDairyStatus = false;
+                   this.isPatientInfo = false;
+                   this.isNurseInfo = false;                   
+                   this.isBedsInfo = true;
+                   this.isMessage = false;
+                   break;                   
            }        
       },            
   },
