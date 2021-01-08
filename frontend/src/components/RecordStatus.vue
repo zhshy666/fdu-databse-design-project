@@ -83,17 +83,18 @@ export default {
   return{
       loading:false,
       recordStatus:{
-        patientID:"1",        
-        temperature:"36.5",
-        symptom:"ahd",
-        level:"light",
-        status:"treating",        
+        patientID:"",        
+        temperature:"",
+        symptom:"",
+        level:"",
+        status:"",        
         date:"",        
       }
     }
   },
   methods:{    
-    submit(){               
+    submit(){
+      this.loading = true;               
       this.$axios
       .post("/recordPatientStatus", {
         hospital_nurse_id: this.$store.state.user.id,
@@ -107,13 +108,16 @@ export default {
       .then(resp => {
         if (resp.status === 200) {
           this.$message.success("Submit successfully!");
+          this.loading = false;
         } else {
           this.$message.error("Something wrong!");      
+          this.loading = false;
         }
       })
       .catch(error => {
-        this.$message.error("Something wrong!");      
+        this.$message.error("Something wrong!");              
         console.log(error);
+        this.loading = false;
       });
     }
   }
