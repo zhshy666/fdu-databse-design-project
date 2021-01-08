@@ -76,10 +76,9 @@
 
 <script>
 import logo from "./Logo"
-import moment from "moment"
 export default {
   name:"RecordStatus",
-  components:{logo,moment},
+  components:{logo},
   data(){
   return{
       loading:false,
@@ -94,9 +93,7 @@ export default {
     }
   },
   methods:{    
-    submit(){         
-      console.log(this.recordStatus.date);
-      console.log(moment(Date.parse(this.recordStatus.date)). utcOffset(480).format("yy-MM-DD hh:mm:ss"));
+    submit(){               
       this.$axios
       .post("/recordPatientStatus", {
         hospital_nurse_id: this.$store.state.user.id,
@@ -105,7 +102,7 @@ export default {
         symptom:this.recordStatus.symptom,
         life_status:this.recordStatus.status,
         disease_level:this.recordStatus.level,
-        date:moment(Date.parse(this.recordStatus.date)). utcOffset(480).format("yy-MM-DD hh:mm:ss"),                
+        date:this.recordStatus.date,                
       })
       .then(resp => {
         if (resp.status === 200) {
