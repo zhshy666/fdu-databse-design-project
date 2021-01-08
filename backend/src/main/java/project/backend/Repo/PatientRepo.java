@@ -128,13 +128,14 @@ public class PatientRepo {
     public List<Patient> findPatientByDiseaseLevel(String type, String diseaseLevel) {
         Connection conn = Util.connect(type);
         assert conn != null;
-        String sql = "select * from database_project.patient where disease_level = ?";
+        String sql = "select * from database_project.patient where disease_level = ? and treatment_region_level != ?";
         ResultSet rs;
         List<Patient> patients = new LinkedList<>();
         Patient patient;
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, diseaseLevel);
+            preparedStatement.setString(2, diseaseLevel);
             rs = preparedStatement.executeQuery();
             while (rs.next()){
                 patient = new Patient();
