@@ -7,7 +7,7 @@
                   <el-button                                        
                     type="text"
                     @click="mark(message.id)"
-                    v-if="message.status == 1"
+                    v-if="message.status == 0"
                   >Mark as read</el-button>                  
                   <p v-else style="font-size:0.9rem;color:grey">Has read</p>
                 </div>
@@ -49,7 +49,7 @@ export default {
   methods:{     
     mark(id){
         this.$axios
-        .post("", {
+        .post("/setRead", {
           id: id,          
         })
         .then(resp => {
@@ -72,7 +72,7 @@ export default {
         .then(resp => {
             if (resp.status === 200) {
                 console.log(resp.data);
-                // this.messages=resp.data;
+                this.messages=resp.data;
             } else {
                 this.$message.error("Something wrong!");
             }
@@ -98,5 +98,8 @@ export default {
 .itemlabel {
   color: cornflowerblue;
   font-weight: bold;  
+}
+.el-card{
+    margin:20px;
 }
 </style>

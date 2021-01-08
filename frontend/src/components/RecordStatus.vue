@@ -11,26 +11,15 @@
     >    
       <el-form-item prop="patientID" size="medium" label="Patient ID">
         <el-input
-          size="medium"
-          type="number"          
+          size="medium"                    
           v-model="recordStatus.patientID"
           auto-complete="off"                    
         ></el-input>
-      </el-form-item>
-
-      <el-form-item prop="patientName" size="medium" label="Patient Name">
-        <el-input
-          size="medium"
-          type="text"          
-          v-model="recordStatus.patientName"
-          auto-complete="off"                    
-        ></el-input>
-      </el-form-item>
+      </el-form-item>      
 
       <el-form-item prop="temperature" size="medium" label="Temperature">
           <el-input
-          size="medium"
-          type="number"          
+          size="medium"            
           v-model="recordStatus.temperature"
           auto-complete="off"                    
         >
@@ -87,35 +76,36 @@
 
 <script>
 import logo from "./Logo"
+import moment from "moment"
 export default {
   name:"RecordStatus",
-  components:{logo},
+  components:{logo,moment},
   data(){
   return{
       loading:false,
       recordStatus:{
-        patientID:"",
-        patientName:"",
-        temperature:"",
-        symptom:"",
-        level:"",
-        status:"",        
+        patientID:"1",        
+        temperature:"36.5",
+        symptom:"ahd",
+        level:"light",
+        status:"treating",        
         date:"",        
       }
     }
   },
-  methods:{
-    submit(){
+  methods:{    
+    submit(){         
+      console.log(this.recordStatus.date);
+      console.log(moment(Date.parse(this.recordStatus.date)). utcOffset(480).format("yy-MM-DD hh:mm:ss"));
       this.$axios
       .post("/recordPatientStatus", {
         hospital_nurse_id: this.$store.state.user.id,
-        id:this.recordStatus.patientID,
-        name:this.recordStatus.patientName,
+        id:this.recordStatus.patientID,        
         temperature:this.recordStatus.temperature,
         symptom:this.recordStatus.symptom,
         life_status:this.recordStatus.status,
         disease_level:this.recordStatus.level,
-        date:this.recordStatus.date,        
+        date:moment(Date.parse(this.recordStatus.date)). utcOffset(480).format("yy-MM-DD hh:mm:ss"),                
       })
       .then(resp => {
         if (resp.status === 200) {
