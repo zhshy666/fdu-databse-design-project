@@ -17,7 +17,7 @@ create table if not exists doctor
     name             varchar(50) not null,
     password         varchar(50) not null,
     age              int not null check ( age > 0 ),
-    gender           varchar(10) default 'male' check ( gender in ('male', 'female') ),
+    gender           varchar(10) default 'male' check ( gender in ('male', 'female') ) not null,
     primary key (id)
 )charset = utf8;
 insert into doctor(id, name, password, age, gender) VALUES ('D001', 'doctor1', '123456', 26, 'male');
@@ -33,7 +33,7 @@ create table if not exists chief_nurse
     name             varchar(50) not null,
     password         varchar(50) not null ,
     age              int not null check ( age > 0 ),
-    gender           varchar(10) default 'male' check ( gender in ('male', 'female') ),
+    gender           varchar(10) default 'male' check ( gender in ('male', 'female') ) not null,
     primary key (id)
 )charset = utf8;
 insert into chief_nurse(id, name, password, age, gender) VALUES ('C001', 'chief_nurse1', '123456', 26, 'female');
@@ -60,7 +60,7 @@ insert into emergency_nurse(id, name, password, age, gender) VALUES ('E003', 'em
 # treatment region
 create table if not exists treatment_region
 (
-    level varchar(10) not null check ( level in ('quarantine', 'light', 'severe', 'critical')),  # 1, 2, 3 依次加重，0 表示在隔离区域
+    level varchar(10) not null check ( level in ('quarantine', 'light', 'severe', 'critical')),
     nurse_resp_num int default 0 check ( nurse_resp_num >= 0 ),
     doctor_id varchar(20),
     nurse_id varchar(20),
@@ -95,6 +95,7 @@ insert into hospital_nurse(id, name, password, age, gender, treatment_region_lev
 insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H004', 'hospital_nurse4', '123456', 36, 'male', 'severe', 0);
 insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H005', 'hospital_nurse5', '123456', 28, 'female', 'critical', 0);
 insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H006', 'hospital_nurse6', '123456', 28, 'female', null, 0);
+create index nurse_current_resp_num_index on hospital_nurse(current_resp_num);
 
 
 # patient
@@ -102,7 +103,7 @@ create table if not exists patient
 (
     patient_id int not null auto_increment,
     name varchar(30) not null,
-    gender varchar(10) default 'male' check ( gender in ('male', 'female') ),
+    gender varchar(10) default 'male' check ( gender in ('male', 'female') ) not null,
     age int not null check ( age > 0 ),
     disease_level varchar(10) not null check ( disease_level in ('light', 'severe', 'critical')),
     life_status varchar(10) default 'treating' not null check ( life_status in ('healthy', 'treating', 'dead') ),
@@ -118,7 +119,8 @@ create table if not exists patient
 # insert into patient(name, gender, age, disease_level, life_status, treatment_region_level) VALUES ('Frank', 'male', 25, 'light', 'treating', 'quarantine');
 # insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('Alice', 'female', 33,  'light', 'treating', 'H001', 'light');
 # insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('Bob', 'male', 23,  'light', 'treating', 'H001', 'light');
-create index patient_treatment_region_level on patient(treatment_region_level);
+create index patient_treatment_region_level_index on patient(treatment_region_level);
+create index patient_disease_level_index on patient(disease_level);
 
 
 # bed
@@ -147,6 +149,7 @@ insert into bed(treatment_region_level) values ('critical');
 # # insert into bed(patient_id, treatment_region_level) VALUES (4, 'light');
 # insert into bed(patient_id, treatment_region_level) VALUES (5, 'light');
 # insert into bed(patient_id, treatment_region_level) VALUES (6, 'light');
+create index bed_treatment_region_level_index  on bed(treatment_region_level);
 
 
 # check list
@@ -154,7 +157,7 @@ create table if not exists checklist
 (
     id int auto_increment not null,
     test_result varchar(10) default '-',
-    date timestamp,
+    date timestamp not null,
     disease_level varchar(10) default '-',
     doctor_id varchar(20),
     patient_id int not null,
@@ -172,6 +175,7 @@ create table if not exists checklist
 # insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-27 13:30:20', 'light', null, 4);
 # insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-27 13:30:20', 'light', null, 5);
 # insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-27 13:30:20', 'light', null, 6);
+create index checklist_patient_id_index on checklist(patient_id);
 
 
 #  patient status
