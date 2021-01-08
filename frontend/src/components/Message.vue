@@ -54,7 +54,12 @@ export default {
         })
         .then(resp => {
           if (resp.status === 200) {
-            this.getMessages();              
+            this.getMessages();   
+            for(let message of this.messages){
+                if(message.status == 0){
+                    this.$emit("hasMessage",true);
+                }
+            }            
           } else {
             this.$message.error("Something error!");
           }
@@ -70,7 +75,7 @@ export default {
             id: this.$store.state.user.id,        
         })
         .then(resp => {
-            if (resp.status === 200) {
+            if (resp.status === 200) {  
                 console.log(resp.data);
                 this.messages=resp.data;
             } else {
