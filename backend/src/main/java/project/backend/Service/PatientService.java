@@ -128,7 +128,7 @@ public class PatientService {
         // 1 hospital_nurse
         hospitalNurseRepo.updateRespPatientNum(type, patient.getNurse_id(), -1);
         // 2 patient - 更新 treatment_region_level 和 nurse_id 为 null
-        patientRepo.updateTreatmentRegionLevelAndNurseIdById(type, null, null, patientId);
+        patientRepo.updateTreatmentRegionLevelAndNurseIdById(type, patient.getTreatment_region_level(), null, patientId);
         // 3 bed
         bedRepo.updateBedToFreeByPatientId(type, patientId);
     }
@@ -184,7 +184,7 @@ public class PatientService {
         // 1 hospital_nurse
         hospitalNurseRepo.updateRespPatientNum(type, patient.getNurse_id(), -1);
         // 2 patient - 更新 treatment_region_level 和 nurse_id 为 null
-        patientRepo.updateTreatmentRegionLevelAndNurseIdById(type, null, null, patient.getPatient_id());
+        patientRepo.updateTreatmentRegionLevelAndNurseIdById(type, patient.getTreatment_region_level(), null, patient.getPatient_id());
         // 3 bed
         bedRepo.updateBedToFreeByPatientId(type, patient.getPatient_id());
     }
