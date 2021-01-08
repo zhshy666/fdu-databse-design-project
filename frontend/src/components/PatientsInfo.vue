@@ -124,7 +124,7 @@
       <template slot-scope="scope">            
         <div v-if ="scope.row.can_be_discharged == 0">no</div>
         <div v-else-if ="scope.row.can_be_discharged == 1" >yes</div>        
-        <div v-else-if="scope.row.can_be_discharged == 2">dischrged</div>
+        <div v-else-if="scope.row.can_be_discharged == 2">discharged</div>
         <div v-else>dead</div>
       </template>
     </el-table-column>
@@ -201,7 +201,7 @@ export default {
       .then(resp => {
         if (resp.status === 200) {
           console.log(resp.data);
-          this.patients = resp.data;                   
+          this.patients = resp.data;                            
         } else {
           this.$message.error("Error occurs when geting patient info");
           console.log(error);
@@ -281,26 +281,7 @@ export default {
       case 'hospital_nurse':                
         return "padding-left:140px";
     } 
-    }
-    // addNewChecklist(id){            
-    //   this.$axios
-    //   .post("/newChecklist", {
-    //     doctor_id: this.$store.state.user.id,
-    //     patient_id:id
-    //   })
-    //   .then(resp => {
-    //     if (resp.status === 200) {
-    //       this.$message.success("Add successfully!");
-    //     } else {
-    //       this.$message.error("Something wrong!");
-    //       console.log(error);
-    //     }
-    //   })
-    //   .catch(error => {
-    //     this.$message.error("Something wrong!");
-    //     console.log(error);
-    //   });
-    // }
+    }    
   },
 
   created(){  
