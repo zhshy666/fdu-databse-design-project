@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import project.backend.Controller.Request.GetPatientsInfoRequest;
 import project.backend.Controller.Request.RegisterPatientInfoRequest;
 import project.backend.Entity.Checklist;
+import project.backend.Entity.Message;
 import project.backend.Entity.Patient;
 import project.backend.Service.ChecklistService;
+import project.backend.Service.MessageService;
 import project.backend.Service.PatientService;
+import project.backend.Service.TreatmentRegionService;
 import project.backend.Utils.Config;
 import project.backend.Utils.Util;
 
@@ -24,11 +27,16 @@ import java.util.List;
 public class EmergencyNurseController {
     private PatientService patientService;
     private ChecklistService checklistService;
+    private MessageService messageService;
+    private TreatmentRegionService treatmentRegionService;
 
     @Autowired
-    public EmergencyNurseController(PatientService patientService, ChecklistService checklistService) {
+    public EmergencyNurseController(PatientService patientService, ChecklistService checklistService,
+                                    MessageService messageService, TreatmentRegionService treatmentRegionService) {
         this.patientService = patientService;
         this.checklistService = checklistService;
+        this.messageService = messageService;
+        this.treatmentRegionService = treatmentRegionService;
     }
 
     @PostMapping("/registerPatientInfo")
@@ -50,6 +58,21 @@ public class EmergencyNurseController {
         Checklist checklist = new Checklist(request.getTest_result(), timestamp, request.getDisease_level());
         checklist.setPatient_id(patientId);
         checklistService.addInitChecklist(Config.EMERGENCY_NURSE, checklist);
+
+        // 发站内信通知护士长
+        if (canTransfer) {
+            SimpleDateFormat f = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
+            Date now = new Date();
+            f.format(now);
+            Timestamp time = new Timestamp(now.getTime());
+            Message message = new Message();
+            message.setStatus(0);
+            String chiefNurseId = treatmentRegionService.getChiefNurseIdByRegion(Config.ROOT, request.getDisease_level());
+            message.setReceiver_id(chiefNurseId);
+            message.setContent("A new patient has been transferred to " + patient.getDisease_level() + ".");
+            message.setTime(time);
+            messageService.addNewMessage(Config.ROOT, message);
+        }
 
         return ResponseEntity.ok(canTransfer);
     }

@@ -82,6 +82,7 @@ public class ChiefNurseController {
 
         // 获取该区域的所有病床
         List<Bed> beds = bedService.getBedsByRegionLevel(Config.CHIEF_NURSE, region.getLevel());
+
         for (Bed bed: beds){
             BedInfo bedInfo;
             if (bed.getPatient_id() != null){

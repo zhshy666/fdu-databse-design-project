@@ -77,7 +77,7 @@ public class BedRepo {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, level);
             rs = preparedStatement.executeQuery();
-            if (rs.next()) {
+            while (rs.next()) {
                 bed = new Bed();
                 Util.toObject(rs, bed);
                 beds.add(bed);
