@@ -46,7 +46,14 @@ public class ChecklistService {
     public Checklist getNewestChecklist(String type, int patient_id) {
         List <Checklist> checklists = checklistRepo.findByPatientId(type, patient_id);
         if (checklists.isEmpty()) return null;
-        return checklists.get(0);
+        int index = 0;
+        for (Checklist checklist: checklists){
+            if (checklist.getTest_result().equals("-"))
+                index++;
+            else
+                break;
+        }
+        return checklists.get(index);
     }
 
     public Map<String, Integer> getEarliestChecklistId(String type, String nurseId) {
