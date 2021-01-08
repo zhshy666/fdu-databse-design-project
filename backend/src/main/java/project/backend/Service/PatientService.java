@@ -99,6 +99,7 @@ public class PatientService {
 
     public boolean canDischarge(String type, int patientId) {
         List<Double> temperatureRes = patientStatusRepo.findTemperaturesByPatientId(type, patientId);
+        if (temperatureRes.size() < 3) return false;
         boolean flag = true;
         for (Double d : temperatureRes){
             if (d >= 37.3){

@@ -128,21 +128,21 @@ public class ChecklistRepo {
         catch (Exception e){
             e.printStackTrace();
         }
-        sql = "update database_project.checklist set test_result = ? where patient_id = ?";
+        sql = "update database_project.checklist set test_result = ? where id = ?";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, checklist.getTest_result());
-            preparedStatement.setInt(2, checklist.getPatient_id());
+            preparedStatement.setInt(2, checklist.getId());
             preparedStatement.executeUpdate();
         }
         catch (Exception e){
             e.printStackTrace();
         }
-        sql = "update database_project.checklist set date = ? where patient_id = ?";
+        sql = "update database_project.checklist set date = ? where id = ?";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setTimestamp(1, new Timestamp(checklist.getDate().getTime()));
-            preparedStatement.setInt(2, checklist.getPatient_id());
+            preparedStatement.setInt(2, checklist.getId());
             preparedStatement.executeUpdate();
         }
         catch (Exception e){
