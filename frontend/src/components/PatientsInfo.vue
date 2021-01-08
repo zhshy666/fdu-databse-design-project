@@ -101,7 +101,7 @@
       width="120">
       <template slot-scope="scope">    
         <!-- 已经死亡 -->
-        <div v-if="scope.row.life_status ='dead'">dead</div>
+        <div v-if="scope.row.life_status =='dead'">dead</div>
         <div v-else>
           <!-- 没有死亡 -->
           <!-- 已经出院 -->
