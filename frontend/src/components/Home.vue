@@ -46,6 +46,12 @@
             <i class="el-icon-message"></i>
             <span slot="title">Message</span>
         </el-menu-item>
+
+        <el-menu-item index = "logout">  
+            
+            <i class="el-icon-circle-close"></i>
+            <span slot="title">Logout</span>
+        </el-menu-item>
     </el-menu>
     </el-aside>
     <el-main>        
@@ -181,7 +187,10 @@ export default {
                    this.isBedsInfo = false;
                    this.isMessage = false;
                    this.isChecklist = true;
-                   break;                   
+                   break;
+                case "logout":
+                    this.$store.commit("logout");
+                    this.$router.push("/login"); 
            }        
       },            
   },
