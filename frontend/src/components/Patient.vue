@@ -32,8 +32,8 @@
       </el-col>   
               
       <el-col :span="7">
-          <span>Life Status</span> | 
-          <el-select size="small" v-model="status" style="width:120px">
+          <span>Life Status</span> |           
+          <el-select size="small" v-model="status" style="width:120px" :disabled="this.patient.life_status == 'dead' || this.patient.can_be_discharged == 2">
             <el-option
               v-for="item in getStatusOptions"
               :key="item.value"
@@ -46,7 +46,7 @@
 
       <el-col :span="7">
           <span>Disease Level</span> | 
-          <el-select size="small" v-model="diseaseLevel" style="width:100px">
+          <el-select size="small" v-model="diseaseLevel" style="width:100px" :disabled="this.patient.life_status == 'dead' || this.patient.can_be_discharged == 2">
             <el-option
               v-for="item in diseaseLevelOptions"
               :key="item.value"
@@ -60,8 +60,8 @@
     <br>
     <br>
     <div class="message">
-      <p v-if="this.patient.can_be_discharged == 1"><i class="el-icon-message"></i>  This patient can discharge now. &nbsp; <el-button type="primary"  size="small" @click="permitDischarge()">Permit Discharge</el-button></p>      
-      <p v-if="this.patient.need_transfer == 1"><i class="el-icon-message"></i>  This patient is waiting for being transfered to another region.</p>
+      <p v-if="this.patient.can_be_discharged == 1 && this.patient.life_status != 'dead'"><i class="el-icon-message"></i>  This patient can discharge now. &nbsp; <el-button type="primary"  size="small" @click="permitDischarge()">Permit Discharge</el-button></p>      
+      <p v-if="this.patient.need_transfer == 1 && this.patient.life_status != 'dead'"><i class="el-icon-message"></i>  This patient is waiting for being transfered to another region.</p>
     </div>
 
   </el-card>  
@@ -105,7 +105,11 @@
   </el-card>
   <el-card>
     <h3>Coronavirus Check Records</h3>
-    <el-button @click="addNewChecklist">Add New Checklist</el-button>
+    <el-button 
+      @click="addNewChecklist" 
+      v-if="this.patient.life_status != 'dead' && this.patient.can_be_discharged != 2 && this.patient.can_be_discharged != 3">
+      Add New Checklist
+    </el-button>
     <el-table
     :data="checklist"    
     style="width: 100%"

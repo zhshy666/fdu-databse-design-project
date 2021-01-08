@@ -100,8 +100,16 @@
       filter-placement="bottom-end"    
       width="120">
       <template slot-scope="scope">    
-        <div v-if="scope.row.need_transfer == 0">no</div>
-        <div v-else>yes</div>
+        <!-- 已经死亡 -->
+        <div v-if="scope.row.life_status ='dead'">dead</div>
+        <div v-else>
+          <!-- 没有死亡 -->
+          <!-- 已经出院 -->
+          <div v-if="scope.row.can_be_discharged == 2">discharged</div>
+          <!-- 没有出院 -->
+          <div v-else-if="scope.row.need_transfer == 1">yes</div>
+          <div v-else-if="scope.row.need_transfer == 0">no</div>
+        </div>        
       </template>
     </el-table-column>
 
@@ -113,10 +121,11 @@
       :filter-method="filterDischarge"
       filter-placement="bottom-end"  
       width="120">    
-      <template slot-scope="scope">    
-        <!-- <el-button size="small" v-if="scope.row.can_be_discharged == 1 && scope.row.disease_level == 'light'" @click="permitDischarge(scope.row.patient_id)">Permit</el-button> -->
-        <div v-if ="scope.row.can_be_discharged == 1" >yes</div>
-        <div v-else>no</div>
+      <template slot-scope="scope">            
+        <div v-if ="scope.row.can_be_discharged == 0">no</div>
+        <div v-else-if ="scope.row.can_be_discharged == 1" >yes</div>        
+        <div v-else-if="scope.row.can_be_discharged == 2">dischrged</div>
+        <div v-else>dead</div>
       </template>
     </el-table-column>
 
@@ -148,11 +157,11 @@ export default {
   methods:{
     parseType(level){
       switch(level){
-        case 'Light':
+        case 'light':
           return 'info';
-        case 'Severe':
+        case 'severe':
           return 'warning';
-        case 'Critical':
+        case 'critical':
           return 'danger';
       }      
     },
@@ -160,9 +169,9 @@ export default {
       switch(status){
         case 'healthy':
           return 'success';
-        case 'Treating':
+        case 'treating':
           return 'warning';
-        case 'Dead':
+        case 'dead':
           return 'info';
       }
     },
@@ -176,7 +185,7 @@ export default {
       return row.disease_level === value;
     },
     filterTransfer(value,row){
-      return row.need_transfer == value;
+      return (row.need_transfer == value && row.life_status != 'dead' && row.can_be_discharged !=2);
     },
     filterDischarge(value,row){
       return row.can_be_discharged == value;
