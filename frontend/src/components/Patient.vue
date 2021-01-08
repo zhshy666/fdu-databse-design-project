@@ -200,6 +200,7 @@ export default {
           console.log(resp.data);
           this.patient.disease_level = this.diseaseLevel;
           this.$message.success("Modify successfully");
+          this.reload();
         } else {
           console.log(error);
         }
