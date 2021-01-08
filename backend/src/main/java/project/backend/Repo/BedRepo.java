@@ -2,10 +2,7 @@ package project.backend.Repo;
 
 import org.springframework.stereotype.Repository;
 import project.backend.Entity.Bed;
-import project.backend.Entity.ChiefNurse;
-import project.backend.Entity.HospitalNurse;
 import project.backend.Utils.Util;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

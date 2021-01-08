@@ -3,7 +3,6 @@ package project.backend.Repo;
 import org.springframework.stereotype.Repository;
 import project.backend.Entity.Checklist;
 import project.backend.Utils.Util;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

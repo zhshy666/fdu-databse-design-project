@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.backend.Entity.*;
 import project.backend.Repo.*;
-import project.backend.Utils.Config;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

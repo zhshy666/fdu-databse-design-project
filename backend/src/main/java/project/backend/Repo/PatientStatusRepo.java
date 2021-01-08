@@ -1,7 +1,6 @@
 package project.backend.Repo;
 
 import org.springframework.stereotype.Repository;
-import project.backend.Entity.Checklist;
 import project.backend.Entity.PatientStatus;
 import project.backend.Utils.Util;
 

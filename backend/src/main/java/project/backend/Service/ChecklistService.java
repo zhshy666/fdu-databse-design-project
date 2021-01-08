@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.backend.Entity.Checklist;
 import project.backend.Repo.ChecklistRepo;
-
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
