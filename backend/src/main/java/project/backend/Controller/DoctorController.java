@@ -59,8 +59,19 @@ public class DoctorController {
         PatientInfo patientInfo = new PatientInfo(patient.getPatient_id(), patient.getName(), patient.getGender(),
                 patient.getAge(), patient.getDisease_level(), patient.getLife_status(), patient.getNurse_id(),
                 patient.getTreatment_region_level());
-        if (canDischarge) patientInfo.setCan_be_discharged(1);
-        if (needTransfer) patientInfo.setNeed_transfer(1);
+        if (patient.getNurse_id() == null && !patient.getTreatment_region_level().equals("quarantine")){
+            if (patient.getLife_status().equals("dead")){
+                patientInfo.setCan_be_discharged(3);
+            }
+            else {
+                patientInfo.setCan_be_discharged(2);
+            }
+        }
+        else {
+            if (canDischarge) patientInfo.setCan_be_discharged(1);
+            if (needTransfer) patientInfo.setNeed_transfer(1);
+        }
+
         result.put("1", patientInfo);
 
         // 2 核酸检测单信息
