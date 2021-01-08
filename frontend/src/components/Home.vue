@@ -42,10 +42,13 @@
             <span slot="title">Beds information</span>
         </el-menu-item>        
 
-        <el-menu-item index = "message" v-if="!this.isEmergencyNurse">
-            <i class="el-icon-message"></i>
-            <span slot="title">Message</span>
-        </el-menu-item>
+        
+        <el-menu-item index = "message" v-if="!this.isEmergencyNurse">            
+            <i class="el-icon-message"></i>                        
+            <span slot="title">
+                <el-badge :is-dot="hasMessage" class="badge">Message</el-badge>
+            </span>            
+        </el-menu-item>        
 
         <el-menu-item index = "logout">  
             
@@ -69,7 +72,7 @@
 
         <beds-info v-if="this.isBedsInfo"></beds-info>   
 
-        <message  v-if="this.isMessage"></message>
+        <message  v-if="this.isMessage" @hasMessage="isMessageUpdate"></message>
         
     </el-main>
 </el-container>
@@ -103,6 +106,8 @@ export default {
         isMessage:false,  
         isBedsInfo:false,        
         isChecklist:false,
+
+        hasMessage:false,
       }
   },
   methods:{
@@ -192,7 +197,11 @@ export default {
                     this.$store.commit("logout");
                     this.$router.push("/login"); 
            }        
-      },            
+      }, 
+      isMessageUpdate(v){
+          console.log(v);
+          this.hasMessage = v;
+      }           
   },
   created(){
       switch(this.$store.state.user.type){
@@ -209,6 +218,27 @@ export default {
             this.isHospitalNurse = true;
             break;        
       }
+      this.$axios
+      .post("/getMessages", {
+        id: this.$store.state.user.id,        
+      })
+      .then(resp => {
+        if (resp.status === 200) {            
+            if(resp.data.length>0){
+                for(let message of resp.data){
+                    if(message.status == 0){
+                        this.hasMessage=true;
+                        return;
+                    }
+                }                
+            }
+        } else {
+            console.log(error);      
+        }
+      })
+      .catch(error => {
+       console.log(error);
+      });
   }
 }
 </script>
@@ -229,5 +259,8 @@ export default {
 h1{
     font-size: 1.5rem;    
 }
-
+.el-badge{
+    line-height: 20px;    
+    padding:5px;
+}
 </style>
