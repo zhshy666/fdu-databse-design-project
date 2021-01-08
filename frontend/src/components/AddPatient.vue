@@ -79,11 +79,11 @@ export default {
     return{
         loading:false,
         newPatient:{
-            name:"Zhang San",
-            gender:"male",
-            age:21,
-            level:"severe",
-            testResult:"positive",
+            name:"",
+            gender:"",
+            age:"",
+            level:"",
+            testResult:"",
             date:"",
         },        
     }

@@ -177,7 +177,7 @@ export default {
         });
     },
     getStyle(){
-      if(this.$store.state.user.type="doctor"){
+      if(this.$store.state.user.type=="doctor"){
         return "padding-left:50px;border:none";        
       }
     }
