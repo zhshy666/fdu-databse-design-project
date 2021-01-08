@@ -118,31 +118,31 @@ public class ChecklistRepo {
     public void updateChecklist(String type, Checklist checklist) {
         Connection conn = Util.connect(type);
         assert conn != null;
-        String sql = "update database_project.checklist set disease_level = ? where patient_id = ?";
+        String sql = "update database_project.checklist set disease_level = ? where id = ?";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, checklist.getDisease_level());
-            preparedStatement.setInt(2, checklist.getPatient_id());
+            preparedStatement.setInt(2, checklist.getId());
             preparedStatement.executeUpdate();
         }
         catch (Exception e){
             e.printStackTrace();
         }
-        sql = "update database_project.checklist set test_result = ? where patient_id = ?";
+        sql = "update database_project.checklist set test_result = ? where id = ?";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, checklist.getTest_result());
-            preparedStatement.setInt(2, checklist.getPatient_id());
+            preparedStatement.setInt(2, checklist.getId());
             preparedStatement.executeUpdate();
         }
         catch (Exception e){
             e.printStackTrace();
         }
-        sql = "update database_project.checklist set date = ? where patient_id = ?";
+        sql = "update database_project.checklist set date = ? where id = ?";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setTimestamp(1, new Timestamp(checklist.getDate().getTime()));
-            preparedStatement.setInt(2, checklist.getPatient_id());
+            preparedStatement.setInt(2, checklist.getId());
             preparedStatement.executeUpdate();
         }
         catch (Exception e){

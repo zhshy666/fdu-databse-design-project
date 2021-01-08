@@ -209,6 +209,7 @@ insert into patient_status(temperature, symptom, life_status, date, patient_id, 
 
 
 # 站内信
+drop table if exists message;
 create table if not exists message
 (
     id int auto_increment,
@@ -262,3 +263,4 @@ select * from patient;
 select * from checklist;
 select * from hospital_nurse;
 select * from patient_status;
+select * from message;
