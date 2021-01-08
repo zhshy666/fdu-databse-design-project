@@ -89,11 +89,11 @@ create table if not exists hospital_nurse
     primary key (id),
     foreign key (treatment_region_level) references treatment_region(level)
 )charset = utf8;
-insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H001', 'hospital_nurse1', '123456', 26, 'female', 'light', 3);
+insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H001', 'hospital_nurse1', '123456', 26, 'female', 'light', 0);
 insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H002', 'hospital_nurse2', '123456', 26, 'female', 'light', 0);
-insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H003', 'hospital_nurse3', '123456', 36, 'male', 'severe', 1);
+insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H003', 'hospital_nurse3', '123456', 36, 'male', 'severe', 0);
 insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H004', 'hospital_nurse4', '123456', 36, 'male', 'severe', 0);
-insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H005', 'hospital_nurse5', '123456', 28, 'female', 'critical', 1);
+insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H005', 'hospital_nurse5', '123456', 28, 'female', 'critical', 0);
 insert into hospital_nurse(id, name, password, age, gender, treatment_region_level, current_resp_num) VALUES ('H006', 'hospital_nurse6', '123456', 28, 'female', null, 0);
 
 
@@ -112,12 +112,12 @@ create table if not exists patient
     foreign key (nurse_id) references hospital_nurse(id),
     foreign key (treatment_region_level) references treatment_region(level)
 )charset = utf8;
-insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('Cathy', 'female', 20, 'light', 'treating', 'H001', 'light');
-insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('Dan', 'male', 20, 'severe', 'treating', 'H003', 'severe');
-insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('Eric', 'male', 20, 'critical', 'treating', 'H005', 'critical');
-insert into patient(name, gender, age, disease_level, life_status, treatment_region_level) VALUES ('Frank', 'male', 25, 'light', 'treating', 'quarantine');
-insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('Alice', 'female', 33,  'light', 'treating', 'H001', 'light');
-insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('Bob', 'male', 23,  'light', 'treating', 'H001', 'light');
+# insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('Cathy', 'female', 20, 'light', 'treating', 'H001', 'light');
+# insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('Dan', 'male', 20, 'severe', 'treating', 'H003', 'severe');
+# insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('Eric', 'male', 20, 'critical', 'treating', 'H005', 'critical');
+# insert into patient(name, gender, age, disease_level, life_status, treatment_region_level) VALUES ('Frank', 'male', 25, 'light', 'treating', 'quarantine');
+# insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('Alice', 'female', 33,  'light', 'treating', 'H001', 'light');
+# insert into patient(name, gender, age, disease_level, life_status, nurse_id, treatment_region_level) VALUES ('Bob', 'male', 23,  'light', 'treating', 'H001', 'light');
 create index patient_treatment_region_level on patient(treatment_region_level);
 
 
@@ -132,21 +132,21 @@ create table if not exists bed
     foreign key (treatment_region_level) references treatment_region(level)
 )charset = utf8;
 insert into bed(treatment_region_level) values ('light');
-# insert into bed(treatment_region_level) values ('light');
-# insert into bed(treatment_region_level) values ('light');
+insert into bed(treatment_region_level) values ('light');
+insert into bed(treatment_region_level) values ('light');
+insert into bed(treatment_region_level) values ('severe');
 insert into bed(treatment_region_level) values ('severe');
 # insert into bed(treatment_region_level) values ('severe');
-# insert into bed(treatment_region_level) values ('severe');
-# insert into bed(treatment_region_level) values ('critical');
-# insert into bed(treatment_region_level) values ('critical');
+insert into bed(treatment_region_level) values ('critical');
+insert into bed(treatment_region_level) values ('critical');
 # insert into bed(treatment_region_level) values ('critical');
 # TODO: 理论上像上边那样新增床位 下边的只是为了测试
-insert into bed(patient_id, treatment_region_level) VALUES (1, 'light');
-insert into bed(patient_id, treatment_region_level) VALUES (2, 'severe');
-insert into bed(patient_id, treatment_region_level) VALUES (3, 'critical');
-# insert into bed(patient_id, treatment_region_level) VALUES (4, 'light');
-insert into bed(patient_id, treatment_region_level) VALUES (5, 'light');
-insert into bed(patient_id, treatment_region_level) VALUES (6, 'light');
+# insert into bed(patient_id, treatment_region_level) VALUES (1, 'light');
+# insert into bed(patient_id, treatment_region_level) VALUES (2, 'severe');
+# insert into bed(patient_id, treatment_region_level) VALUES (3, 'critical');
+# # insert into bed(patient_id, treatment_region_level) VALUES (4, 'light');
+# insert into bed(patient_id, treatment_region_level) VALUES (5, 'light');
+# insert into bed(patient_id, treatment_region_level) VALUES (6, 'light');
 
 
 # check list
@@ -164,14 +164,14 @@ create table if not exists checklist
     check ( (disease_level is null) or (disease_level is not null and disease_level in ('-', 'light', 'severe', 'critical')) ),
     check ( (test_result is null) or (test_result is not null and test_result in ('-', 'positive', 'negative')) )
 )charset = utf8;
-insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('positive', '2020-12-20 13:30:20', 'critical', 'D002', 2);
-insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-25 13:30:20', 'light', 'D003', 3);
-insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('positive', '2020-12-25 13:30:20', 'light', 'D001', 1);
-insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-26 13:30:20', 'light', 'D001', 1);
-insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-27 13:30:20', 'light', 'D001', 1);
-insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-27 13:30:20', 'light', null, 4);
-insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-27 13:30:20', 'light', null, 5);
-insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-27 13:30:20', 'light', null, 6);
+# insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('positive', '2020-12-20 13:30:20', 'critical', 'D002', 2);
+# insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-25 13:30:20', 'light', 'D003', 3);
+# insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('positive', '2020-12-25 13:30:20', 'light', 'D001', 1);
+# insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-26 13:30:20', 'light', 'D001', 1);
+# insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-27 13:30:20', 'light', 'D001', 1);
+# insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-27 13:30:20', 'light', null, 4);
+# insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-27 13:30:20', 'light', null, 5);
+# insert into checklist(test_result, date, disease_level, doctor_id, patient_id) VALUES ('negative', '2020-12-27 13:30:20', 'light', null, 6);
 
 
 #  patient status
@@ -190,22 +190,22 @@ create table if not exists patient_status
     foreign key (nurse_id) references hospital_nurse(id),
     foreign key (checklist_id) references checklist(id)
 )charset = utf8;
-insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
-            VALUES (37.6, 'fever', 'treating', '2020-12-20 13:30:20', 2, 'H003', 1);
-insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
-            VALUES (37.1, 'healthy', 'treating', '2020-12-25 13:30:20', 3, 'H005', 2);
-insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
-            VALUES (37.0, 'healthy', 'treating', '2020-12-25 13:30:20', 1, 'H001', 3);
-insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
-            VALUES (37.1, 'healthy', 'treating', '2020-12-26 13:30:20', 1, 'H001', 4);
-insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
-            VALUES (36.1, 'healthy', 'treating', '2020-12-27 13:30:20', 1, 'H001', 5);
-insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
-            VALUES (36.1, 'healthy', 'treating', '2020-12-27 13:30:20', 4, 'H003', 6);
-insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
-            VALUES (36.1, 'healthy', 'treating', '2020-12-27 13:30:20', 5, 'H001', 7);
-insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
-            VALUES (36.1, 'healthy', 'treating', '2020-12-27 13:30:20', 6, 'H001', 8);
+# insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
+#             VALUES (37.6, 'fever', 'treating', '2020-12-20 13:30:20', 2, 'H003', 1);
+# insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
+#             VALUES (37.1, 'healthy', 'treating', '2020-12-25 13:30:20', 3, 'H005', 2);
+# insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
+#             VALUES (37.0, 'healthy', 'treating', '2020-12-25 13:30:20', 1, 'H001', 3);
+# insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
+#             VALUES (37.1, 'healthy', 'treating', '2020-12-26 13:30:20', 1, 'H001', 4);
+# insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
+#             VALUES (36.1, 'healthy', 'treating', '2020-12-27 13:30:20', 1, 'H001', 5);
+# insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
+#             VALUES (36.1, 'healthy', 'treating', '2020-12-27 13:30:20', 4, 'H003', 6);
+# insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
+#             VALUES (36.1, 'healthy', 'treating', '2020-12-27 13:30:20', 5, 'H001', 7);
+# insert into patient_status(temperature, symptom, life_status, date, patient_id, nurse_id, checklist_id)
+#             VALUES (36.1, 'healthy', 'treating', '2020-12-27 13:30:20', 6, 'H001', 8);
 
 
 # 站内信
@@ -259,8 +259,9 @@ grant select, update on checklist to 'hospital_nurse'@'localhost';
 grant select, update, insert on patient_status to 'hospital_nurse'@'localhost';
 grant select on treatment_region to 'hospital_nurse'@'localhost';
 
-select * from patient;
-select * from checklist;
-select * from hospital_nurse;
-select * from patient_status;
-select * from message;
+# select * from patient;
+# select * from checklist;
+# select * from hospital_nurse;
+# select * from patient_status;
+# select * from message;
+# select * from bed;

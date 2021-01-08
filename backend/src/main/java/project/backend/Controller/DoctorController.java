@@ -118,7 +118,20 @@ public class DoctorController {
         patientService.updateDiseaseLevel(Config.DOCTOR, patientId, newDiseaseLevel);
         // 2 判断能否转到指定的治疗区域，不能的话还停留在当前区域
         boolean canTransfer = patientService.canTransfer(Config.DOCTOR, newDiseaseLevel, patient);
-        if (canTransfer) transferToCurrentRegion(region);
+        if (canTransfer) {
+            transferToCurrentRegion(region);
+            SimpleDateFormat f = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
+            Date now = new Date();
+            f.format(now);
+            Timestamp time = new Timestamp(now.getTime());
+            String chiefNurseId = treatmentRegionService.getChiefNurseIdByRegion(Config.ROOT, newDiseaseLevel);
+            Message message = new Message();
+            message.setStatus(0);
+            message.setReceiver_id(chiefNurseId);
+            message.setTime(time);
+            message.setContent("A new patient has been transferred to " + newDiseaseLevel + ".");
+            messageService.addNewMessage(Config.ROOT, message);
+        }
         return ResponseEntity.ok(canTransfer);
     }
 
