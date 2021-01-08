@@ -77,11 +77,22 @@ public class AuthController {
             PatientInfo patientInfo = new PatientInfo(patient.getPatient_id(), patient.getName(), patient.getGender(),
                     patient.getAge(), patient.getDisease_level(), patient.getLife_status(), patient.getNurse_id(),
                     patient.getTreatment_region_level());
-            if (patientsCanBeDischarged.contains(patient.getPatient_id())){
-                patientInfo.setCan_be_discharged(1);
+            // 2 表示出院或者死亡
+            if (patient.getNurse_id() == null && !patient.getTreatment_region_level().equals("quarantine")){
+                if (patient.getLife_status().equals("dead")){
+                    patientInfo.setCan_be_discharged(3);
+                }
+                else {
+                    patientInfo.setCan_be_discharged(2);
+                }
             }
-            if (patientsNeedTransfer.contains(patient.getPatient_id())){
-                patientInfo.setNeed_transfer(1);
+            else {
+                if (patientsCanBeDischarged.contains(patient.getPatient_id())) {
+                    patientInfo.setCan_be_discharged(1);
+                }
+                if (patientsNeedTransfer.contains(patient.getPatient_id())) {
+                    patientInfo.setNeed_transfer(1);
+                }
             }
             info.add(patientInfo);
         }
