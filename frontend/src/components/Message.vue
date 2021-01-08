@@ -54,12 +54,7 @@ export default {
         })
         .then(resp => {
           if (resp.status === 200) {
-            this.getMessages();   
-            for(let message of this.messages){
-                if(message.status == 0){
-                    this.$emit("hasMessage",true);
-                }
-            }            
+            this.getMessages();                           
           } else {
             this.$message.error("Something error!");
           }
@@ -78,6 +73,13 @@ export default {
             if (resp.status === 200) {  
                 console.log(resp.data);
                 this.messages=resp.data;
+                for(let message of this.messages){
+                    if(message.status == 0){
+                        this.$emit("hasMessage",true);
+                        return;
+                    }
+                    this.$emit("hasMessage",false);
+                }
             } else {
                 this.$message.error("Something wrong!");
             }

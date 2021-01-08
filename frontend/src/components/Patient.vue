@@ -97,6 +97,10 @@
       prop="symptom"
       label="Symptom">
     </el-table-column>
+    <el-table-column
+      prop="result"
+      label="Test Result">
+    </el-table-column>
   </el-table>
   </el-card>
   <el-card>

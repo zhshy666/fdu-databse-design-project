@@ -108,6 +108,14 @@ export default {
       .then(resp => {
         if (resp.status === 200) {
           this.$message.success("Submit successfully!");
+          this.recordStatus={
+            patientID:"",        
+            temperature:"",
+            symptom:"",
+            level:"",
+            status:"",        
+            date:"",            
+          }
           this.loading = false;
         } else {
           this.$message.error("Something wrong!");      
