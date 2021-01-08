@@ -5,7 +5,6 @@ import java.util.Date;
 public class RecordPatientStatusRequest {
     private String hospital_nurse_id;
     private int id;
-    private String name;
     private double temperature;
     private String symptom;
     private String life_status;
@@ -26,14 +25,6 @@ public class RecordPatientStatusRequest {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public double getTemperature() {

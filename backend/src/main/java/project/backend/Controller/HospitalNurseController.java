@@ -86,6 +86,10 @@ public class HospitalNurseController {
         if (!request.getHospital_nurse_id().startsWith("H")){
             return new ResponseEntity<>("Not allowed", HttpStatus.FORBIDDEN);
         }
+        Patient patient = patientService.getPatientById(Config.HOSPITAL_NURSE, request.getId());
+        if (patient == null){
+            return new ResponseEntity<>("No such patient", HttpStatus.BAD_REQUEST);
+        }
         PatientStatus patientStatus = new PatientStatus();
         // 1 基本信息
         patientStatus.setPatient_id(request.getId());
@@ -94,16 +98,7 @@ public class HospitalNurseController {
         patientStatus.setTemperature(request.getTemperature());
         patientStatus.setSymptom(request.getSymptom());
 
-        SimpleDateFormat f = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
-        Timestamp timestamp = null;
-        try {
-            Date time = f.parse(request.getDate());
-            String result = f.format(time);
-            timestamp = Timestamp.valueOf(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        assert timestamp != null;
+        Timestamp timestamp = Util.transferDateFormat(request.getDate());
         patientStatus.setDate(timestamp);
 
         // 2 找最近一次的核酸检测单

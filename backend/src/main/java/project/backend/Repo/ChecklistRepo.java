@@ -118,11 +118,11 @@ public class ChecklistRepo {
     public void updateChecklist(String type, Checklist checklist) {
         Connection conn = Util.connect(type);
         assert conn != null;
-        String sql = "update database_project.checklist set disease_level = ? where patient_id = ?";
+        String sql = "update database_project.checklist set disease_level = ? where id = ?";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, checklist.getDisease_level());
-            preparedStatement.setInt(2, checklist.getPatient_id());
+            preparedStatement.setInt(2, checklist.getId());
             preparedStatement.executeUpdate();
         }
         catch (Exception e){
